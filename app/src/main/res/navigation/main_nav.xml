@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.thingsflow.ui.SplashFragment"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_locationManagementFragment"
+            app:destination="@id/locationManagementFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.thingsflow.ui.authentication.SignInFragment"
+        android:label="SignInFragment" >
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_locationManagementFragment"
+            app:destination="@id/locationManagementFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.thingsflow.ui.authentication.SignUpFragment"
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_signUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_verifyOTPFragment"
+            app:destination="@id/verifyOTPFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/verifyOTPFragment"
+        android:name="com.example.thingsflow.ui.authentication.VerifyOTPFragment"
+        android:label="VerifyOTPFragment" >
+        <action
+            android:id="@+id/action_verifyOTPFragment_to_createLocationFragment"
+            app:destination="@id/createLocationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/locationManagementFragment"
+        android:name="com.example.thingsflow.ui.location.LocationManagementFragment"
+        android:label="LocationManagementFragment" >
+        <action
+            android:id="@+id/action_locationManagementFragment_to_createLocationFragment"
+            app:destination="@id/createLocationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createLocationFragment"
+        android:name="com.example.thingsflow.ui.location.CreateLocationFragment"
+        android:label="CreateLocationFragment" >
+          <action
+            android:id="@+id/action_createLocationFragment_to_locationManagementFragment"
+            app:destination="@id/locationManagementFragment" />
+        <action
+            android:id="@+id/action_createLocationFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.example.thingsflow.ui.authentication.ResetPasswordFragment"
+        android:label="ResetPasswordFragment" >
+        <action
+            android:id="@+id/action_resetPasswordFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_resetPasswordFragment_to_verifyResetPwdOtpFragment"
+            app:destination="@id/verifyResetPwdOtpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/verifyResetPwdOtpFragment"
+        android:name="com.example.thingsflow.ui.authentication.VerifyResetPwdOtpFragment"
+        android:label="VerifyResetPwdOtpFragment" >
+        <action
+            android:id="@+id/action_verifyResetPwdOtpFragment_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment" />
+        <action
+            android:id="@+id/action_verifyResetPwdOtpFragment_to_locationManagementFragment"
+            app:destination="@id/locationManagementFragment" />
+    </fragment>
+</navigation>

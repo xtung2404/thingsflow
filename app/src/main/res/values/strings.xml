@@ -1,0 +1,41 @@
+<resources>
+    <string name="sign_in">Đăng nhập</string>
+    <string name="sign_up">Đăng ký</string>
+    <string name="signing_in">Đang đăng nhập</string>
+    <string name="insert_your_email">Nhập Email của bạn</string>
+    <string name="insert_your_password">Nhập mật khẩu của bạn</string>
+    <string name="insert_your_username">Nhập Username của bạn</string>
+    <string name="confirm_your_password">Xác nhận mật khẩu của bạn</string>
+    <string name="at_least_6_characters">Tối thiểu 6 ký tự (Yêu cầu có chữ, số, kí tự đặc biệt)</string>
+    <string name="sending_otp">Đang gửi OTP</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="to_continue">Tiếp tục</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="confirm_otp">Xác nhận mã OTP</string>
+    <string name="resend">Gửi lại</string>
+    <string name="otp_code_is_false">Mãi OTP không đúng!</string>
+    <string name="select_location">Chọn địa điểm</string>
+    <string name="please_select_a_location_to_continue">Hãy chọn 1 địa điểm để tiếp tục</string>
+    <string name="create_a_new_location">Tạo địa điểm mới</string>
+    <string name="name_location_after">Bạn nên đặt tên ví dụ như: nhà xưởng, vườn, ... </string>
+    <string name="sorting_out_helps_easier_to_manage">Phân loại giúp bạn dễ quản lý hơn khi có nhiều địa điểm</string>
+    <string name="you_can_change_later">Bạn vẫn có thể chỉnh sửa về sau</string>
+    <string name="save_location">Lưu địa điểm</string>
+    <string name="sign_in_by_another_account">Đăng nhập tài khoản khác </string>
+    <string name="get_otp_code">Nhận mã xác thực</string>
+    <string name="otp_code_will_be_sent_to_your_email">Mã xác thực sẽ được gửi tới email của bạn</string>
+    <string name="reset_password_for">Thay đổi mật khẩu cho </string>
+    <string name="reset_password">Đặt lại mật khẩu</string>
+    <string-array name="location_type">
+        <item>Chưa xác định</item>
+        <item>Nhà riêng</item>
+        <item>Văn phòng</item>
+        <item>Vườn cây</item>
+        <item>Nhà xưởng</item>
+        <item>Nhà kho</item>
+        <item>Nhà bếp</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

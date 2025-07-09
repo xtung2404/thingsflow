@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="img_size_largest">72dp</dimen>
+    <dimen name="img_size_large">48dp</dimen>
+    <dimen name="img_size_normal">36dp</dimen>
+    <dimen name="img_size_small">24dp</dimen>
+
+    <dimen name="img_padding">6dp</dimen>
+    <dimen name="img_padding_large">8dp</dimen>
+
+    <dimen name="space_screen_super_small">8dp</dimen>
+    <dimen name="space_screen_small">16dp</dimen>
+    <dimen name="space_screen_normal">24dp</dimen>
+    <dimen name="space_screen_medium">32dp</dimen>
+    <dimen name="space_screen_large">48dp</dimen>
+    <dimen name="space_screen_super_large">64dp</dimen>
+
+    <dimen name="text_size_48">48sp</dimen>
+    <dimen name="text_size_32">32sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_15">15sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_13">13sp</dimen>
+    <dimen name="text_size_11">11sp</dimen>
+    <dimen name="text_size_10">10sp</dimen>
+    <dimen name="text_size_8">8sp</dimen>
+    <dimen name="text_size_40">40sp</dimen>
+
+    <dimen name="height_line">0.32dp</dimen>
+    <dimen name="spacing_xsmall">2dp</dimen>
+    <dimen name="spacing_large">15dp</dimen>
+    <dimen name="spacing_smlarge">18dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- radius -->
+    <dimen name="common_item_radius">10dp</dimen>
+    <dimen name="common_dialog_radius">20dp</dimen>
+
+    <!--    free size style -->
+    <dimen name="_space8dp">8dp</dimen>
+    <dimen name="_space16dp">16dp</dimen>
+    <dimen name="_space64dp">64dp</dimen>
+    <dimen name="_space72dp">72dp</dimen>
+    <dimen name="_space128dp">128dp</dimen>
+    <dimen name="_space256dp">256dp</dimen>
+    <dimen name="_space20dp">20dp</dimen>
+    <dimen name="_space10dp">10dp</dimen>
+    <dimen name="_space100dp">100dp</dimen>
+    <dimen name="_space30dp">30dp</dimen>
+    <dimen name="_space12dp">12dp</dimen>
+    <dimen name="_space2dp">2dp</dimen>
+    <dimen name="_space4dp">4dp</dimen>
+    <dimen name="_space48dp">48dp</dimen>
+    <dimen name="_space200dp">200dp</dimen>
+    <dimen name="_space32dp">32dp</dimen>
+    <dimen name="_space160dp">160dp</dimen>
+    <dimen name="_space24dp">24dp</dimen>
+    <dimen name="_space180dp">180dp</dimen>
+    <dimen name="_space18dp">18dp</dimen>
+    <dimen name="_space5dp">5dp</dimen>
+    <dimen name="_space50dp">50dp</dimen>
+    <dimen name="_space25dp">25dp</dimen>
+    <dimen name="_space3dp">3dp</dimen>
+    <dimen name="_space512dp">512dp</dimen>
+    <dimen name="_space320dp">320dp</dimen>
+
+
+</resources>
