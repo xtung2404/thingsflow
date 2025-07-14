@@ -1,19 +1,17 @@
 package com.example.thingsflow.ui.authentication
 
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentSignUpBinding
 import com.example.thingsflow.module.viewmodel.AuthenticationViewModel
 import com.example.thingsflow.ui.BaseFragment
-import com.example.thingsflow.utils.UIState
+import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
-import rogo.iot.module.rogocore.sdk.SmartSdk
 
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
@@ -25,7 +23,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
     override fun initView() {
         super.initView()
         binding.apply {
-
+            toolbar.txtTitle.text = getFragmentLabel(requireContext(), findNavController().previousBackStackEntry?.destination?.id)
         }
     }
 
@@ -55,20 +53,19 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
                 authenticationViewModel.signUp(
                     username,
                     email,
-                    pwd
-                ).observe(requireActivity()) {
-                    when (it) {
-                        is UIState.Success -> {
+                    pwd,
+                    object : AuthRequestCallback {
+                        override fun onSuccess() {
                             CoroutineScope(Dispatchers.Main).launch {
                                 findNavController().navigate(R.id.verifyOTPFragment)
                             }
                         }
 
-                        is UIState.Failure -> {
+                        override fun onFailure(p0: Int, p1: String?) {
 
                         }
                     }
-                }
+                )
             }
         }
     }

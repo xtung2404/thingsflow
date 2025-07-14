@@ -9,11 +9,14 @@ import com.example.thingsflow.module.viewmodel.AuthenticationViewModel
 import com.example.thingsflow.module.viewmodel.LocationViewModel
 import com.example.thingsflow.ui.BaseFragment
 import com.example.thingsflow.ui.adapter.LocationTypeSpinnerAdapter
-import com.example.thingsflow.utils.UIState
+import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
+import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 @AndroidEntryPoint
 class CreateLocationFragment : BaseFragment<FragmentCreateLocationBinding>() {
@@ -39,6 +42,7 @@ class CreateLocationFragment : BaseFragment<FragmentCreateLocationBinding>() {
         super.initView()
         setView()
         binding.apply {
+            toolbar.txtTitle.text = getFragmentLabel(requireContext(), findNavController().previousBackStackEntry?.destination?.id)
             spinnerLocationType.adapter = locationTypeSpinnerAdapter
         }
     }
@@ -79,33 +83,35 @@ class CreateLocationFragment : BaseFragment<FragmentCreateLocationBinding>() {
     ) {
         locationViewModel.createLocation(
             label,
-            type
-        ).observe(requireActivity()) {
-            when(it) {
-                is UIState.Success -> {
+            type,
+            object : RequestCallback<IoTLocation> {
+                override fun onSuccess(p0: IoTLocation?) {
                     CoroutineScope(Dispatchers.Main).launch {
                         findNavController().navigate(R.id.locationManagementFragment)
                     }
                 }
-                is UIState.Failure -> {
+
+                override fun onFailure(p0: Int, p1: String?) {
 
                 }
+
             }
-        }
+        )
     }
 
     private fun signOut() {
         authenticationViewModel
-            .signOut()
-            .observe(requireActivity()) {
-                when(it) {
-                    is UIState.Success -> {
+            .signOut(
+                object : AuthRequestCallback {
+                    override fun onSuccess() {
                         findNavController().navigate(R.id.signInFragment)
                     }
-                    is UIState.Failure -> {
+
+                    override fun onFailure(p0: Int, p1: String?) {
 
                     }
+
                 }
-            }
+            )
     }
 }

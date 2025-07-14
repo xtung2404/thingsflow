@@ -8,10 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.databinding.LayoutItemLocationManagementBinding
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
-class LocationAdapter: ListAdapter<IoTLocation, LocationAdapter.LocationViewHolder>(
+class LocationAdapter(
+    private val onMenuClick: (IoTLocation) -> Unit
+): ListAdapter<IoTLocation, LocationAdapter.LocationViewHolder>(
     object : DiffUtil.ItemCallback<IoTLocation>() {
         override fun areItemsTheSame(oldItem: IoTLocation, newItem: IoTLocation): Boolean {
-            return oldItem.uuid!!.contentEquals(newItem.uuid)
+            return oldItem.uuid!!.contentEquals(newItem.uuid) && oldItem.label == newItem.label
         }
 
         override fun areContentsTheSame(oldItem: IoTLocation, newItem: IoTLocation): Boolean {
@@ -26,7 +28,7 @@ class LocationAdapter: ListAdapter<IoTLocation, LocationAdapter.LocationViewHold
             binding.apply {
                 txtLocLabel.text = loc.label
                 btnOption.setOnClickListener {
-
+                    onMenuClick.invoke(loc)
                 }
             }
         }

@@ -4,13 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thingsflow.module.repository.AuthenticationRepository
-import com.example.thingsflow.utils.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthenticationViewModel @Inject constructor(val repo: AuthenticationRepository): ViewModel() {
+class AuthenticationViewModel @Inject constructor(val repo: AuthenticationRepository) :
+    ViewModel() {
     fun connectService(): MutableLiveData<Boolean> {
         val result = MutableLiveData<Boolean>()
         viewModelScope.launch {
@@ -20,75 +21,68 @@ class AuthenticationViewModel @Inject constructor(val repo: AuthenticationReposi
         }
         return result
     }
+
     fun signIn(
         input: String,
-        pwd: String
-    ): MutableLiveData<UIState<String>> {
-        val result = MutableLiveData<UIState<String>>()
+        pwd: String,
+        callback: AuthRequestCallback
+    ) {
         viewModelScope.launch {
             repo.signIn(
                 input,
-                pwd
-            ) {
-                result.postValue(it)
-            }
+                pwd,
+                callback
+            )
         }
-        return result
     }
 
     fun signUp(
         username: String,
         email: String,
-        pwd: String
-    ): MutableLiveData<UIState<String>> {
-        val result = MutableLiveData<UIState<String>>()
+        pwd: String,
+        callback: AuthRequestCallback
+    ) {
         viewModelScope.launch {
             repo.signUp(
                 username,
                 email,
-                pwd
-            ) {
-                result.postValue(it)
-            }
+                pwd,
+                callback
+            )
         }
-        return result
     }
 
-    fun signOut(): MutableLiveData<UIState<String>> {
-        val result = MutableLiveData<UIState<String>>()
+    fun signOut(
+        callback: AuthRequestCallback
+    ) {
         viewModelScope.launch {
-            repo.signOut {
-                result.postValue(it)
-            }
+            repo.signOut(callback)
         }
-        return result
     }
 
     fun forgotPwd(
-        email: String?
-    ): MutableLiveData<UIState<String>> {
-        val result = MutableLiveData<UIState<String>>()
+        email: String?,
+        callback: AuthRequestCallback
+    ) {
         viewModelScope.launch {
-            repo.forgotPwd(email) {
-                result.postValue(it)
-            }
+            repo.forgotPwd(
+                email,
+                callback
+            )
         }
-        return result
     }
 
     fun handleOtpVerification(
         otp: String,
-        pwd: String?
-    ): MutableLiveData<UIState<String>> {
-        val result = MutableLiveData<UIState<String>>()
+        pwd: String?,
+        callback: AuthRequestCallback
+    ) {
         viewModelScope.launch {
             repo.handleOtpVerification(
                 otp,
-                pwd
-            ) {
-                result.postValue(it)
-            }
+                pwd,
+                callback
+            )
         }
-        return result
     }
 }

@@ -1,23 +1,19 @@
 package com.example.thingsflow.ui.authentication
 
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentResetPasswordBinding
 import com.example.thingsflow.module.viewmodel.AuthenticationViewModel
 import com.example.thingsflow.ui.BaseFragment
-import com.example.thingsflow.utils.UIState
+import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 
 @AndroidEntryPoint
 class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>() {
@@ -36,6 +32,10 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>() {
     override fun initView() {
         super.initView()
         binding.apply {
+            toolbar.txtTitle.text = getFragmentLabel(requireContext(), findNavController().previousBackStackEntry?.destination?.id)
+            toolbar.btnBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
             email?.let {
                 edtEmail.setText(it)
                 txtEmail.text = it
@@ -71,19 +71,20 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>() {
 
             btnContinue.setOnClickListener {
                 authenticationViewModel.forgotPwd(
-                    email
-                ).observe(requireActivity()) {
-                    when(it) {
-                        is UIState.Success -> {
+                    email,
+                    object : AuthRequestCallback {
+                        override fun onSuccess() {
                             CoroutineScope(Dispatchers.Main).launch {
                                 findNavController().navigate(R.id.verifyResetPwdOtpFragment)
                             }
                         }
-                        is UIState.Failure -> {
+
+                        override fun onFailure(p0: Int, p1: String?) {
 
                         }
+
                     }
-                }
+                )
             }
         }
     }

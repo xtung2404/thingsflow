@@ -1,6 +1,5 @@
 package com.example.thingsflow.module.repository
 
-import com.example.thingsflow.utils.UIState
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback
@@ -25,7 +24,7 @@ class AuthenticationRepository @Inject constructor() {
     fun signIn(
         input: String,
         pwd: String,
-        result: (UIState<String>) -> Unit
+        callback: AuthRequestCallback
     ) {
         val isEmail = input.contains("@")
         val username = if (isEmail) null else input
@@ -35,15 +34,7 @@ class AuthenticationRepository @Inject constructor() {
             emailAdr,
             null,
             pwd,
-            object : AuthRequestCallback {
-                override fun onSuccess() {
-                    result.invoke(UIState.Success(null))
-                }
-
-                override fun onFailure(p0: Int, p1: String?) {
-                    result.invoke(UIState.Failure(p0, p1))
-                }
-            }
+            callback
         )
     }
 
@@ -51,76 +42,42 @@ class AuthenticationRepository @Inject constructor() {
         username: String,
         email: String,
         pwd: String,
-        result: (UIState<String>) -> Unit
+        callback: AuthRequestCallback
     ) {
         SmartSdk.signUp(
             username,
             email,
             null,
             pwd,
-            object : AuthRequestCallback {
-                override fun onSuccess() {
-                    result.invoke(UIState.Success(null))
-                }
-
-                override fun onFailure(p0: Int, p1: String?) {
-                    result.invoke(UIState.Failure(p0, p1))
-                }
-            }
+            callback
         )
     }
 
     fun signOut(
-        result: (UIState<String>) -> Unit
+        callback: AuthRequestCallback
     ) {
-        SmartSdk.signOut(
-            object : AuthRequestCallback {
-                override fun onSuccess() {
-                    result.invoke(UIState.Success(null))
-                }
-
-                override fun onFailure(p0: Int, p1: String?) {
-                    result.invoke(UIState.Failure(p0, p1))
-                }
-            }
-        )
+        SmartSdk.signOut(callback)
     }
 
     fun forgotPwd(
         email: String?,
-        result: (UIState<String>) -> Unit
+        callback: AuthRequestCallback
     ) {
         SmartSdk.forgot(
             email,
-            object : AuthRequestCallback {
-                override fun onSuccess() {
-                    result.invoke(UIState.Success(null))
-                }
-
-                override fun onFailure(p0: Int, p1: String?) {
-                    result.invoke(UIState.Failure(p0, p1))
-                }
-            }
+            callback
         )
     }
 
     fun handleOtpVerification(
         otp: String,
         pwd: String?,
-        result: (UIState<String>) -> Unit
+        callback: AuthRequestCallback
     ) {
         SmartSdk.updatePasswordOrVerifyAccount(
             otp,
             pwd,
-            object : AuthRequestCallback {
-                override fun onSuccess() {
-                    result.invoke(UIState.Success(null))
-                }
-
-                override fun onFailure(p0: Int, p1: String?) {
-                    result.invoke(UIState.Failure(p0, p1))
-                }
-            }
+            callback
         )
     }
 }

@@ -17,8 +17,8 @@ class ThingsFlowApplication: Application() {
         AndroidIoTPlatform(this, false)
         //init app key and app secret key
         SmartSdk().initV2(
-            "78c4807471bf498fa0dd943b1fd4ff9a",
-            "060863465ebe478d569a565d439a76dda4fc79690c3b",
+            "f78f5dd2fc594475a27bef7c2caf9ab4",
+            "41d96be770b2902f801b1689c5edae29c16a068e8f87"
         )
         //enable log
         ILogR.setEnablePrint(true)
