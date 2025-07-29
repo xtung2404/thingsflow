@@ -2,13 +2,18 @@ package com.example.thingflowsdk.core;
 
 import android.content.Context;
 
+import kotlinx.coroutines.flow.Flow;
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback;
 import rogo.iot.module.platform.ILogR;
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback;
+import rogo.iot.module.rogocore.sdk.entity.IoTProductModel;
 import rogo.iot.module.rogocore.sdk.handler.ConfigWileDirectDeviceHandler;
 import rogo.iot.module.rogocore.sdk.handler.GroupHandler;
 import rogo.iot.module.rogocore.sdk.handler.LocationHandler;
 
+/**
+ *
+ */
 public class FlowSdk {
     private static String TAG = "FlowSdk";
     protected static FlowSdkBaseHandler instance;
@@ -109,6 +114,10 @@ public class FlowSdk {
         ((FlowSdkBaseHandler) instance).closeServiceConnection();
     }
 
+    public synchronized static IoTProductModel getProductModel(String productId) {
+        return ((FlowSdkBaseHandler) instance).getProductModel(productId);
+    }
+
     public synchronized static void setAppLocation(String uuid) {
         ((FlowSdkBaseHandler) instance).setAppLocation(uuid);
     }
@@ -116,6 +125,7 @@ public class FlowSdk {
     public synchronized static String getAppLocation() {
         return ((FlowSdkBaseHandler) instance).getAppLocation();
     }
+
 
     public synchronized static LocationHandler locationHandler() {
         return ((FlowSdkBaseHandler) instance).locationHandler();
@@ -128,6 +138,7 @@ public class FlowSdk {
     public synchronized static ConfigWileDirectDeviceHandler configWileDirectDeviceHandler() {
         return ((FlowSdkBaseHandler) instance).configWileDirectDeviceHandler();
     }
+
 
 
 

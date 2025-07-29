@@ -7,6 +7,7 @@ import rogo.iot.module.platform.ILogR;
 import rogo.iot.module.rogocore.app.AndroidIoTPlatform;
 import rogo.iot.module.rogocore.sdk.SmartSdk;
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback;
+import rogo.iot.module.rogocore.sdk.entity.IoTProductModel;
 import rogo.iot.module.rogocore.sdk.handler.ConfigWileDirectDeviceHandler;
 import rogo.iot.module.rogocore.sdk.handler.GroupHandler;
 import rogo.iot.module.rogocore.sdk.handler.LocationHandler;
@@ -96,6 +97,11 @@ public class FlowSdkBaseHandlerImpl implements FlowSdkBaseHandler{
     @Override
     public void closeServiceConnection() {
         SmartSdk.closeConnectionService();
+    }
+
+    @Override
+    public IoTProductModel getProductModel(String productId) {
+        return SmartSdk.getProductModel(productId);
     }
 
     @Override

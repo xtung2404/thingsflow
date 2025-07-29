@@ -4,6 +4,7 @@ import android.content.Context;
 
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback;
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback;
+import rogo.iot.module.rogocore.sdk.entity.IoTProductModel;
 import rogo.iot.module.rogocore.sdk.handler.ConfigWileDirectDeviceHandler;
 import rogo.iot.module.rogocore.sdk.handler.GroupHandler;
 import rogo.iot.module.rogocore.sdk.handler.LocationHandler;
@@ -28,6 +29,8 @@ interface FlowSdkBaseHandler {
     void setAppLocation(String uuid);
 
     String getAppLocation();
+
+    IoTProductModel getProductModel(String productId);
 
     LocationHandler locationHandler();
 
