@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
+import rogo.iot.module.platform.ILogR
 
 @AndroidEntryPoint
 class SignInFragment : BaseFragment<FragmentSignInBinding>() {
@@ -52,7 +53,8 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
     }
 
     /**
-     * log in with email and password
+     * handle user's sign-in process.
+     * Required inputs: email or username, and password
      */
     private fun signIn() {
         binding.apply {
@@ -63,6 +65,7 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
             )
             val input = edtEmail.text.toString()
             val pwd = edtPwd.text.toString()
+
             if (isUserInfoValid(input, pwd)) {
                 authenticationViewModel.signIn(
                     input,
@@ -76,9 +79,10 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
                         }
 
                         override fun onFailure(p0: Int, p1: String?) {
-
+                            CoroutineScope(Dispatchers.Main).launch {
+                                dialog?.cancel()
+                            }
                         }
-
                     }
                 )
             }

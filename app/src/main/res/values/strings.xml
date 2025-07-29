@@ -30,7 +30,33 @@
     <string name="otp_code_will_be_sent_to_your_email">Mã xác thực sẽ được gửi tới email của bạn</string>
     <string name="reset_password_for">Thay đổi mật khẩu cho </string>
     <string name="reset_password">Đặt lại mật khẩu</string>
+    <string name="list_of_available_locations">Danh sách địa điểm đã có</string>
     <string name="cancel">Hủy</string>
+    <string name="scan_gateway">Quét gateway</string>
+    <string name="add_gateway">Thêm Gateway</string>
+    <string name="make_sure_that_gateway_is_plugged">Hãy đảm đã cắm nguồn Gateway</string>
+    <string name="scanning_gateway">Đang quét Gateway</string>
+    <string name="available_gateway">Gateway khả dụng</string>
+    <string name="rescan_device">Quét lại thiết bị</string>
+    <string name="rescan_wifi">Quét lại mạng WiFi</string>
+    <string name="connect_to_another_wifi">Kết nối mạng WiFi khác</string>
+    <string name="main_fragment">Màn hình chính</string>
+    <string name="connect_to_wifi">Kết nối mạng WiFi</string>
+    <string name="available_wifi">Mạng WiFi khả dụng</string>
+    <string name="wifi_info">Thông tin WiFi</string>
+    <string name="insert_wifi_label">Nhập tên Wifi</string>
+    <string name="insert_wifi_password">Nhập mật khẩu wifi</string>
+    <string name="connect">Kết nối</string>
+    <string name="assign_gateway_to_group">Thêm Gateway vào nhóm</string>
+    <string name="helpful_when_lots_of_gateway">Giúp bạn dễ quản lý hơn khi có nhiều Gateway</string>
+    <string name="change_device_label_helpful_to_manage">Đổi tên Gateway giúp bạn dễ quản lý về sau</string>
+    <string name="available_group">Nhóm khả dụng</string>
+    <string name="continue_without_assignment_to_group">Tiếp tục mà không thêm nhóm</string>
+    <string name="create_new_group">Tạo nhóm mới</string>
+    <string name="undefined">Chưa xác định</string>
+    <string name="save_group">Lưu nhóm</string>
+    <string name="add_another_gateway">Thêm Gateway khác</string>
+    <string name="finish">Hoàn thành</string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>

@@ -1,5 +1,6 @@
 package com.example.thingsflow.module.repository
 
+import com.example.thingflowsdk.core.FlowSdk
 import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
@@ -13,7 +14,7 @@ class LocationRepository @Inject constructor() {
         type: String,
         callback: RequestCallback<IoTLocation>
     ) {
-        SmartSdk.locationHandler().createLocation(
+        FlowSdk.locationHandler().createLocation(
             label,
             type,
             callback
@@ -25,7 +26,7 @@ class LocationRepository @Inject constructor() {
         label: String,
         callback: RequestCallback<IoTLocation>
     ) {
-        SmartSdk.locationHandler().updateLocation(
+        FlowSdk.locationHandler().updateLocation(
             ioTLocation.uuid,
             label,
             ioTLocation.desc,
@@ -37,9 +38,15 @@ class LocationRepository @Inject constructor() {
         uuid: String,
         callback: RequestCallback<Boolean>
     ) {
-        SmartSdk.locationHandler().delete(
+        FlowSdk.locationHandler().delete(
             uuid,
             callback
         )
+    }
+
+    fun getDefaultLocation(): String? = FlowSdk.getAppLocation()
+
+    fun setDefaultLocation(uuid: String) {
+        FlowSdk.setAppLocation(uuid)
     }
 }

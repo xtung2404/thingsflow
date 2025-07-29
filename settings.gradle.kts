@@ -29,4 +29,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ThingsFlow"
 include(":app")
- 
+include(":thingflowsdk")

@@ -68,8 +68,11 @@ class VerifyResetPwdOtpFragment : BaseFragment<FragmentVerifyResetPwdOtpBinding>
             )
 
             edtOtps.forEachIndexed { i, editText ->
-                editText.filters =
-                    arrayOf(InputFilter { src, _, _, _, _, _ -> src.toString().uppercase() })
+                //set required inputs are uppercase
+                editText.filters = arrayOf(
+                    InputFilter.LengthFilter(1),
+                    InputFilter { src, _, _, _, _, _ -> src.toString().uppercase() }
+                )
 
                 var previousLength = 0
 
@@ -92,12 +95,14 @@ class VerifyResetPwdOtpFragment : BaseFragment<FragmentVerifyResetPwdOtpBinding>
                     }
 
                     override fun afterTextChanged(s: Editable?) {
+                        //if text in EditText is deleted, automatically move backward to the previous one
                         val currentLength = s?.length ?: 0
                         if (previousLength == 1 && currentLength == 0 && i > 0) {
                             edtOtps[i - 1].requestFocus()
                             edtOtps[i - 1].setSelection(edtOtps[i - 1].text.length)
                         }
 
+                        //if text in EditText is filled, automatically move forward to the next one
                         if (currentLength == 1 && i < edtOtps.size - 1) {
                             edtOtps[i + 1].requestFocus()
                         }
@@ -151,7 +156,7 @@ class VerifyResetPwdOtpFragment : BaseFragment<FragmentVerifyResetPwdOtpBinding>
     }
 
     /**
-     * count down timer
+     * count down until the otp code is expired
      */
     private fun startCountdownTimer(
         onTick: (Int) -> Unit,

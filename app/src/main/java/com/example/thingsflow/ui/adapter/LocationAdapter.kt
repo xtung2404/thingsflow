@@ -5,12 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemLocationManagementBinding
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class LocationAdapter(
     private val onMenuClick: (IoTLocation) -> Unit
-): ListAdapter<IoTLocation, LocationAdapter.LocationViewHolder>(
+) : ListAdapter<IoTLocation, LocationAdapter.LocationViewHolder>(
     object : DiffUtil.ItemCallback<IoTLocation>() {
         override fun areItemsTheSame(oldItem: IoTLocation, newItem: IoTLocation): Boolean {
             return oldItem.uuid!!.contentEquals(newItem.uuid) && oldItem.label == newItem.label
@@ -21,12 +22,36 @@ class LocationAdapter(
         }
     }
 ) {
+    private var selectedLocationId: String? = null
+
     inner class LocationViewHolder(
         private val binding: LayoutItemLocationManagementBinding
-    ): RecyclerView.ViewHolder(binding.root) {
-        fun bind(loc: IoTLocation) {
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(loc: IoTLocation, isSelected: Boolean) {
             binding.apply {
                 txtLocLabel.text = loc.label
+                cbLocation.isChecked = isSelected
+                root.setBackgroundColor(
+                    if (isSelected)
+                        root.context.getColor(R.color.light_gray)
+                    else
+                        root.context.getColor(R.color.light_gray_10)
+                )
+
+                root.setOnClickListener {
+                    if (selectedLocationId != loc.uuid) {
+                        selectedLocationId = loc.uuid
+                        notifyDataSetChanged()
+                    }
+                }
+
+                cbLocation.setOnClickListener {
+                    if (selectedLocationId != loc.uuid) {
+                        selectedLocationId = loc.uuid
+                        notifyDataSetChanged()
+                    }
+                }
+
                 btnOption.setOnClickListener {
                     onMenuClick.invoke(loc)
                 }
@@ -44,6 +69,22 @@ class LocationAdapter(
     }
 
     override fun onBindViewHolder(holder: LocationViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val item = getItem(position)
+        val isSelected = item.uuid == selectedLocationId
+        holder.bind(item, isSelected)
+    }
+
+    fun setSelectedLocation(loc: IoTLocation) {
+        selectedLocationId = loc.uuid
+        notifyDataSetChanged()
+    }
+
+    fun setSelectedLocation(uuid: String) {
+        selectedLocationId = uuid
+        notifyDataSetChanged()
+    }
+
+    fun getSelectedLocation(): IoTLocation? {
+        return currentList.find { it.uuid == selectedLocationId }
     }
 }

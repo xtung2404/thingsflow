@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="@dimen/_space50dp">
+        android:paddingTop="@dimen/space_screen_super_small">
         <include layout="@layout/layout_toolbar"
             android:id="@+id/toolbar" />
         <LinearLayout

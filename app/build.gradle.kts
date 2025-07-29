@@ -56,6 +56,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(project(":thingflowsdk"))
     implementation(group = "", name = "rogocore", ext = "jar")
     implementation(group = "", name = "rogocloudapi", ext = "jar")
     implementation(group = "", name = "rogoplatform", ext = "jar")
@@ -64,11 +65,15 @@ dependencies {
     implementation(group = "", name = "rogosigmesh", ext = "jar")
     implementation(group = "", name = "rogocli", ext = "jar")
 
+    //GSON
     implementation ("com.google.code.gson:gson:2.10.1")
+    //OHKTTP - NET
     implementation ("com.squareup.okhttp3:okhttp:$okhttp3")
     implementation ("io.github.rburgst:okhttp-digest:2.6")
     implementation ("org.eclipse.paho:org.eclipse.paho.mqttv5.client:$paho_client")
+    //LOTTIE_ANIMATION
     implementation ("com.airbnb.android:lottie:$lottie")
+    //HILT
     implementation ("com.google.dagger:hilt-android:2.50")
     kapt ("com.google.dagger:hilt-android-compiler:2.50")
 

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="@dimen/_space50dp">
+        android:paddingTop="@dimen/space_screen_super_small">
         <include layout="@layout/layout_toolbar"
             android:id="@+id/toolbar"/>
         <LinearLayout
@@ -35,11 +35,18 @@
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/list_of_available_locations"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="@dimen/_space50dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_marginTop="@dimen/_space50dp"
+                android:layout_marginTop="@dimen/space_screen_small"
                 android:orientation="vertical">
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
@@ -51,8 +58,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_create"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="@dimen/_space10dp">
+                    android:gravity="center_vertical">
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="@dimen/_space20dp"
                         android:layout_height="@dimen/_space20dp"

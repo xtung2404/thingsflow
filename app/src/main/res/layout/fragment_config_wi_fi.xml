@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <include layout="@layout/layout_toolbar"
+        android:id="@+id/toolbar"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="45dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/connect_to_wifi"
+                    android:textSize="24sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/space_screen_small"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/make_sure_that_gateway_is_plugged"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/space_screen_super_small"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/available_wifi"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginVertical="@dimen/space_screen_small"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv_wifi"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_rescan"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="@dimen/_space20dp"
+                        android:layout_height="@dimen/_space20dp"
+                        android:layout_marginEnd="@dimen/space_screen_super_small"
+                        android:src="@drawable/ic_recycle"
+                        android:scaleType="centerInside" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rescan_wifi"
+                        android:textSize="@dimen/text_size_13"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </LinearLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_continue"
+                android:text="@string/to_continue"
+                android:textColor="@color/white"
+                android:paddingVertical="13dp"
+                android:background="@color/black"
+                android:textAllCaps="false"
+                android:layout_marginTop="@dimen/space_screen_small"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_connect_to_another_wifi"
+                android:text="@string/connect_to_another_wifi"
+                android:textColor="@color/black"
+                android:paddingVertical="13dp"
+                android:layout_marginTop="@dimen/space_screen_small"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_white_stroke_black"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>

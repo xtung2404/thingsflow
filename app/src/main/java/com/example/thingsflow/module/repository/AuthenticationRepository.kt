@@ -1,5 +1,6 @@
 package com.example.thingsflow.module.repository
 
+import com.example.thingflowsdk.core.FlowSdk
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback
@@ -9,14 +10,14 @@ class AuthenticationRepository @Inject constructor() {
     fun connectService(
         result: (Boolean) -> Unit
     ) {
-        SmartSdk.connectService(
+        FlowSdk.connectService(
             object : SmartSdkConnectCallback {
                 override fun onConnected(isAuthenticated: Boolean) {
                     result.invoke(isAuthenticated)
                 }
 
                 override fun onDisconnected() {
-                    SmartSdk.closeConnectionService()
+                    FlowSdk.closeServiceConnection()
                 }
             }
         )
@@ -29,7 +30,7 @@ class AuthenticationRepository @Inject constructor() {
         val isEmail = input.contains("@")
         val username = if (isEmail) null else input
         val emailAdr = if (isEmail) input else null
-        SmartSdk.signIn(
+        FlowSdk.signIn(
             username,
             emailAdr,
             null,
@@ -44,7 +45,7 @@ class AuthenticationRepository @Inject constructor() {
         pwd: String,
         callback: AuthRequestCallback
     ) {
-        SmartSdk.signUp(
+        FlowSdk.signUp(
             username,
             email,
             null,
@@ -56,14 +57,14 @@ class AuthenticationRepository @Inject constructor() {
     fun signOut(
         callback: AuthRequestCallback
     ) {
-        SmartSdk.signOut(callback)
+        FlowSdk.signOut(callback)
     }
 
     fun forgotPwd(
         email: String?,
         callback: AuthRequestCallback
     ) {
-        SmartSdk.forgot(
+        FlowSdk.forgot(
             email,
             callback
         )
@@ -74,7 +75,7 @@ class AuthenticationRepository @Inject constructor() {
         pwd: String?,
         callback: AuthRequestCallback
     ) {
-        SmartSdk.updatePasswordOrVerifyAccount(
+        FlowSdk.updatePasswordOrVerifyAccount(
             otp,
             pwd,
             callback

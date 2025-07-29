@@ -46,6 +46,7 @@ class LocationManagementFragment : BaseFragment<FragmentLocationManagementBindin
             }
         )
     }
+
     private val locationAdapter: LocationAdapter by lazy {
         LocationAdapter(
             onMenuClick = {
@@ -61,6 +62,9 @@ class LocationManagementFragment : BaseFragment<FragmentLocationManagementBindin
             rvLocation.adapter = locationAdapter
             locationViewModel.locationsLiveData.observe(requireActivity()) {
                 locationAdapter.submitList(it)
+                if (locationViewModel.getDefaultLocation() != null) {
+                    locationAdapter.setSelectedLocation(locationViewModel.getDefaultLocation()!!)
+                }
             }
         }
     }
@@ -78,6 +82,14 @@ class LocationManagementFragment : BaseFragment<FragmentLocationManagementBindin
         binding.apply {
             btnCreate.setOnClickListener {
                 findNavController().navigate(R.id.createLocationFragment)
+            }
+
+            btnContinue.setOnClickListener {
+                val selectedLocation = locationAdapter.getSelectedLocation()
+                selectedLocation?.let {
+                    locationViewModel.setDefaultLocation(it.uuid)
+                    findNavController().navigate(R.id.homeFragment)
+                }
             }
 
             btnSingOut.setOnClickListener {

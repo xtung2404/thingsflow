@@ -41,9 +41,9 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
     }
 
     /**
-     * sign up with email and password
+     * handle user's sign-up proccess.
+     * Required inputs: username, email, password
      */
-
     private fun signUp() {
         binding.apply {
             val username = edtUsername.text.toString()
@@ -71,7 +71,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
     }
 
     /**
-     * check valid of user's information
+     * check validation of user's information
      * @param email: email of user
      * @param password: password of user
      * @param confirmPwd: recheck the password

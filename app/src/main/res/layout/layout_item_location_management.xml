@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -8,13 +9,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/root"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingVertical="@dimen/_space4dp">
+        android:paddingVertical="@dimen/_space10dp"
+        android:paddingHorizontal="@dimen/space_screen_super_small"
+        android:layout_marginBottom="@dimen/_space12dp"
+        android:background="@color/light_gray">
         <CheckBox
             android:layout_width="@dimen/_space32dp"
             android:layout_height="@dimen/_space32dp"
-            android:id="@+id/cb_location"/>
+            android:id="@+id/cb_location"
+            android:button="@drawable/custom_checkbox"
+            android:layout_marginEnd="@dimen/_space3dp"
+            android:buttonTint="@null"
+            app:buttonTint="@null"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

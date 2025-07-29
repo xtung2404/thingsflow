@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:paddingVertical="@dimen/_space50dp">
+            <include layout="@layout/layout_toolbar"
+                android:id="@+id/toolbar"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="45dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wifi_info"
+                    android:textSize="24sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="23dp"
+                    android:layout_marginBottom="@dimen/_space20dp"/>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="@dimen/_space20dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/edt_ssid"
+                        android:paddingHorizontal="13dp"
+                        android:paddingVertical="14dp"
+                        android:textSize="13sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/bg_text_input_gray"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="13sp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/edt_pwd"
+                        android:paddingHorizontal="13dp"
+                        android:paddingVertical="14dp"
+                        android:textSize="13sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/bg_text_input_gray"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_connect"
+                    android:text="@string/connect"
+                    android:textColor="@color/white"
+                    android:paddingVertical="13dp"
+                    android:background="@color/black"
+                    android:textAllCaps="false"
+                    android:layout_marginTop="@dimen/_space30dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

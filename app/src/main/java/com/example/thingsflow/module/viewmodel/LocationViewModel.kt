@@ -8,6 +8,7 @@ import com.example.thingsflow.module.repository.LocationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 import javax.inject.Inject
 
@@ -60,4 +61,11 @@ class LocationViewModel @Inject constructor(val repo: LocationRepository): ViewM
             )
         }
     }
+
+    fun setDefaultLocation(uuid: String) {
+        viewModelScope.launch {
+            repo.setDefaultLocation(uuid)
+        }
+    }
+    fun getDefaultLocation(): String? = repo.getDefaultLocation()
 }

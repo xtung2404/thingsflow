@@ -7,19 +7,18 @@ import com.example.thingsflow.module.repository.AuthenticationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
+import rogo.iot.module.rogocore.sdk.SmartSdk
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(val repo: AuthenticationRepository) :
     ViewModel() {
-    fun connectService(): MutableLiveData<Boolean> {
-        val result = MutableLiveData<Boolean>()
+    fun connectService(
+        result: (Boolean) -> Unit
+    ) {
         viewModelScope.launch {
-            repo.connectService {
-                result.postValue(it)
-            }
+            repo.connectService(result)
         }
-        return result
     }
 
     fun signIn(
