@@ -3,12 +3,11 @@ package com.example.thingsflow.ui.authentication
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
-
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
-import com.example.thingsflow.databinding.FragmentVerifyOTPBinding
-import com.example.thingsflow.module.viewmodel.AuthenticationViewModel
+import com.example.thingsflow.databinding.FragmentVerifyResetPwdOtpBinding
+import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.ui.BaseFragment
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,30 +20,29 @@ import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 import rogo.iot.module.platform.ILogR
 
 @AndroidEntryPoint
-class VerifyOTPFragment : BaseFragment<FragmentVerifyOTPBinding>() {
+class FragmentVerifyResetPwdOtp : BaseFragment<FragmentVerifyResetPwdOtpBinding>() {
     override val layoutId: Int
-        get() = R.layout.fragment_verify_o_t_p
-
-    private val authenticationViewModel by viewModels<AuthenticationViewModel>()
-    private val TAG = "VerifyOTPFragment"
+        get() = R.layout.fragment_verify_reset_pwd_otp
+    private val vmAuthentication by viewModels<VMAuthentication>()
+    private val TAG = "VerifyResetPwdOtpFragment"
     private var countDownTiming = 60
     private var countdownJob: Job? = null
+
     override fun initVariable() {
         super.initVariable()
-        startCountdownTimer(
-            onTick = {
-                binding.apply {
+        binding.apply {
+            txtSendingOtp.text = resources.getString(R.string.sending_otp)
+            txtTimeOut.text = "${countDownTiming} s"
+            startCountdownTimer(
+                onTick = {
                     txtTimeOut.text = "${it} s"
-                }
-            },
-            onFinish = {
-                binding.apply {
+                },
+                onFinish = {
                     txtSendingOtp.text = resources.getString(R.string.otp_code_is_false)
                     txtTimeOut.text = resources.getString(R.string.resend)
                 }
-
-            }
-        )
+            )
+        }
     }
 
     override fun initView() {
@@ -55,7 +53,6 @@ class VerifyOTPFragment : BaseFragment<FragmentVerifyOTPBinding>() {
                 findNavController().popBackStack()
             }
         }
-
     }
 
     override fun initAction() {
@@ -69,6 +66,7 @@ class VerifyOTPFragment : BaseFragment<FragmentVerifyOTPBinding>() {
                 edtOtp5,
                 edtOtp6
             )
+
             edtOtps.forEachIndexed { i, editText ->
                 //set required inputs are uppercase
                 editText.filters = arrayOf(
@@ -123,7 +121,8 @@ class VerifyOTPFragment : BaseFragment<FragmentVerifyOTPBinding>() {
 
             btnConfirm.setOnClickListener {
                 val otpCode = edtOtps.joinToString("") { it.text.toString() }
-                handleOtpVerification(otpCode)
+                val newPwd = edtPwd.text.toString()
+                handleOtpVerification(otpCode, newPwd)
             }
         }
     }
@@ -131,18 +130,20 @@ class VerifyOTPFragment : BaseFragment<FragmentVerifyOTPBinding>() {
     /**
      * verify otp code
      * @param otpCode: code user got from mail
+     * @param newPwd: new password of user
      */
     private fun handleOtpVerification(
-        otpCode: String
+        otpCode: String,
+        newPwd: String
     ) {
-        authenticationViewModel.handleOtpVerification(
+        vmAuthentication.handleOtpVerification(
             otpCode,
-            null,
+            newPwd,
             object : AuthRequestCallback {
                 override fun onSuccess() {
                     CoroutineScope(Dispatchers.Main).launch {
                         countdownJob?.cancel()
-                        findNavController().navigate(R.id.createLocationFragment)
+                        findNavController().navigate(R.id.locationManagementFragment)
                     }
                 }
 
@@ -155,7 +156,7 @@ class VerifyOTPFragment : BaseFragment<FragmentVerifyOTPBinding>() {
     }
 
     /**
-     * count down until the otp is expired
+     * count down until the otp code is expired
      */
     private fun startCountdownTimer(
         onTick: (Int) -> Unit,
@@ -169,4 +170,5 @@ class VerifyOTPFragment : BaseFragment<FragmentVerifyOTPBinding>() {
             onFinish()
         }
     }
+
 }

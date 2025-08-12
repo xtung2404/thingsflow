@@ -1,15 +1,14 @@
 package com.example.thingsflow.ui.location
 
-import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentLocationManagementBinding
-import com.example.thingsflow.module.viewmodel.AuthenticationViewModel
-import com.example.thingsflow.module.viewmodel.LocationViewModel
+import com.example.thingsflow.module.viewmodel.VMAuthentication
+import com.example.thingsflow.module.viewmodel.VMLocation
 import com.example.thingsflow.ui.BaseFragment
-import com.example.thingsflow.ui.adapter.LocationAdapter
+import com.example.thingsflow.ui.adapter.AdapterLocation
 import com.example.thingsflow.ui.dialog.DialogDeleteLocation
 import com.example.thingsflow.ui.dialog.DialogEditLocation
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,12 +18,12 @@ import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 
 @AndroidEntryPoint
-class LocationManagementFragment : BaseFragment<FragmentLocationManagementBinding>() {
+class FragmentLocationManagement : BaseFragment<FragmentLocationManagementBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_location_management
 
-    private val locationViewModel by activityViewModels<LocationViewModel>()
-    private val authenticationViewModel by viewModels<AuthenticationViewModel>()
+    private val vmLocation by activityViewModels<VMLocation>()
+    private val vmAuthentication by viewModels<VMAuthentication>()
     private val dialogEditLocation: DialogEditLocation by lazy {
         DialogEditLocation(
             requireContext(),
@@ -47,8 +46,8 @@ class LocationManagementFragment : BaseFragment<FragmentLocationManagementBindin
         )
     }
 
-    private val locationAdapter: LocationAdapter by lazy {
-        LocationAdapter(
+    private val locationAdapter: AdapterLocation by lazy {
+        AdapterLocation(
             onMenuClick = {
                 dialogEditLocation.show(it)
             }
@@ -58,12 +57,12 @@ class LocationManagementFragment : BaseFragment<FragmentLocationManagementBindin
     override fun initVariable() {
         super.initVariable()
         binding.apply {
-            locationViewModel.refresh()
+            vmLocation.refresh()
             rvLocation.adapter = locationAdapter
-            locationViewModel.locationsLiveData.observe(requireActivity()) {
+            vmLocation.locationsLiveData.observe(requireActivity()) {
                 locationAdapter.submitList(it)
-                if (locationViewModel.getDefaultLocation() != null) {
-                    locationAdapter.setSelectedLocation(locationViewModel.getDefaultLocation()!!)
+                if (vmLocation.getDefaultLocation() != null) {
+                    locationAdapter.setSelectedLocation(vmLocation.getDefaultLocation()!!)
                 }
             }
         }
@@ -87,13 +86,13 @@ class LocationManagementFragment : BaseFragment<FragmentLocationManagementBindin
             btnContinue.setOnClickListener {
                 val selectedLocation = locationAdapter.getSelectedLocation()
                 selectedLocation?.let {
-                    locationViewModel.setDefaultLocation(it.uuid)
+                    vmLocation.setDefaultLocation(it.uuid)
                     findNavController().navigate(R.id.homeFragment)
                 }
             }
 
             btnSingOut.setOnClickListener {
-                authenticationViewModel
+                vmAuthentication
                     .signOut(
                         object : AuthRequestCallback {
                             override fun onSuccess() {

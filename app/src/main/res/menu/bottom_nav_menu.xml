@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_dashboard"
+        android:title="Dashboard"
+        android:icon="@drawable/ic_add" />
+
+    <item
+        android:id="@+id/nav_flow"
+        android:title="Flow"
+        android:icon="@drawable/ic_add" />
+
+    <item
+        android:id="@+id/nav_statisik"
+        android:title="Statistik"
+        android:icon="@drawable/ic_add" />
+
+    <item
+        android:id="@+id/nav_device"
+        android:title="Device"
+        android:icon="@drawable/ic_add" />
+</menu>

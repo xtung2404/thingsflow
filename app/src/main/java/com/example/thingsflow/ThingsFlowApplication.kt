@@ -2,11 +2,8 @@ package com.example.thingsflow
 
 import android.app.Application
 import com.example.thingflowsdk.core.FlowSdk
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 import rogo.iot.module.platform.ILogR
-import rogo.iot.module.rogocore.app.AndroidIoTPlatform
-import rogo.iot.module.rogocore.sdk.SmartSdk
 
 @HiltAndroidApp
 class ThingsFlowApplication: Application() {

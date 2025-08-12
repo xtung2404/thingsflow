@@ -6,7 +6,7 @@ import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 import javax.inject.Inject
 
-class LocationRepository @Inject constructor() {
+class RepoLocation @Inject constructor() {
     fun getLocationList(): List<IoTLocation> = SmartSdk.locationHandler().all.toList()
 
     fun createLocation(

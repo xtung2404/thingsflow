@@ -3,11 +3,12 @@ package com.example.thingsflow.ui.authentication
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
-import com.example.thingsflow.databinding.FragmentVerifyResetPwdOtpBinding
-import com.example.thingsflow.module.viewmodel.AuthenticationViewModel
+import com.example.thingsflow.databinding.FragmentVerifyOTPBinding
+import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.ui.BaseFragment
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,29 +21,30 @@ import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 import rogo.iot.module.platform.ILogR
 
 @AndroidEntryPoint
-class VerifyResetPwdOtpFragment : BaseFragment<FragmentVerifyResetPwdOtpBinding>() {
+class FragmentVerifyOTP : BaseFragment<FragmentVerifyOTPBinding>() {
     override val layoutId: Int
-        get() = R.layout.fragment_verify_reset_pwd_otp
-    private val authenticationViewModel by viewModels<AuthenticationViewModel>()
-    private val TAG = "VerifyResetPwdOtpFragment"
+        get() = R.layout.fragment_verify_o_t_p
+
+    private val vmAuthentication by viewModels<VMAuthentication>()
+    private val TAG = "VerifyOTPFragment"
     private var countDownTiming = 60
     private var countdownJob: Job? = null
-
     override fun initVariable() {
         super.initVariable()
-        binding.apply {
-            txtSendingOtp.text = resources.getString(R.string.sending_otp)
-            txtTimeOut.text = "${countDownTiming} s"
-            startCountdownTimer(
-                onTick = {
+        startCountdownTimer(
+            onTick = {
+                binding.apply {
                     txtTimeOut.text = "${it} s"
-                },
-                onFinish = {
+                }
+            },
+            onFinish = {
+                binding.apply {
                     txtSendingOtp.text = resources.getString(R.string.otp_code_is_false)
                     txtTimeOut.text = resources.getString(R.string.resend)
                 }
-            )
-        }
+
+            }
+        )
     }
 
     override fun initView() {
@@ -53,6 +55,7 @@ class VerifyResetPwdOtpFragment : BaseFragment<FragmentVerifyResetPwdOtpBinding>
                 findNavController().popBackStack()
             }
         }
+
     }
 
     override fun initAction() {
@@ -66,7 +69,6 @@ class VerifyResetPwdOtpFragment : BaseFragment<FragmentVerifyResetPwdOtpBinding>
                 edtOtp5,
                 edtOtp6
             )
-
             edtOtps.forEachIndexed { i, editText ->
                 //set required inputs are uppercase
                 editText.filters = arrayOf(
@@ -121,8 +123,7 @@ class VerifyResetPwdOtpFragment : BaseFragment<FragmentVerifyResetPwdOtpBinding>
 
             btnConfirm.setOnClickListener {
                 val otpCode = edtOtps.joinToString("") { it.text.toString() }
-                val newPwd = edtPwd.text.toString()
-                handleOtpVerification(otpCode, newPwd)
+                handleOtpVerification(otpCode)
             }
         }
     }
@@ -130,20 +131,18 @@ class VerifyResetPwdOtpFragment : BaseFragment<FragmentVerifyResetPwdOtpBinding>
     /**
      * verify otp code
      * @param otpCode: code user got from mail
-     * @param newPwd: new password of user
      */
     private fun handleOtpVerification(
-        otpCode: String,
-        newPwd: String
+        otpCode: String
     ) {
-        authenticationViewModel.handleOtpVerification(
+        vmAuthentication.handleOtpVerification(
             otpCode,
-            newPwd,
+            null,
             object : AuthRequestCallback {
                 override fun onSuccess() {
                     CoroutineScope(Dispatchers.Main).launch {
                         countdownJob?.cancel()
-                        findNavController().navigate(R.id.locationManagementFragment)
+                        findNavController().navigate(R.id.createLocationFragment)
                     }
                 }
 
@@ -156,7 +155,7 @@ class VerifyResetPwdOtpFragment : BaseFragment<FragmentVerifyResetPwdOtpBinding>
     }
 
     /**
-     * count down until the otp code is expired
+     * count down until the otp is expired
      */
     private fun startCountdownTimer(
         onTick: (Int) -> Unit,
@@ -170,5 +169,4 @@ class VerifyResetPwdOtpFragment : BaseFragment<FragmentVerifyResetPwdOtpBinding>
             onFinish()
         }
     }
-
 }

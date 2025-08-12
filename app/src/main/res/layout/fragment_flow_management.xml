@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/list_of_flow_scenario"
+            android:textSize="@dimen/text_size_24"
+            android:textColor="@color/black"
+            android:layout_marginTop="40dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/list_of_using_flow_scenario"
+            android:textSize="@dimen/text_size_10"
+            android:textColor="@color/black"
+            android:layout_marginTop="@dimen/space_screen_small" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/you_dont_have_any_scenario"
+                android:textSize="@dimen/text_size_15"
+                android:textColor="@color/black"
+                android:layout_marginTop="@dimen/space_screen_small" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_create"
+                android:orientation="horizontal"
+                android:background="@color/emerald"
+                android:layout_marginTop="@dimen/_space20dp"
+                android:paddingHorizontal="@dimen/_space30dp"
+                android:paddingVertical="@dimen/_space10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_add"
+                    app:tint="@color/white"
+                    android:layout_marginEnd="@dimen/_space5dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_flow_scenario"
+                    android:textSize="@dimen/text_size_15"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

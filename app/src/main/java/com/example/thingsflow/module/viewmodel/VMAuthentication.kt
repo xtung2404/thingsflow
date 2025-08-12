@@ -1,17 +1,15 @@
 package com.example.thingsflow.module.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thingsflow.module.repository.AuthenticationRepository
+import com.example.thingsflow.module.repository.RepoAuthentication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
-import rogo.iot.module.rogocore.sdk.SmartSdk
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthenticationViewModel @Inject constructor(val repo: AuthenticationRepository) :
+class VMAuthentication @Inject constructor(val repo: RepoAuthentication) :
     ViewModel() {
     fun connectService(
         result: (Boolean) -> Unit

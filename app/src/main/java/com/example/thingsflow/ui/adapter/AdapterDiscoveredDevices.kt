@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.databinding.LayoutItemDiscoveredDeviceBinding
 import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
 
-class DiscoveredDevicesAdapter(
+class AdapterDiscoveredDevices(
     private val onItemSelected: (IoTDirectDeviceInfo) -> Unit
 ):
-ListAdapter<IoTDirectDeviceInfo, DiscoveredDevicesAdapter.DiscoveredDevicesViewHolder>(
+ListAdapter<IoTDirectDeviceInfo, AdapterDiscoveredDevices.DiscoveredDevicesViewHolder>(
     object : DiffUtil.ItemCallback<IoTDirectDeviceInfo>() {
         override fun areItemsTheSame(
             oldItem: IoTDirectDeviceInfo,

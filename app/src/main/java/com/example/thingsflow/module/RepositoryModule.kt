@@ -1,9 +1,9 @@
 package com.example.thingsflow.module
 
-import com.example.thingsflow.module.repository.AuthenticationRepository
-import com.example.thingsflow.module.repository.ConfigWileDirectRepository
-import com.example.thingsflow.module.repository.GroupRepository
-import com.example.thingsflow.module.repository.LocationRepository
+import com.example.thingsflow.module.repository.RepoAuthentication
+import com.example.thingsflow.module.repository.RepoConfigWileDirect
+import com.example.thingsflow.module.repository.RepoGroup
+import com.example.thingsflow.module.repository.RepoLocation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,15 +15,15 @@ import javax.inject.Singleton
 class RepositoryModule {
     @Singleton
     @Provides
-    fun provideAuthenticationRepository() = AuthenticationRepository()
+    fun provideRepoAuthentication() = RepoAuthentication()
     @Singleton
     @Provides
-    fun provideLocationRepository() = LocationRepository()
+    fun provideRepoLocation() = RepoLocation()
     @Singleton
     @Provides
-    fun provideConfigWileDirectRepository() = ConfigWileDirectRepository()
+    fun provideRepoConfigWileDirect() = RepoConfigWileDirect()
 
     @Singleton
     @Provides
-    fun provideGroupRepository() = GroupRepository()
+    fun provideRepoGroup() = RepoGroup()
 }

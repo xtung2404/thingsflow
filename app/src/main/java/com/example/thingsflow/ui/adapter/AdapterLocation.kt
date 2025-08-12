@@ -9,9 +9,9 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemLocationManagementBinding
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
-class LocationAdapter(
+class AdapterLocation(
     private val onMenuClick: (IoTLocation) -> Unit
-) : ListAdapter<IoTLocation, LocationAdapter.LocationViewHolder>(
+) : ListAdapter<IoTLocation, AdapterLocation.LocationViewHolder>(
     object : DiffUtil.ItemCallback<IoTLocation>() {
         override fun areItemsTheSame(oldItem: IoTLocation, newItem: IoTLocation): Boolean {
             return oldItem.uuid!!.contentEquals(newItem.uuid) && oldItem.label == newItem.label

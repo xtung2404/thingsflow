@@ -4,37 +4,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thingsflow.module.repository.GroupRepository
-import com.example.thingsflow.module.repository.LocationRepository
+import com.example.thingsflow.module.repository.RepoLocation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import rogo.iot.module.platform.callback.RequestCallback
-import rogo.iot.module.rogocore.sdk.SmartSdk
-import rogo.iot.module.rogocore.sdk.entity.IoTGroup
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 import javax.inject.Inject
 
 @HiltViewModel
-class GroupViewModel @Inject constructor(val repo: GroupRepository): ViewModel() {
-    private val _groupsLiveData: MutableLiveData<List<IoTGroup>> = MutableLiveData()
-    val groupsLiveData: LiveData<List<IoTGroup>> = _groupsLiveData
+class VMLocation @Inject constructor(val repo: RepoLocation): ViewModel() {
+    private val _locationsLiveData: MutableLiveData<List<IoTLocation>> = MutableLiveData()
+    val locationsLiveData: LiveData<List<IoTLocation>> = _locationsLiveData
 
 
-    fun getAll(): List<IoTGroup> {
-        val groups = repo.getAll()
-        _groupsLiveData.value = groups
-        return groups
-    }
     fun refresh() {
-        _groupsLiveData.value = repo.getAll()
+        _locationsLiveData.value = repo.getLocationList()
     }
-    fun create(
+    fun createLocation(
         label: String,
         type: String,
-        callback: RequestCallback<IoTGroup>
+        callback: RequestCallback<IoTLocation>
     ) {
         viewModelScope.launch {
-            repo.create(
+            repo.createLocation(
                 label,
                 type,
                 callback
@@ -44,13 +36,13 @@ class GroupViewModel @Inject constructor(val repo: GroupRepository): ViewModel()
     }
 
     fun update(
-        ioTGroup: IoTGroup,
+        ioTLocation: IoTLocation,
         label: String,
-        callback: RequestCallback<IoTGroup>
+        callback: RequestCallback<IoTLocation>
     ) {
         viewModelScope.launch {
-            repo.update(
-                ioTGroup,
+            repo.editLocation(
+                ioTLocation,
                 label,
                 callback
             )
@@ -62,10 +54,17 @@ class GroupViewModel @Inject constructor(val repo: GroupRepository): ViewModel()
         callback: RequestCallback<Boolean>
     ) {
         viewModelScope.launch {
-            repo.delete(
+            repo.deleteLocation(
                 uuid,
                 callback
             )
         }
     }
+
+    fun setDefaultLocation(uuid: String) {
+        viewModelScope.launch {
+            repo.setDefaultLocation(uuid)
+        }
+    }
+    fun getDefaultLocation(): String? = repo.getDefaultLocation()
 }

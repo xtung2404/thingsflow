@@ -5,10 +5,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentCreateLocationBinding
-import com.example.thingsflow.module.viewmodel.AuthenticationViewModel
-import com.example.thingsflow.module.viewmodel.LocationViewModel
+import com.example.thingsflow.module.viewmodel.VMAuthentication
+import com.example.thingsflow.module.viewmodel.VMLocation
 import com.example.thingsflow.ui.BaseFragment
-import com.example.thingsflow.ui.adapter.LocationTypeSpinnerAdapter
+import com.example.thingsflow.ui.adapter.AdapterSpinnerLocationType
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -19,19 +19,19 @@ import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 @AndroidEntryPoint
-class CreateLocationFragment : BaseFragment<FragmentCreateLocationBinding>() {
+class FragmentCreateLocation : BaseFragment<FragmentCreateLocationBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_create_location
 
-    private val locationViewModel by viewModels<LocationViewModel>()
-    private val authenticationViewModel by viewModels<AuthenticationViewModel>()
-    private lateinit var locationTypeSpinnerAdapter: LocationTypeSpinnerAdapter
+    private val vmLocation by viewModels<VMLocation>()
+    private val vmAuthentication by viewModels<VMAuthentication>()
+    private lateinit var locationTypeSpinnerAdapter: AdapterSpinnerLocationType
     private var isCreatingFirstLocation: Boolean = false
     override fun initVariable() {
         super.initVariable()
         binding.apply {
             isCreatingFirstLocation = findNavController().previousBackStackEntry?.destination?.id == R.id.signUpFragment
-            locationTypeSpinnerAdapter = LocationTypeSpinnerAdapter(
+            locationTypeSpinnerAdapter = AdapterSpinnerLocationType(
                 requireContext(),
                 resources.getStringArray(R.array.location_type).toList()
             )
@@ -81,7 +81,7 @@ class CreateLocationFragment : BaseFragment<FragmentCreateLocationBinding>() {
         label: String,
         type: String
     ) {
-        locationViewModel.createLocation(
+        vmLocation.createLocation(
             label,
             type,
             object : RequestCallback<IoTLocation> {
@@ -100,7 +100,7 @@ class CreateLocationFragment : BaseFragment<FragmentCreateLocationBinding>() {
     }
 
     private fun signOut() {
-        authenticationViewModel
+        vmAuthentication
             .signOut(
                 object : AuthRequestCallback {
                     override fun onSuccess() {

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.example.thingsflow.ui.SplashFragment"
+        android:name="com.example.thi ngsflow.ui.FragmentSplash"
         android:label="SplashFragment" >
         <action
             android:id="@+id/action_splashFragment_to_signInFragment"
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.example.thingsflow.ui.authentication.SignInFragment"
+        android:name="com.example.thingsflow.ui.authentication.FragmentSignIn"
         android:label="SignInFragment" >
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.thingsflow.ui.authentication.SignUpFragment"
+        android:name="com.example.thingsflow.ui.authentication.FragmentSignUp"
         android:label="SignUpFragment" >
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
@@ -45,7 +45,7 @@
     </fragment>
     <fragment
         android:id="@+id/verifyOTPFragment"
-        android:name="com.example.thingsflow.ui.authentication.VerifyOTPFragment"
+        android:name="com.example.thingsflow.ui.authentication.FragmentVerifyOTP"
         android:label="VerifyOTPFragment" >
         <action
             android:id="@+id/action_verifyOTPFragment_to_createLocationFragment"
@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/locationManagementFragment"
-        android:name="com.example.thingsflow.ui.location.LocationManagementFragment"
+        android:name="com.example.thingsflow.ui.location.FragmentLocationManagement"
         android:label="LocationManagementFragment" >
         <action
             android:id="@+id/action_locationManagementFragment_to_createLocationFragment"
@@ -64,7 +64,7 @@
     </fragment>
     <fragment
         android:id="@+id/createLocationFragment"
-        android:name="com.example.thingsflow.ui.location.CreateLocationFragment"
+        android:name="com.example.thingsflow.ui.location.FragmentCreateLocation"
         android:label="CreateLocationFragment" >
           <action
             android:id="@+id/action_createLocationFragment_to_locationManagementFragment"
@@ -75,7 +75,7 @@
     </fragment>
     <fragment
         android:id="@+id/resetPasswordFragment"
-        android:name="com.example.thingsflow.ui.authentication.ResetPasswordFragment"
+        android:name="com.example.thingsflow.ui.authentication.FragmentResetPassword"
         android:label="ResetPasswordFragment" >
         <action
             android:id="@+id/action_resetPasswordFragment_to_signInFragment"
@@ -86,7 +86,7 @@
     </fragment>
     <fragment
         android:id="@+id/verifyResetPwdOtpFragment"
-        android:name="com.example.thingsflow.ui.authentication.VerifyResetPwdOtpFragment"
+        android:name="com.example.thingsflow.ui.authentication.FragmentVerifyResetPwdOtp"
         android:label="VerifyResetPwdOtpFragment" >
         <action
             android:id="@+id/action_verifyResetPwdOtpFragment_to_resetPasswordFragment"
@@ -97,15 +97,18 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.thingsflow.ui.HomeFragment"
+        android:name="com.example.thingsflow.ui.FragmentDashboard"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_identifyDeviceFragment"
             app:destination="@id/identifyDeviceFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_fragmentFlowScenManagement"
+            app:destination="@id/fragmentFlowScenManagement" />
     </fragment>
     <fragment
         android:id="@+id/identifyDeviceFragment"
-        android:name="com.example.thingsflow.ui.deviceConfig.IdentifyDeviceFragment"
+        android:name="com.example.thingsflow.ui.deviceConfig.FragmentIdentifyDevice"
         android:label="IdentifyDeviceFragment" >
         <action
             android:id="@+id/action_identifyDeviceFragment_to_homeFragment"
@@ -116,7 +119,7 @@
     </fragment>
     <fragment
         android:id="@+id/configWiFiFragment"
-        android:name="com.example.thingsflow.ui.deviceConfig.ConfigWiFiFragment"
+        android:name="com.example.thingsflow.ui.deviceConfig.FragmentConfigWiFi"
         android:label="ConfigWiFiFragment" >
         <action
             android:id="@+id/action_configWiFiFragment_to_assignDeviceToGroupFragment"
@@ -124,7 +127,7 @@
     </fragment>
     <fragment
         android:id="@+id/assignDeviceToGroupFragment"
-        android:name="com.example.thingsflow.ui.deviceConfig.AssignDeviceToGroupFragment"
+        android:name="com.example.thingsflow.ui.deviceConfig.FragmentAssignDeviceToGroup"
         android:label="AssignDeviceToGroupFragment" >
         <action
             android:id="@+id/action_assignDeviceToGroupFragment_to_setDeviceLabelFragment"
@@ -132,6 +135,18 @@
     </fragment>
     <fragment
         android:id="@+id/setDeviceLabelFragment"
-        android:name="com.example.thingsflow.ui.deviceConfig.SetDeviceLabelFragment"
+        android:name="com.example.thingsflow.ui.deviceConfig.FragmentSetDeviceLabel"
         android:label="SetDeviceLabelFragment" />
+    <fragment
+        android:id="@+id/fragmentFlowScenManagement"
+        android:name="com.example.thingsflow.ui.flow.FragmentFlowScenManagement"
+        android:label="FragmentFlowScenManagement" >
+        <action
+            android:id="@+id/action_fragmentFlowScenManagement_to_fragmentFlowScenario"
+            app:destination="@id/fragmentFlowScenario" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentFlowScenario"
+        android:name="com.example.thingsflow.ui.flow.FragmentFlowScenario"
+        android:label="FragmentFlowScenario" />
 </navigation>

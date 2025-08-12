@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.ThingsFlow" parent="Base.Theme.ThingsFlow" />
+
+    <style name="BottomNavigationView.TextOnly" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconSize">0dp</item>
+        <item name="itemIconTint">@null</item>
+        <item name="itemTextAppearanceActive">@style/BottomNavText</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavText</item>
+    </style>
+
+    <style name="BottomNavText" parent="@android:style/TextAppearance.Small">
+        <item name="android:gravity">center</item>
+    </style>
 </resources>

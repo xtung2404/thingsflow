@@ -1,18 +1,12 @@
 package com.example.thingsflow.ui.deviceConfig
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentConfigWiFiBinding
-import com.example.thingsflow.module.viewmodel.ConfigWileDirectViewModel
+import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
 import com.example.thingsflow.ui.BaseFragment
-import com.example.thingsflow.ui.adapter.DiscoveredWiFiAdapter
+import com.example.thingsflow.ui.adapter.AdapterDiscoveredWiFi
 import com.example.thingsflow.ui.dialog.DialogConfigWiFi
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,13 +14,13 @@ import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.platform.entity.IoTWifiInfo
 
 @AndroidEntryPoint
-class ConfigWiFiFragment : BaseFragment<FragmentConfigWiFiBinding>() {
+class FragmentConfigWiFi : BaseFragment<FragmentConfigWiFiBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_config_wi_fi
 
-    private val configWileDirectViewModel by activityViewModels<ConfigWileDirectViewModel>()
-    private val discoveredWiFiAdapter: DiscoveredWiFiAdapter by lazy {
-        DiscoveredWiFiAdapter(
+    private val vmConfigWileDirect by activityViewModels<VMConfigWileDirect>()
+    private val adapterDiscoveredWiFi: AdapterDiscoveredWiFi by lazy {
+        AdapterDiscoveredWiFi(
             onWiFiSelected = {
                 dialogConfigWiFi.show(
                     it.ssid
@@ -73,7 +67,7 @@ class ConfigWiFiFragment : BaseFragment<FragmentConfigWiFiBinding>() {
     override fun initVariable() {
         super.initVariable()
         binding.apply {
-            rvWifi.adapter = discoveredWiFiAdapter
+            rvWifi.adapter = adapterDiscoveredWiFi
         }
     }
 
@@ -81,12 +75,12 @@ class ConfigWiFiFragment : BaseFragment<FragmentConfigWiFiBinding>() {
      * request device to scan for available WiFis in spanning time of 8 seconds
      */
     fun scanWifi() {
-        discoveredWiFiAdapter.submitList(listOf())
-        configWileDirectViewModel.scanWiFi(
+        adapterDiscoveredWiFi.submitList(listOf())
+        vmConfigWileDirect.scanWiFi(
             object: RequestCallback<Collection<IoTWifiInfo>> {
                 override fun onSuccess(p0: Collection<IoTWifiInfo>?) {
                     p0?.let {
-                        discoveredWiFiAdapter.submitList(it.toList())
+                        adapterDiscoveredWiFi.submitList(it.toList())
                     }
                 }
 

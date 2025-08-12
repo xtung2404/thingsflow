@@ -4,7 +4,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentSignUpBinding
-import com.example.thingsflow.module.viewmodel.AuthenticationViewModel
+import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.ui.BaseFragment
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,11 +14,11 @@ import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 
 @AndroidEntryPoint
-class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
+class FragmentSignUp : BaseFragment<FragmentSignUpBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_sign_up
 
-    private val authenticationViewModel by viewModels<AuthenticationViewModel>()
+    private val vmAuthentication by viewModels<VMAuthentication>()
 
     override fun initView() {
         super.initView()
@@ -50,7 +50,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
             val email = edtEmail.text.toString()
             val pwd = edtPwd.text.toString()
             if (isUserInfoValid(username, email, pwd)) {
-                authenticationViewModel.signUp(
+                vmAuthentication.signUp(
                     username,
                     email,
                     pwd,

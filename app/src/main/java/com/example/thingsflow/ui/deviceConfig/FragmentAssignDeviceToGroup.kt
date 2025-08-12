@@ -2,25 +2,24 @@ package com.example.thingsflow.ui.deviceConfig
 
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentAssignDeviceToGroupBinding
-import com.example.thingsflow.module.viewmodel.GroupViewModel
+import com.example.thingsflow.module.viewmodel.VMGroup
 import com.example.thingsflow.ui.BaseFragment
-import com.example.thingsflow.ui.adapter.GroupSpinnerAdapter
+import com.example.thingsflow.ui.adapter.AdapterSpinnerGroup
 import com.example.thingsflow.ui.dialog.DialogCreateGroup
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
 import rogo.iot.module.rogocore.sdk.entity.IoTGroup
 
 @AndroidEntryPoint
-class AssignDeviceToGroupFragment : BaseFragment<FragmentAssignDeviceToGroupBinding>() {
+class FragmentAssignDeviceToGroup : BaseFragment<FragmentAssignDeviceToGroupBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_assign_device_to_group
 
-    private val groupViewModel by activityViewModels<GroupViewModel>()
-    private lateinit var groupSpinnerAdapter: GroupSpinnerAdapter
+    private val vmGroup by activityViewModels<VMGroup>()
+    private lateinit var adapterSpinnerGroup: AdapterSpinnerGroup
     private val dialogCreateGroup: DialogCreateGroup by lazy {
         DialogCreateGroup(
             requireContext(),
@@ -33,12 +32,12 @@ class AssignDeviceToGroupFragment : BaseFragment<FragmentAssignDeviceToGroupBind
             toolbar.txtTitle.text = getFragmentLabel(requireContext(), findNavController().previousBackStackEntry?.destination?.id)
             val availableGroups = arrayListOf<IoTGroup?>()
             availableGroups.add(null)
-            availableGroups.addAll(groupViewModel.getAll())
-            groupSpinnerAdapter = GroupSpinnerAdapter(
+            availableGroups.addAll(vmGroup.getAll())
+            adapterSpinnerGroup = AdapterSpinnerGroup(
                 requireContext(),
                 availableGroups.toList()
             )
-            spinnerGroup.adapter = groupSpinnerAdapter
+            spinnerGroup.adapter = adapterSpinnerGroup
         }
     }
 

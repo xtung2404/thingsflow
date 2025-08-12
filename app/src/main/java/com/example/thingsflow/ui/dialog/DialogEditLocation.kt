@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.DialogEditLocationBinding
-import com.example.thingsflow.module.viewmodel.LocationViewModel
+import com.example.thingsflow.module.viewmodel.VMLocation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,8 +21,8 @@ class DialogEditLocation(
     R.layout.dialog_edit_location
 ) {
     private var ioTLocation: IoTLocation?= null
-    private val locationViewModel: LocationViewModel by lazy {
-        ViewModelProvider(viewModelOwner)[LocationViewModel::class.java]
+    private val vmLocation: VMLocation by lazy {
+        ViewModelProvider(viewModelOwner)[VMLocation::class.java]
     }
     override fun setupView(binding: DialogEditLocationBinding) {
         binding.apply {
@@ -37,13 +37,13 @@ class DialogEditLocation(
 
             btnSave.setOnClickListener {
                 ioTLocation?.let {
-                    locationViewModel.update(
+                    vmLocation.update(
                         it,
                         edtLabel.text.toString(),
                         object : RequestCallback<IoTLocation> {
                             override fun onSuccess(p0: IoTLocation?) {
                                 CoroutineScope(Dispatchers.Main).launch {
-                                    locationViewModel.refresh()
+                                    vmLocation.refresh()
                                     dismiss()
                                 }
                             }

@@ -1,20 +1,13 @@
 package com.example.thingsflow.ui.deviceConfig
 
-import android.content.res.Resources
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentIdentifyDeviceBinding
-import com.example.thingsflow.module.viewmodel.ConfigWileDirectViewModel
+import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
 import com.example.thingsflow.ui.BaseFragment
-import com.example.thingsflow.ui.adapter.DiscoveredDevicesAdapter
+import com.example.thingsflow.ui.adapter.AdapterDiscoveredDevices
 import com.example.thingsflow.utils.ScanningIoTDeviceCallback
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,24 +16,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
-import rogo.iot.module.platform.entity.IoTNetworkConnectivity
-import rogo.iot.module.rogocore.sdk.SmartSdk
-import rogo.iot.module.rogocore.sdk.callback.DiscoverySmartDeviceCallback
-import rogo.iot.module.rogocore.sdk.callback.SetupWileDirectDeviceCallback
 import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
 
 @AndroidEntryPoint
-class IdentifyDeviceFragment : BaseFragment<FragmentIdentifyDeviceBinding>() {
+class FragmentIdentifyDevice : BaseFragment<FragmentIdentifyDeviceBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_identify_device
     private val TAG = "IdentifyDeviceFragment"
     // Time to discover for available devices
     private val DISCOVERY_TIMEOUT_SECONDS: Long = 15
-    private val configWileDirectViewModel by activityViewModels<ConfigWileDirectViewModel>()
+    private val vmConfigWileDirect by activityViewModels<VMConfigWileDirect>()
     // list of discovered devices
     private val discoveredGateways = arrayListOf<IoTDirectDeviceInfo>()
-    private val discoveredDevicesAdapter: DiscoveredDevicesAdapter by lazy {
-        DiscoveredDevicesAdapter(
+    private val adapterDiscoveredDevices: AdapterDiscoveredDevices by lazy {
+        AdapterDiscoveredDevices(
             onItemSelected = {
                 identifyAndConnectToDevice(it)
             }
@@ -64,7 +53,7 @@ class IdentifyDeviceFragment : BaseFragment<FragmentIdentifyDeviceBinding>() {
                     rvGateway.requestLayout()
                 }
             }
-            rvGateway.adapter = discoveredDevicesAdapter
+            rvGateway.adapter = adapterDiscoveredDevices
         }
     }
 
@@ -74,7 +63,7 @@ class IdentifyDeviceFragment : BaseFragment<FragmentIdentifyDeviceBinding>() {
             discovery()
 
             toolbar.btnBack.setOnClickListener {
-                configWileDirectViewModel.cancelDiscovery()
+                vmConfigWileDirect.cancelDiscovery()
                 findNavController().popBackStack()
             }
 
@@ -90,8 +79,8 @@ class IdentifyDeviceFragment : BaseFragment<FragmentIdentifyDeviceBinding>() {
      */
     private fun discovery() {
         discoveredGateways.clear()
-        discoveredDevicesAdapter.submitList(discoveredGateways)
-        configWileDirectViewModel
+        adapterDiscoveredDevices.submitList(discoveredGateways)
+        vmConfigWileDirect
             .discovery(
                 DISCOVERY_TIMEOUT_SECONDS,
                 object : ScanningIoTDeviceCallback {
@@ -103,7 +92,7 @@ class IdentifyDeviceFragment : BaseFragment<FragmentIdentifyDeviceBinding>() {
                         if (!discoveredGateways.contains(device)) {
                             ILogR.D(TAG, "discovery:deviceFound ", device.label)
                             discoveredGateways.add(device)
-                            discoveredDevicesAdapter.notifyItemInserted(discoveredGateways.size - 1)
+                            adapterDiscoveredDevices.notifyItemInserted(discoveredGateways.size - 1)
                         }
                     }
 
@@ -118,7 +107,7 @@ class IdentifyDeviceFragment : BaseFragment<FragmentIdentifyDeviceBinding>() {
      * connect to one of discovered devices
      */
     private fun identifyAndConnectToDevice(ioTDirectDeviceInfo: IoTDirectDeviceInfo) {
-        configWileDirectViewModel.connectAndIdentifyDevice(
+        vmConfigWileDirect.connectAndIdentifyDevice(
             ioTDirectDeviceInfo,
             object : SuccessStatusCallback {
                 override fun onSuccess() {
@@ -137,6 +126,6 @@ class IdentifyDeviceFragment : BaseFragment<FragmentIdentifyDeviceBinding>() {
     override fun onDestroy() {
         super.onDestroy()
         discoveredGateways.clear()
-        discoveredDevicesAdapter.submitList(discoveredGateways)
+        adapterDiscoveredDevices.submitList(discoveredGateways)
     }
 }

@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.example.thingsflow.R
 import rogo.iot.module.rogocore.sdk.entity.IoTGroup
 
-class GroupSpinnerAdapter(
+class AdapterSpinnerGroup(
     context: Context,
     private val items: List<IoTGroup?>
 ): ArrayAdapter<IoTGroup>(context, android.R.layout.simple_spinner_item, items) {

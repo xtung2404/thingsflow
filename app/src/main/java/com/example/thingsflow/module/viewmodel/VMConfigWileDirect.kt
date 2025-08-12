@@ -2,7 +2,7 @@ package com.example.thingsflow.module.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thingsflow.module.repository.ConfigWileDirectRepository
+import com.example.thingsflow.module.repository.RepoConfigWileDirect
 import com.example.thingsflow.utils.ScanningIoTDeviceCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -18,8 +18,8 @@ import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import javax.inject.Inject
 
 @HiltViewModel
-class ConfigWileDirectViewModel
-@Inject constructor(val repo: ConfigWileDirectRepository) :ViewModel()
+class VMConfigWileDirect
+@Inject constructor(val repo: RepoConfigWileDirect) :ViewModel()
 {
     private val TAG = "ConfigWileDirectViewModel"
     private var identifiedDevice: IoTDirectDeviceInfo?= null

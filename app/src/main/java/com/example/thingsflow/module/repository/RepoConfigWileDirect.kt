@@ -10,17 +10,14 @@ import kotlinx.coroutines.launch
 import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.platform.callback.SuccessRequestCallback
 import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
-import rogo.iot.module.platform.entity.IoTNetworkConnectivity
 import rogo.iot.module.platform.entity.IoTWifiInfo
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.callback.DiscoverySmartDeviceCallback
 import rogo.iot.module.rogocore.sdk.callback.SetupWileDirectDeviceCallback
-import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
-import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 import javax.inject.Inject
 
-class ConfigWileDirectRepository @Inject constructor() {
+class RepoConfigWileDirect @Inject constructor() {
     val handler = FlowSdk.configWileDirectDeviceHandler()
     var discoveryJob: Job?= null
     fun discovery(

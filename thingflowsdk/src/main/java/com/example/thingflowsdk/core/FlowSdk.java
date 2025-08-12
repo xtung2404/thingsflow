@@ -2,7 +2,6 @@ package com.example.thingflowsdk.core;
 
 import android.content.Context;
 
-import kotlinx.coroutines.flow.Flow;
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback;
 import rogo.iot.module.platform.ILogR;
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback;

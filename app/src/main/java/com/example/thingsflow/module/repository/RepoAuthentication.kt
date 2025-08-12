@@ -2,11 +2,10 @@ package com.example.thingsflow.module.repository
 
 import com.example.thingflowsdk.core.FlowSdk
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
-import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback
 import javax.inject.Inject
 
-class AuthenticationRepository @Inject constructor() {
+class RepoAuthentication @Inject constructor() {
     fun connectService(
         result: (Boolean) -> Unit
     ) {

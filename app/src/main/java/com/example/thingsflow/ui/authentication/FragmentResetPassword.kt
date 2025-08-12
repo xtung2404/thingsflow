@@ -6,7 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentResetPasswordBinding
-import com.example.thingsflow.module.viewmodel.AuthenticationViewModel
+import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.ui.BaseFragment
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,12 +16,12 @@ import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 
 @AndroidEntryPoint
-class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>() {
+class FragmentResetPassword : BaseFragment<FragmentResetPasswordBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_reset_password
 
     private var email: String?= ""
-    private val authenticationViewModel by viewModels<AuthenticationViewModel>()
+    private val vmAuthentication by viewModels<VMAuthentication>()
 
     override fun initVariable() {
         super.initVariable()
@@ -70,7 +70,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>() {
             )
 
             btnContinue.setOnClickListener {
-                authenticationViewModel.forgotPwd(
+                vmAuthentication.forgotPwd(
                     email,
                     object : AuthRequestCallback {
                         override fun onSuccess() {

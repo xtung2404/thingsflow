@@ -5,17 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.DialogCreateGroupBinding
-import com.example.thingsflow.databinding.DialogEditLocationBinding
-import com.example.thingsflow.module.viewmodel.GroupViewModel
-import com.example.thingsflow.module.viewmodel.LocationViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.thingsflow.module.viewmodel.VMGroup
 import rogo.iot.module.platform.callback.RequestCallback
-import rogo.iot.module.platform.callback.SuccessRequestCallback
-import rogo.iot.module.rogocore.sdk.define.IoTGroupType
 import rogo.iot.module.rogocore.sdk.entity.IoTGroup
-import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class DialogCreateGroup(
     context: Context,
@@ -24,8 +16,8 @@ class DialogCreateGroup(
     context,
     R.layout.dialog_create_group
 ) {
-    private val groupViewModel: GroupViewModel by lazy {
-        ViewModelProvider(viewModelOwner)[GroupViewModel::class.java]
+    private val vmGroup: VMGroup by lazy {
+        ViewModelProvider(viewModelOwner)[VMGroup::class.java]
     }
     override fun setupView(binding: DialogCreateGroupBinding) {
         binding.apply {
@@ -35,7 +27,7 @@ class DialogCreateGroup(
             btnSave.setOnClickListener {
                 val label = edtLabel.text.toString()
                 if (label.isNotEmpty()) {
-                    groupViewModel.create(
+                    vmGroup.create(
                         edtLabel.text.toString(),
                         spinnerGroupType.selectedItem as String,
                         object : RequestCallback<IoTGroup> {

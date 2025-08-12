@@ -57,6 +57,19 @@
     <string name="save_group">Lưu nhóm</string>
     <string name="add_another_gateway">Thêm Gateway khác</string>
     <string name="finish">Hoàn thành</string>
+    <string name="list_of_flow_scenario">Danh sách các Flow Scenario</string>
+    <string name="list_of_using_flow_scenario">Danh sách Flow Scenario đang sử dụng</string>
+    <string name="you_dont_have_any_scenario">Bạn chưa có Flow Scenario nào</string>
+    <string name="create_flow_scenario">Tạo Flow Scenario</string>
+    <string name="connect_box_to_create_a_flow_scenario">Hãy nối các box để tạo thành Flow Scenario</string>
+    <string name="input_event">Sự kiện đầu vào</string>
+    <string name="device_type">Loại thiết bị</string>
+    <string name="attribute_of_device">Thuộc tính thiết bị</string>
+    <string name="choose_every_attributes">Chọn tất cả các thuộc tính</string>
+    <string name="choose_device">Chọn thiết bị</string>
+    <string name="later">Để sau</string>
+    <string name="device_list">Danh sách thiết bị</string>
+    <string name="config">Thiết lập</string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>

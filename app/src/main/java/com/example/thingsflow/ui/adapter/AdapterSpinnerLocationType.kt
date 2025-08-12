@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
-class LocationTypeSpinnerAdapter(
+class AdapterSpinnerLocationType(
     context: Context,
     private val items: List<String>
 ): ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, items) {

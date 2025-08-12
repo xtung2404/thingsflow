@@ -5,7 +5,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentSignInBinding
-import com.example.thingsflow.module.viewmodel.AuthenticationViewModel
+import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.ui.BaseFragment
 import com.example.thingsflow.ui.dialog.showDialogLoadingWithAnimation
 import dagger.hilt.android.AndroidEntryPoint
@@ -13,14 +13,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
-import rogo.iot.module.platform.ILogR
 
 @AndroidEntryPoint
-class SignInFragment : BaseFragment<FragmentSignInBinding>() {
+class FragmentSignIn : BaseFragment<FragmentSignInBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_sign_in
 
-    private val authenticationViewModel by viewModels<AuthenticationViewModel>()
+    private val vmAuthentication by viewModels<VMAuthentication>()
     override fun initAction() {
         super.initAction()
         binding.apply {
@@ -67,7 +66,7 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
             val pwd = edtPwd.text.toString()
 
             if (isUserInfoValid(input, pwd)) {
-                authenticationViewModel.signIn(
+                vmAuthentication.signIn(
                     input,
                     pwd,
                     object : AuthRequestCallback {

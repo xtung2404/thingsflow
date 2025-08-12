@@ -7,17 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.DialogConfigWifiBinding
-import com.example.thingsflow.databinding.DialogEditLocationBinding
-import com.example.thingsflow.module.viewmodel.ConfigWileDirectViewModel
-import com.example.thingsflow.module.viewmodel.LocationViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
 import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.platform.callback.SuccessRequestCallback
-import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class DialogConfigWiFi(
     context: Context,
@@ -28,8 +20,8 @@ class DialogConfigWiFi(
     R.layout.dialog_config_wifi
 ) {
     private val TAG = "DialogConfigWiFi"
-    private val configWileDirectViewModel: ConfigWileDirectViewModel by lazy {
-        ViewModelProvider(viewModelOwner)[ConfigWileDirectViewModel::class.java]
+    private val vmConfigWileDirect: VMConfigWileDirect by lazy {
+        ViewModelProvider(viewModelOwner)[VMConfigWileDirect::class.java]
     }
     override fun setupView(binding: DialogConfigWifiBinding) {
         binding.apply {
@@ -40,7 +32,7 @@ class DialogConfigWiFi(
             btnConnect.setOnClickListener {
                 val ssid = edtSsid.text.toString()
                 val pwd = edtPwd.text.toString()
-                configWileDirectViewModel.requestConnectWifiNetwork(
+                vmConfigWileDirect.requestConnectWifiNetwork(
                     ssid,
                     pwd,
                     object : SuccessRequestCallback {

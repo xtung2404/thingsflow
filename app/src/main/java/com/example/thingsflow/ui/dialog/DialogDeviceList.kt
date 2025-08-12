@@ -13,7 +13,7 @@ import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
-class DialogDeleteLocation(
+class DialogDeviceList(
     context: Context,
     private val viewModelOwner: ViewModelStoreOwner,
     private val onCancel: (IoTLocation) -> Unit

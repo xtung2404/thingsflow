@@ -1,15 +1,9 @@
 package com.example.thingsflow.ui.deviceConfig
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentSetDeviceLabelBinding
-import com.example.thingsflow.module.viewmodel.ConfigWileDirectViewModel
+import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
 import com.example.thingsflow.ui.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import rogo.iot.module.platform.callback.RequestCallback
@@ -18,16 +12,16 @@ import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 
 @AndroidEntryPoint
-class SetDeviceLabelFragment : BaseFragment<FragmentSetDeviceLabelBinding>() {
+class FragmentSetDeviceLabel : BaseFragment<FragmentSetDeviceLabelBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_set_device_label
 
     private var identifiedDevice: IoTDirectDeviceInfo?= null
     private var selectedGroup: String?= null
-    private val configWileDirectViewModel by activityViewModels<ConfigWileDirectViewModel>()
+    private val vmConfigWileDirect by activityViewModels<VMConfigWileDirect>()
     override fun initVariable() {
         super.initVariable()
-        identifiedDevice = configWileDirectViewModel.getIdentifiedDevice()
+        identifiedDevice = vmConfigWileDirect.getIdentifiedDevice()
         arguments?.let {
             selectedGroup = it.getString("group")
         }
@@ -44,7 +38,7 @@ class SetDeviceLabelFragment : BaseFragment<FragmentSetDeviceLabelBinding>() {
         binding.apply {
             btnFinish.setOnClickListener {
 
-                configWileDirectViewModel.setupAndSyncDeviceToCloud(
+                vmConfigWileDirect.setupAndSyncDeviceToCloud(
                     edtLabel.text.toString(),
                     selectedGroup,
                     SmartSdk.getProductModel(identifiedDevice?.productId).devSubType,

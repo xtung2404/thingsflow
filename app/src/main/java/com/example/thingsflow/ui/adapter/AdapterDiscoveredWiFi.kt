@@ -6,13 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.databinding.LayoutItemDiscoveredWifiBinding
-import rogo.iot.module.platform.define.IoTWifiAuthType
 import rogo.iot.module.platform.entity.IoTWifiInfo
 
-class DiscoveredWiFiAdapter(
+class AdapterDiscoveredWiFi(
     private val onWiFiSelected: (IoTWifiInfo) -> Unit
 ):
-ListAdapter<IoTWifiInfo, DiscoveredWiFiAdapter.DiscoveredWiFiViewHolder>(
+ListAdapter<IoTWifiInfo, AdapterDiscoveredWiFi.DiscoveredWiFiViewHolder>(
     object : DiffUtil.ItemCallback<IoTWifiInfo>() {
         override fun areItemsTheSame(oldItem: IoTWifiInfo, newItem: IoTWifiInfo): Boolean {
             return oldItem.ssid == newItem.ssid

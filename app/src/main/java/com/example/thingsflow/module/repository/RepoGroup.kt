@@ -4,10 +4,9 @@ import com.example.thingflowsdk.core.FlowSdk
 import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTGroup
-import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 import javax.inject.Inject
 
-class GroupRepository @Inject constructor() {
+class RepoGroup @Inject constructor() {
     fun getAll(): List<IoTGroup> = SmartSdk.groupHandler().all.toList()
 
     fun create(
