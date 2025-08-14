@@ -88,7 +88,7 @@ class LayoutZoomPan @JvmOverloads constructor(
             .filterIsInstance<FBoxActionControlDevice>()
             .groupBy { it.segId }
 
-        // Đặt EventBox ở góc trên trái
+        // 1) Thêm EventBox (không có ô xám)
         eventBox?.let {
             val view = createViewForFBox(it)
             addView(view)
@@ -98,17 +98,15 @@ class LayoutZoomPan @JvmOverloads constructor(
             boxPositions[it] = RectF(view.x, view.y, view.x + view.measuredWidth, view.y + view.measuredHeight)
         }
 
-        // Tính chiều cao tất cả segment
+        // 2) Tính chiều cao tất cả segment
         actionBoxesBySegId.keys.forEach { segId ->
             calculateSegmentHeight(segId, actionBoxesBySegId)
         }
 
-        // Bố trí các segment
+        // 3) Bố trí các segment theo BFS
         val queue = LinkedList<Pair<Int, FBox?>>()
         val processed = mutableSetOf<Int>()
-
         eventBox?.targetSegId?.let { queue.add(Pair(it, eventBox)) }
-
         val branchYPositions = mutableMapOf<Int, Float>()
 
         while (queue.isNotEmpty()) {
@@ -117,8 +115,13 @@ class LayoutZoomPan @JvmOverloads constructor(
             processed.add(segId)
 
             val group = actionBoxesBySegId[segId] ?: continue
-            val boxesInSegment = group.sortedBy { it.positiveSegId != 0 }
 
+            // Ưu tiên box có nhánh
+            val boxesInSegment = group.sortedWith(
+                compareByDescending<FBoxActionControlDevice> { (it.positiveSegId != 0 || it.negativeSegId != 0) }
+            )
+
+            // đo kích thước group
             var maxGroupWidth = 0f
             var groupHeight = 0f
             boxesInSegment.forEach { box ->
@@ -132,35 +135,47 @@ class LayoutZoomPan @JvmOverloads constructor(
             val totalGroupWidth = maxGroupWidth + 2 * groupPadding
             val contentHeightOfSegment = groupHeight + 2 * groupPadding
 
+            // X -> ngay sau parent
             val parentBoxRect = parentBox?.let { boxPositions[it] }
             val groupLeft = if (parentBoxRect != null) parentBoxRect.right + horizontalSpacing else startXPadding
 
-            var boundingBoxTop = topMargin // Mặc định căn theo EventBox top
+            // ✅ Y -> căn top segment con = top ô xám của segment cha (nếu có)
+            var boundingBoxTop = topMargin
+            if (parentBox != null && parentBoxRect != null) {
+                if (parentBox is FBoxActionControlDevice) {
+                    val parentSegTop = segmentPositions[parentBox.segId]?.top ?: parentBoxRect.top
 
-            if (parentBox is FBoxActionControlDevice) {
-                val branches = mutableListOf<Int>()
-                if (parentBox.positiveSegId != 0) branches.add(parentBox.positiveSegId)
-                if (parentBox.negativeSegId != 0) branches.add(parentBox.negativeSegId)
+                    val branches = mutableListOf<Int>()
+                    if (parentBox.positiveSegId != 0) branches.add(parentBox.positiveSegId)
+                    if (parentBox.negativeSegId != 0) branches.add(parentBox.negativeSegId)
 
-                if (branches.isNotEmpty()) {
-                    var currentY = parentBoxRect!!.top
-                    branches.forEach { branchSegId ->
-                        branchYPositions[branchSegId] = currentY
-                        val segmentHeight = segmentHeightCache[branchSegId] ?: 0f
-                        currentY += segmentHeight + verticalSpacing
+                    if (branches.isNotEmpty()) {
+                        var currentY = parentSegTop // ← bắt đầu từ đỉnh ô xám cha
+                        branches.forEach { branchSegId ->
+                            branchYPositions[branchSegId] = currentY
+                            val segH = segmentHeightCache[branchSegId] ?: 0f
+                            currentY += segH + verticalSpacing
+                        }
+                        boundingBoxTop = branchYPositions[segId] ?: parentSegTop
+                    } else {
+                        // cha không rẽ nhánh → con duy nhất: top = top ô xám cha
+                        boundingBoxTop = parentSegTop
                     }
-                    boundingBoxTop = branchYPositions[segId] ?: parentBoxRect!!.top
                 } else {
-                    boundingBoxTop = parentBoxRect!!.top
+                    // parent là Event (không có ô xám) → dùng top của event
+                    boundingBoxTop = parentBoxRect.top
                 }
-            } else if (parentBox is FBoxEventDevice) {
-                boundingBoxTop = parentBoxRect!!.top
             }
 
-            val segmentRect = RectF(groupLeft, boundingBoxTop, groupLeft + totalGroupWidth, boundingBoxTop + contentHeightOfSegment)
+            // tạo ô xám segment
+            val segmentRect = RectF(
+                groupLeft, boundingBoxTop,
+                groupLeft + totalGroupWidth, boundingBoxTop + contentHeightOfSegment
+            )
             boundingBoxes[segId] = segmentRect
             segmentPositions[segId] = segmentRect
 
+            // đặt các box trong segment
             var currentBoxY = boundingBoxTop + groupPadding
             boxesInSegment.forEach { box ->
                 val view = createViewForFBox(box)
@@ -177,6 +192,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                 currentBoxY += view.measuredHeight + verticalSpacing
             }
 
+            // queue nhánh
             boxesInSegment.forEach { box ->
                 if (box.positiveSegId != 0 && !processed.contains(box.positiveSegId)) {
                     queue.add(Pair(box.positiveSegId, box))
@@ -189,14 +205,28 @@ class LayoutZoomPan @JvmOverloads constructor(
             contentWidth = max(contentWidth, groupLeft + totalGroupWidth)
         }
 
+        // 4) Căn lại eventBox theo top của box đầu tiên ở target segment (nếu bạn muốn vậy)
+        eventBox?.let { ev ->
+            val firstTargetBox = firstBoxInSegment[ev.targetSegId]
+            val targetRect = firstTargetBox?.let { boxPositions[it] }
+            val evView = findViewByFBox(ev)
+            if (targetRect != null && evView != null) {
+                evView.y = targetRect.top
+                boxPositions[ev] = RectF(evView.x, evView.y, evView.x + evView.measuredWidth, evView.y + evView.measuredHeight)
+            }
+        }
+
         contentHeight = calculateContentBounds().height()
     }
 
-    private fun calculateSegmentHeight(segId: Int, actionBoxesBySegId: Map<Int, List<FBoxActionControlDevice>>): Float {
+    private fun calculateSegmentHeight(
+        segId: Int,
+        map: Map<Int, List<FBoxActionControlDevice>>
+    ): Float {
         if (segmentHeightCache.containsKey(segId)) {
             return segmentHeightCache[segId]!!
         }
-        val group = actionBoxesBySegId[segId] ?: return 0f
+        val group = map[segId] ?: return 0f
         var groupHeight = 0f
         var maxChildBranchHeight = 0f
 
@@ -212,7 +242,7 @@ class LayoutZoomPan @JvmOverloads constructor(
             if (branches.isNotEmpty()) {
                 var currentBranchHeight = 0f
                 branches.forEach { branchId ->
-                    currentBranchHeight += calculateSegmentHeight(branchId, actionBoxesBySegId)
+                    currentBranchHeight += calculateSegmentHeight(branchId, map)
                 }
                 currentBranchHeight += (branches.size - 1) * verticalSpacing
                 maxChildBranchHeight = max(maxChildBranchHeight, currentBranchHeight)
@@ -231,6 +261,14 @@ class LayoutZoomPan @JvmOverloads constructor(
             this.background = null
             this.onBoxClickListener = this@LayoutZoomPan
         }
+    }
+
+    private fun findViewByFBox(target: FBox): ViewBox? {
+        for (i in 0 until childCount) {
+            val child = getChildAt(i)
+            if (child is ViewBox && child.fBox == target) return child
+        }
+        return null
     }
 
     private fun calculateContentBounds(): RectF {
@@ -273,8 +311,11 @@ class LayoutZoomPan @JvmOverloads constructor(
             if (startBoxRect != null && firstBox != null && endBoundingBox != null) {
                 val endBoxRect = boxPositions[firstBox]
                 if (endBoxRect != null) {
-                    canvas.drawLine(startBoxRect.right, startBoxRect.centerY(),
-                        endBoundingBox.left, endBoxRect.centerY(), connectionPaint)
+                    canvas.drawLine(
+                        startBoxRect.right, startBoxRect.centerY(),
+                        endBoundingBox.left, endBoxRect.centerY(),
+                        connectionPaint
+                    )
                 }
             }
         }
@@ -287,8 +328,11 @@ class LayoutZoomPan @JvmOverloads constructor(
                     if (firstBox != null && endBoundingBox != null) {
                         val endBoxRect = boxPositions[firstBox]
                         if (endBoxRect != null) {
-                            canvas.drawLine(startBoxRect.right, startBoxRect.centerY(),
-                                endBoundingBox.left, endBoxRect.centerY(), connectionPaint)
+                            canvas.drawLine(
+                                startBoxRect.right, startBoxRect.centerY(),
+                                endBoundingBox.left, endBoxRect.centerY(),
+                                connectionPaint
+                            )
                         }
                     }
                 }
@@ -298,8 +342,11 @@ class LayoutZoomPan @JvmOverloads constructor(
                     if (firstBox != null && endBoundingBox != null) {
                         val endBoxRect = boxPositions[firstBox]
                         if (endBoxRect != null) {
-                            canvas.drawLine(startBoxRect.right, startBoxRect.centerY(),
-                                endBoundingBox.left, endBoxRect.centerY(), connectionPaint)
+                            canvas.drawLine(
+                                startBoxRect.right, startBoxRect.centerY(),
+                                endBoundingBox.left, endBoxRect.centerY(),
+                                connectionPaint
+                            )
                         }
                     }
                 }
@@ -340,8 +387,10 @@ class LayoutZoomPan @JvmOverloads constructor(
             for (i in 0 until childCount) {
                 val child = getChildAt(i)
                 if (child is ViewBox) {
-                    val childRect = RectF(child.x + translateX, child.y + translateY,
-                        child.x + child.width + translateX, child.y + child.height + translateY)
+                    val childRect = RectF(
+                        child.x + translateX, child.y + translateY,
+                        child.x + child.width + translateX, child.y + child.height + translateY
+                    )
                     if (childRect.contains(e.x, e.y)) {
                         child.performClick()
                         return true
