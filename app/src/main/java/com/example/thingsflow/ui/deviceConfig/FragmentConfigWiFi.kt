@@ -5,7 +5,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentConfigWiFiBinding
 import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
-import com.example.thingsflow.ui.BaseFragment
+import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterDiscoveredWiFi
 import com.example.thingsflow.ui.dialog.DialogConfigWiFi
 import com.example.thingsflow.utils.getFragmentLabel
@@ -14,7 +14,7 @@ import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.platform.entity.IoTWifiInfo
 
 @AndroidEntryPoint
-class FragmentConfigWiFi : BaseFragment<FragmentConfigWiFiBinding>() {
+class FragmentConfigWiFi : FragmentBase<FragmentConfigWiFiBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_config_wi_fi
 

@@ -2,7 +2,6 @@ package com.example.thingsflow.ui.dialog
 
 import android.content.Context
 import android.view.View
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.thingsflow.R
@@ -15,7 +14,7 @@ class DialogConfigWiFi(
     context: Context,
     private val viewModelOwner: ViewModelStoreOwner,
     private val onConfigSuccess: () -> Unit
-): BaseDialog<DialogConfigWifiBinding>(
+): DialogBase<DialogConfigWifiBinding>(
     context,
     R.layout.dialog_config_wifi
 ) {

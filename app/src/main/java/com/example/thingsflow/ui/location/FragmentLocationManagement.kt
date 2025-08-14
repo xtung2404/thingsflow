@@ -7,7 +7,7 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentLocationManagementBinding
 import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.module.viewmodel.VMLocation
-import com.example.thingsflow.ui.BaseFragment
+import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterLocation
 import com.example.thingsflow.ui.dialog.DialogDeleteLocation
 import com.example.thingsflow.ui.dialog.DialogEditLocation
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 
 @AndroidEntryPoint
-class FragmentLocationManagement : BaseFragment<FragmentLocationManagementBinding>() {
+class FragmentLocationManagement : FragmentBase<FragmentLocationManagementBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_location_management
 

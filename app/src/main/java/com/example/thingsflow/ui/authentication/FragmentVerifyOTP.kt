@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentVerifyOTPBinding
 import com.example.thingsflow.module.viewmodel.VMAuthentication
-import com.example.thingsflow.ui.BaseFragment
+import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +21,7 @@ import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 import rogo.iot.module.platform.ILogR
 
 @AndroidEntryPoint
-class FragmentVerifyOTP : BaseFragment<FragmentVerifyOTPBinding>() {
+class FragmentVerifyOTP : FragmentBase<FragmentVerifyOTPBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_verify_o_t_p
 

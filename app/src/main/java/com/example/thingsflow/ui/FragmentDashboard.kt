@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import rogo.iot.module.platform.ILogR
 
 @AndroidEntryPoint
-class FragmentDashboard : BaseFragment<FragmentHomeBinding>() {
+class FragmentDashboard : FragmentBase<FragmentHomeBinding>() {
     private val TAG = "HomeFragment"
     override val layoutId: Int
         get() = R.layout.fragment_home
@@ -25,7 +25,7 @@ class FragmentDashboard : BaseFragment<FragmentHomeBinding>() {
         initializeBluetoothOrRequestPermission()
         binding.apply {
             btnContinue.setOnClickListener {
-                findNavController().navigate(R.id.identifyDeviceFragment)
+                findNavController().navigate(R.id.fragmentFlowScenManagement)
             }
         }
     }

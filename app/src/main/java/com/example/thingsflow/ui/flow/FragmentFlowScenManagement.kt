@@ -3,9 +3,11 @@ package com.example.thingsflow.ui.flow
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowManagementBinding
-import com.example.thingsflow.ui.BaseFragment
+import com.example.thingsflow.ui.FragmentBase
+import dagger.hilt.android.AndroidEntryPoint
 
-class FragmentFlowScenManagement : BaseFragment<FragmentFlowManagementBinding>() {
+@AndroidEntryPoint
+class FragmentFlowScenManagement : FragmentBase<FragmentFlowManagementBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_flow_management
 
@@ -20,7 +22,7 @@ class FragmentFlowScenManagement : BaseFragment<FragmentFlowManagementBinding>()
         super.initAction()
         binding.apply {
             btnCreate.setOnClickListener {
-//                findNavController().navigate()
+                findNavController().navigate(R.id.fragmentFlowScenario)
             }
         }
     }

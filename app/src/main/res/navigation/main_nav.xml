@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.example.thi ngsflow.ui.FragmentSplash"
+        android:name="com.example.thingsflow.ui.FragmentSplash"
         android:label="SplashFragment" >
         <action
             android:id="@+id/action_splashFragment_to_signInFragment"

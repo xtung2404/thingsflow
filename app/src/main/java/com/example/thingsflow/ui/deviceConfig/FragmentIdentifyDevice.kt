@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentIdentifyDeviceBinding
 import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
-import com.example.thingsflow.ui.BaseFragment
+import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterDiscoveredDevices
 import com.example.thingsflow.utils.ScanningIoTDeviceCallback
 import com.example.thingsflow.utils.getFragmentLabel
@@ -19,7 +19,7 @@ import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
 import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
 
 @AndroidEntryPoint
-class FragmentIdentifyDevice : BaseFragment<FragmentIdentifyDeviceBinding>() {
+class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_identify_device
     private val TAG = "IdentifyDeviceFragment"

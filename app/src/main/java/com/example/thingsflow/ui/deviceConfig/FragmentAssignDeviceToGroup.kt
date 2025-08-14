@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentAssignDeviceToGroupBinding
 import com.example.thingsflow.module.viewmodel.VMGroup
-import com.example.thingsflow.ui.BaseFragment
+import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterSpinnerGroup
 import com.example.thingsflow.ui.dialog.DialogCreateGroup
 import com.example.thingsflow.utils.getFragmentLabel
@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import rogo.iot.module.rogocore.sdk.entity.IoTGroup
 
 @AndroidEntryPoint
-class FragmentAssignDeviceToGroup : BaseFragment<FragmentAssignDeviceToGroupBinding>() {
+class FragmentAssignDeviceToGroup : FragmentBase<FragmentAssignDeviceToGroupBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_assign_device_to_group
 

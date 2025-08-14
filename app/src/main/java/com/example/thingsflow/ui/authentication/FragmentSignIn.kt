@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentSignInBinding
 import com.example.thingsflow.module.viewmodel.VMAuthentication
-import com.example.thingsflow.ui.BaseFragment
+import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.dialog.showDialogLoadingWithAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 
 @AndroidEntryPoint
-class FragmentSignIn : BaseFragment<FragmentSignInBinding>() {
+class FragmentSignIn : FragmentBase<FragmentSignInBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_sign_in
 

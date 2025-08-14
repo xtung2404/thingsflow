@@ -8,7 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentVerifyResetPwdOtpBinding
 import com.example.thingsflow.module.viewmodel.VMAuthentication
-import com.example.thingsflow.ui.BaseFragment
+import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +20,7 @@ import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 import rogo.iot.module.platform.ILogR
 
 @AndroidEntryPoint
-class FragmentVerifyResetPwdOtp : BaseFragment<FragmentVerifyResetPwdOtpBinding>() {
+class FragmentVerifyResetPwdOtp : FragmentBase<FragmentVerifyResetPwdOtpBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_verify_reset_pwd_otp
     private val vmAuthentication by viewModels<VMAuthentication>()

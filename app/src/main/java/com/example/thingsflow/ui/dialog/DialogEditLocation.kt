@@ -16,7 +16,7 @@ class DialogEditLocation(
     context: Context,
     private val viewModelOwner: ViewModelStoreOwner,
     private val onDeleteLoc:(IoTLocation) -> Unit
-): BaseDialog<DialogEditLocationBinding>(
+): DialogBase<DialogEditLocationBinding>(
     context,
     R.layout.dialog_edit_location
 ) {

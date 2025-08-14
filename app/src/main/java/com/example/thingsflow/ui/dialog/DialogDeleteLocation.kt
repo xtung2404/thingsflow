@@ -17,7 +17,7 @@ class DialogDeleteLocation(
     context: Context,
     private val viewModelOwner: ViewModelStoreOwner,
     private val onCancel: (IoTLocation) -> Unit
-): BaseDialog<DialogDeleteLocationBinding>(
+): DialogBase<DialogDeleteLocationBinding>(
     context,
     R.layout.dialog_delete_location
 )  {

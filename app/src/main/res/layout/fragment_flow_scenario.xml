@@ -23,11 +23,12 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="@dimen/space_screen_small"
                 android:text="@string/list_of_flow_scenario"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginStart="40dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -35,8 +36,19 @@
                 android:layout_marginTop="@dimen/_space5dp"
                 android:text="@string/connect_box_to_create_a_flow_scenario"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_10" />
-
+                android:textSize="@dimen/text_size_10"
+                android:layout_marginStart="40dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                android:layout_marginTop="@dimen/_space32dp"/>
+            <com.example.thingsflow.ui.customview.LayoutZoomPan
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/boxLayout">
+            </com.example.thingsflow.ui.customview.LayoutZoomPan>
         </LinearLayout>
 
         <View

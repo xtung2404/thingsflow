@@ -4,7 +4,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentSetDeviceLabelBinding
 import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
-import com.example.thingsflow.ui.BaseFragment
+import com.example.thingsflow.ui.FragmentBase
 import dagger.hilt.android.AndroidEntryPoint
 import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
@@ -12,7 +12,7 @@ import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 
 @AndroidEntryPoint
-class FragmentSetDeviceLabel : BaseFragment<FragmentSetDeviceLabelBinding>() {
+class FragmentSetDeviceLabel : FragmentBase<FragmentSetDeviceLabelBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_set_device_label
 

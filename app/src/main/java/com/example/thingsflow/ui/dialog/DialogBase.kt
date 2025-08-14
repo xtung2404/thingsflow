@@ -12,7 +12,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 
-abstract class BaseDialog<B: ViewDataBinding> (
+abstract class DialogBase<B: ViewDataBinding> (
     context: Context,
     @LayoutRes private val layoutResId: Int,
     private val cancelable: Boolean = false

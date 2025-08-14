@@ -7,7 +7,7 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentCreateLocationBinding
 import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.module.viewmodel.VMLocation
-import com.example.thingsflow.ui.BaseFragment
+import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterSpinnerLocationType
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +19,7 @@ import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 @AndroidEntryPoint
-class FragmentCreateLocation : BaseFragment<FragmentCreateLocationBinding>() {
+class FragmentCreateLocation : FragmentBase<FragmentCreateLocationBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_create_location
 

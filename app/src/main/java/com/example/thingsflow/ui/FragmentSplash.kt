@@ -9,7 +9,7 @@ import com.example.thingsflow.module.viewmodel.VMLocation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FragmentSplash : BaseFragment<FragmentSplashBinding>() {
+class FragmentSplash : FragmentBase<FragmentSplashBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_splash
 

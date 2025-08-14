@@ -12,7 +12,7 @@ import rogo.iot.module.rogocore.sdk.entity.IoTGroup
 class DialogCreateGroup(
     context: Context,
     private val viewModelOwner: ViewModelStoreOwner
-): BaseDialog<DialogCreateGroupBinding>(
+): DialogBase<DialogCreateGroupBinding>(
     context,
     R.layout.dialog_create_group
 ) {
