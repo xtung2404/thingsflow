@@ -64,6 +64,8 @@ dependencies {
     implementation(group = "", name = "rogoutils", ext = "jar")
     implementation(group = "", name = "rogosigmesh", ext = "jar")
     implementation(group = "", name = "rogocli", ext = "jar")
+    implementation(group = "", name = "flowcommon", ext = "jar")
+
 
     //GSON
     implementation ("com.google.code.gson:gson:2.10.1")

@@ -1,15 +1,52 @@
 package com.example.thingsflow.ui.flow
 
+import android.view.View
+import android.widget.CompoundButton
+import android.widget.CompoundButton.OnCheckedChangeListener
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowScenarioBinding
 import com.example.thingsflow.ui.FragmentBase
+import com.example.thingsflow.ui.adapter.AdapterAttributes
+import com.example.thingsflow.ui.adapter.AdapterSpinnerBoxEventType
+import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.ui.customview.ViewBox
+import com.example.thingsflow.utils.getSupportedAttribue
+import com.example.thingsflow.utils.getSupportedBoxEvent
+import com.example.thingsflow.utils.getSupportedDeviceType
 import dagger.hilt.android.AndroidEntryPoint
 import rogo.iot.module.flowcommon.box.FBox
+import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
+import rogo.iot.module.flowcommon.box.action.FBoxActionAIGemini
+import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
+import rogo.iot.module.flowcommon.box.action.FBoxActionCodeFunction
+import rogo.iot.module.flowcommon.box.action.FBoxActionConditionDeviceState
+import rogo.iot.module.flowcommon.box.action.FBoxActionConditionGeneral
+import rogo.iot.module.flowcommon.box.action.FBoxActionConditionTime
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
+import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDLearn
+import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRecognize
+import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRemove
+import rogo.iot.module.flowcommon.box.action.FBoxActionHandlerAnotherBox
+import rogo.iot.module.flowcommon.box.action.FBoxActionPublishMqtt
+import rogo.iot.module.flowcommon.box.action.FBoxActionSendWebSocket
+import rogo.iot.module.flowcommon.box.event.FBoxEventCameraStreaming
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
+import rogo.iot.module.flowcommon.box.event.FBoxEventFaceID
+import rogo.iot.module.flowcommon.box.event.FBoxEventHttpServerApi
+import rogo.iot.module.flowcommon.box.event.FBoxEventIORS232
+import rogo.iot.module.flowcommon.box.event.FBoxEventIORS485
+import rogo.iot.module.flowcommon.box.event.FBoxEventMqtt
+import rogo.iot.module.flowcommon.box.event.FBoxEventSchedule
+import rogo.iot.module.flowcommon.box.event.FBoxEventStatistic
+import rogo.iot.module.flowcommon.box.event.FBoxEventTimerInterval
+import rogo.iot.module.flowcommon.box.event.FBoxEventTouchID
+import rogo.iot.module.flowcommon.box.event.FBoxEventVoiceRecognize
+import rogo.iot.module.flowcommon.box.event.FBoxEventWeather
 import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.define.IoTDeviceType
+import java.util.Arrays
 
 @AndroidEntryPoint
 class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBox.OnBoxClickListener {
@@ -17,6 +54,36 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
         get() = R.layout.fragment_flow_scenario
 
     private val TAG = "FragmentFlowScenario"
+    private val adapterSpinnerBoxEventType: AdapterSpinnerBoxEventType by lazy {
+        AdapterSpinnerBoxEventType(requireContext(), getSupportedBoxEvent())
+    }
+
+    private val adapterSpinnerDeviceType: AdapterSpinnerDeviceType by lazy {
+        AdapterSpinnerDeviceType(requireContext(), getSupportedDeviceType())
+    }
+
+    private val adapterAttributes: AdapterAttributes by lazy {
+        AdapterAttributes(
+            onItemClicked = {
+                attrMap[it] = !attrMap[it]!!
+                adapterAttributes.notifyDataSetChanged()
+            }
+        )
+    }
+    private var attrMap: MutableMap<Int, Boolean> = mutableMapOf()
+
+    override fun initVariable() {
+        super.initVariable()
+        binding.apply {
+            overlayBoxEvent.visibility = View.GONE
+            dimBackground.visibility = View.GONE
+            spinnerEventInput.adapter = adapterSpinnerBoxEventType
+            spinnerDeviceType.adapter = adapterSpinnerDeviceType
+            rvAttr.adapter = adapterAttributes
+            attrMap = getSupportedAttribue().associateWith { false } as MutableMap<Int, Boolean>
+            adapterAttributes.submitList(attrMap.entries.toList())
+        }
+    }
 
     override fun initView() {
         super.initView()
@@ -84,9 +151,74 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
 
     override fun initAction() {
         super.initAction()
+        binding.apply {
+            btnBackOverlayEvent.setOnClickListener {
+                dimBackground.visibility = View.GONE
+                overlayBoxEvent.visibility = View.GONE
+            }
+
+
+            cbAllAttr.setOnCheckedChangeListener(
+                object : OnCheckedChangeListener {
+                    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+                        attrMap.keys.forEach { key ->
+                            attrMap[key] = isChecked
+                        }
+                        adapterAttributes.notifyDataSetChanged()
+                    }
+
+                }
+            )
+
+        }
     }
 
     override fun onBoxClick(box: FBox?) {
         ILogR.D(TAG, "onBoxClick")
+        when (box) {
+            is FBoxEventDevice,
+            is FBoxEventMqtt,
+            is FBoxEventWeather,
+            is FBoxEventSchedule,
+            is FBoxEventCameraStreaming,
+            is FBoxEventFaceID,
+            is FBoxEventHttpServerApi,
+            is FBoxEventIORS232,
+            is FBoxEventIORS485,
+            is FBoxEventTouchID,
+            is FBoxEventVoiceRecognize,
+            is FBoxEventTimerInterval,
+            is FBoxEventStatistic
+            -> {
+                binding.overlayBoxEvent.visibility = View.VISIBLE
+                binding.dimBackground.visibility = View.VISIBLE
+            }
+
+            is FBoxActionConditionGeneral,
+            is FBoxActionConditionTime,
+            is FBoxActionConditionDeviceState
+            -> {
+
+            }
+
+            is FBoxActionAIGPT,
+            is FBoxActionAIGemini,
+            is FBoxActionCallHttp,
+            is FBoxActionControlDevice,
+            is FBoxActionCodeFunction,
+            is FBoxActionFaceIDLearn,
+            is FBoxActionFaceIDRecognize,
+            is FBoxActionFaceIDRemove,
+            is FBoxActionHandlerAnotherBox,
+            is FBoxActionPublishMqtt,
+            is FBoxActionSendWebSocket
+            -> {
+
+            }
+
+            else -> {
+
+            }
+        }
     }
 }

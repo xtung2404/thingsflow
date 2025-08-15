@@ -2,49 +2,82 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/box_width"
     android:layout_height="wrap_content">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@drawable/bg_light_gray_stroke_orange"
         android:gravity="center_vertical"
-        android:paddingVertical="@dimen/padding_box_vertical"
-        android:paddingHorizontal="@dimen/padding_box_horizontal">
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/padding_box_horizontal"
+        android:paddingVertical="@dimen/padding_box_vertical">
 
-        <TextView
-            android:id="@+id/txt_box_evt_label"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/ln_evt_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_overline"
-            android:text="Loại box"
-            android:maxLines="1"
-            android:ellipsize="end"/>
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/txt_box_evt_device"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_overline"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp"
-            android:text="Mục đích của box"
-            android:maxLines="1"
-            android:ellipsize="end"/>
+            <TextView
+                android:id="@+id/txt_box_evt_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Loại box"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_overline" />
 
-        <TextView
-            android:id="@+id/txt_box_evt_attr"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/txt_box_evt_device"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Mục đích của box"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_overline"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_box_evt_attr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Loại thiết bị"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_overline"
+                android:textStyle="bold"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ln_evt_empty"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_overline"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp"
-            android:text="Loại thiết bị"
-            android:visibility="visible"
-            android:maxLines="1"
-            android:ellipsize="end"/>
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="@dimen/_space24dp"
+                android:layout_height="@dimen/_space24dp"
+                android:src="@drawable/ic_add"
+                android:scaleType="centerCrop"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Tạo sự kiện"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_overline"
+                android:textStyle="bold" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.example.thingsflow.R
@@ -22,6 +24,7 @@ import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRemove
 import rogo.iot.module.flowcommon.box.action.FBoxActionHandlerAnotherBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionPublishMqtt
 import rogo.iot.module.flowcommon.box.action.FBoxActionSendWebSocket
+import rogo.iot.module.flowcommon.box.event.FBoxEvent
 import rogo.iot.module.flowcommon.box.event.FBoxEventCameraStreaming
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.box.event.FBoxEventFaceID
@@ -35,18 +38,23 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventTimerInterval
 import rogo.iot.module.flowcommon.box.event.FBoxEventTouchID
 import rogo.iot.module.flowcommon.box.event.FBoxEventVoiceRecognize
 import rogo.iot.module.flowcommon.box.event.FBoxEventWeather
+import rogo.iot.module.platform.ILogR
+import java.util.Arrays
 
 class ViewBox @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
+    private val TAG = "ViewBox"
     private var downX: Float = 0f
     private var downY: Float = 0f
 
     private lateinit var txtBoxEvtLabel: TextView
     private lateinit var txtBoxEvtDevice: TextView
     private lateinit var txtBoxEvtAttr: TextView
+    private lateinit var lnEvtContent: LinearLayout
+    private lateinit var lnEvtEmpty: LinearLayout
 
     private lateinit var txtBoxActLabel: TextView
     private lateinit var txtBoxActType: TextView
@@ -62,6 +70,7 @@ class ViewBox @JvmOverloads constructor(
         }
     var onBlockTouched: ((FBox) -> Unit)? = null
     var onBoxClickListener: OnBoxClickListener? = null
+
     init {
         setOnClickListener {
             onBoxClickListener?.onBoxClick(fBox)
@@ -69,9 +78,9 @@ class ViewBox @JvmOverloads constructor(
     }
 
     private fun updateBlockContent() {
-        if (fBox != null) {
+        fBox?.let { boxVal ->
             removeAllViews()
-            val layoutResId = when (fBox) {
+            val layoutResId = when (boxVal) {
                 is FBoxEventDevice,
                 is FBoxEventMqtt,
                 is FBoxEventWeather,
@@ -109,7 +118,7 @@ class ViewBox @JvmOverloads constructor(
             }
             LayoutInflater.from(context).inflate(layoutResId, this, true)
 
-            when (fBox) {
+            when (boxVal) {
                 is FBoxEventDevice,
                 is FBoxEventMqtt,
                 is FBoxEventWeather,
@@ -127,6 +136,23 @@ class ViewBox @JvmOverloads constructor(
                     txtBoxEvtLabel = findViewById<TextView>(R.id.txt_box_evt_label)
                     txtBoxEvtDevice = findViewById<TextView>(R.id.txt_box_evt_device)
                     txtBoxEvtAttr = findViewById<TextView>(R.id.txt_box_evt_attr)
+                    lnEvtContent = findViewById<LinearLayout>(R.id.ln_evt_content)
+                    lnEvtEmpty = findViewById<LinearLayout>(R.id.ln_evt_empty)
+                    when (boxVal) {
+                        is FBoxEventDevice -> {
+                            ILogR.D(TAG, "updateBlockContent: BoxEventInfo ", boxVal.devType, Arrays.toString(boxVal.attrTypes), boxVal.devType)
+                            if (boxVal.devId == null &&
+                                boxVal.attrTypes == null &&
+                                boxVal.devType == 0
+                            ) {
+                                lnEvtContent.visibility = View.GONE
+                                lnEvtEmpty.visibility = View.VISIBLE
+                            } else {
+                                lnEvtContent.visibility = View.VISIBLE
+                                lnEvtEmpty.visibility = View.GONE
+                            }
+                        }
+                    }
                 }
 
                 is FBoxActionConditionGeneral,
@@ -161,10 +187,6 @@ class ViewBox @JvmOverloads constructor(
                     txtBoxEvtAttr = findViewById<TextView>(R.id.txt_box_evt_attr)
                 }
             }
-        } else {
-            val layoutResId = R.layout.layout_item_box_evt_null
-            LayoutInflater.from(context).inflate(layoutResId, this, true)
-            txtBoxEvtLabel = findViewById<TextView>(R.id.txt_box_evt_null_label)
         }
 
     }
