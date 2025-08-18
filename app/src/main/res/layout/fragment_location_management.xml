@@ -25,21 +25,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/select_location"
-                android:textSize="24sp"
+                android:textSize="@dimen/text_headline5"
                 android:textColor="@color/black"
                 android:layout_gravity="center"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/please_select_a_location_to_continue"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body2"
                 android:textColor="@color/black"
                 android:layout_gravity="center"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/list_of_available_locations"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body2"
                 android:textColor="@color/black"
                 android:layout_marginTop="@dimen/_space50dp"/>
             <LinearLayout
@@ -69,7 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/create_a_new_location"
-                        android:textSize="@dimen/text_size_13"
+                        android:textSize="@dimen/text_body2"
                         android:textColor="@color/black"
                         android:textStyle="bold"/>
                 </LinearLayout>
@@ -85,7 +85,8 @@
                 android:paddingVertical="13dp"
                 android:background="@color/black"
                 android:textAllCaps="false"
-                android:layout_marginVertical="@dimen/space_screen_small"/>
+                android:layout_marginVertical="@dimen/space_screen_small"
+                android:textSize="@dimen/text_button"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
@@ -96,7 +97,8 @@
                 android:paddingVertical="13dp"
                 android:background="@color/black"
                 android:textAllCaps="false"
-                android:layout_marginVertical="@dimen/space_screen_small"/>
+                android:layout_marginVertical="@dimen/space_screen_small"
+                android:textSize="@dimen/text_button"/>
         </LinearLayout>
     </LinearLayout>
 </layout>

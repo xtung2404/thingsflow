@@ -7,14 +7,21 @@
 
     <style name="Theme.ThingsFlow" parent="Base.Theme.ThingsFlow" />
 
-    <style name="BottomNavigationView.TextOnly" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="itemIconSize">0dp</item>
-        <item name="itemIconTint">@null</item>
-        <item name="itemTextAppearanceActive">@style/BottomNavText</item>
-        <item name="itemTextAppearanceInactive">@style/BottomNavText</item>
+    <style name="Widget.MyApp.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemActiveIndicatorStyle">@style/Widget.MyApp.BottomNavigationView.ActiveIndicator</item>
     </style>
 
-    <style name="BottomNavText" parent="@android:style/TextAppearance.Small">
-        <item name="android:gravity">center</item>
+    <style name="Widget.MyApp.BottomNavigationView.ActiveIndicator" parent="">
+        <!-- Bo tròn theo cả icon + text -->
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.BottomNav.Indicator</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.MyApp.BottomNav.Indicator" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
     </style>
 </resources>

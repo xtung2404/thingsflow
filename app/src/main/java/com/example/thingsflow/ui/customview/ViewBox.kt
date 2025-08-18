@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.example.thingsflow.R
+import com.example.thingsflow.utils.getDeviceTypeLabel
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGemini
@@ -51,8 +52,8 @@ class ViewBox @JvmOverloads constructor(
     private var downY: Float = 0f
 
     private lateinit var txtBoxEvtLabel: TextView
-    private lateinit var txtBoxEvtDevice: TextView
-    private lateinit var txtBoxEvtAttr: TextView
+    private lateinit var txtBoxEvtType: TextView
+    private lateinit var txtBoxEvtDeviceType: TextView
     private lateinit var lnEvtContent: LinearLayout
     private lateinit var lnEvtEmpty: LinearLayout
 
@@ -134,8 +135,8 @@ class ViewBox @JvmOverloads constructor(
                 is FBoxEventStatistic
                 -> {
                     txtBoxEvtLabel = findViewById<TextView>(R.id.txt_box_evt_label)
-                    txtBoxEvtDevice = findViewById<TextView>(R.id.txt_box_evt_device)
-                    txtBoxEvtAttr = findViewById<TextView>(R.id.txt_box_evt_attr)
+                    txtBoxEvtType = findViewById<TextView>(R.id.txt_box_evt_device)
+                    txtBoxEvtDeviceType = findViewById<TextView>(R.id.txt_box_evt_device_type)
                     lnEvtContent = findViewById<LinearLayout>(R.id.ln_evt_content)
                     lnEvtEmpty = findViewById<LinearLayout>(R.id.ln_evt_empty)
                     when (boxVal) {
@@ -150,6 +151,8 @@ class ViewBox @JvmOverloads constructor(
                             } else {
                                 lnEvtContent.visibility = View.VISIBLE
                                 lnEvtEmpty.visibility = View.GONE
+                                txtBoxEvtType.text = context.resources.getString(R.string.event_from_device)
+                                txtBoxEvtDeviceType.text = getDeviceTypeLabel(context, boxVal.devType)
                             }
                         }
                     }
@@ -179,12 +182,17 @@ class ViewBox @JvmOverloads constructor(
                     txtBoxActLabel = findViewById<TextView>(R.id.txt_box_act_label)
                     txtBoxActType = findViewById<TextView>(R.id.txt_box_act_type)
                     txtBoxActAction = findViewById<TextView>(R.id.txt_box_act_action)
+                    when(boxVal) {
+                        is FBoxActionControlDevice -> {
+                            txtBoxActType.text = context.getString(R.string.control_device)
+                        }
+                    }
                 }
 
                 else -> {
                     txtBoxEvtLabel = findViewById<TextView>(R.id.txt_box_evt_label)
-                    txtBoxEvtDevice = findViewById<TextView>(R.id.txt_box_evt_device)
-                    txtBoxEvtAttr = findViewById<TextView>(R.id.txt_box_evt_attr)
+                    txtBoxEvtType = findViewById<TextView>(R.id.txt_box_evt_device)
+                    txtBoxEvtDeviceType = findViewById<TextView>(R.id.txt_box_evt_device_type)
                 }
             }
         }

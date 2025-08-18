@@ -32,6 +32,7 @@
     <string name="reset_password">Đặt lại mật khẩu</string>
     <string name="list_of_available_locations">Danh sách địa điểm đã có</string>
     <string name="cancel">Hủy</string>
+    <string name="save">Lưu</string>
     <string name="scan_gateway">Quét gateway</string>
     <string name="add_gateway">Thêm Gateway</string>
     <string name="make_sure_that_gateway_is_plugged">Hãy đảm đã cắm nguồn Gateway</string>
@@ -105,6 +106,9 @@
     <string name="smoke">Khói</string>
     <string name="wall_mounted">Gắn tường</string>
     <string name="choose_device_from_list">Chọn thiết bị từ danh sách</string>
+    <string name="label_flow_scenario">Đặt tên Flow Scenario</string>
+    <string name="action">Hành động</string>
+    <string name="control_device">Điều khiển thiết bị</string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>

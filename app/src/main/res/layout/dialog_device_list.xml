@@ -25,45 +25,58 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/device_list"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/text_headline6"
                     android:textColor="@color/black"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="23dp"/>
+                    android:layout_gravity="center_horizontal"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/name_location_after"
-                    android:textSize="@dimen/text_size_10"
+                    android:text="@string/device_list"
+                    android:textSize="@dimen/text_caption"
                     android:textColor="@color/black"
-                    android:layout_marginTop="@dimen/space_screen_super_small"/>
+                    android:layout_marginTop="@dimen/_space30dp"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/space_screen_small"
-                    android:layout_marginBottom="@dimen/space_screen_super_small"
-                    android:background="@color/gray" />
+                    android:background="@color/light_gray"
+                    android:layout_marginTop="@dimen/_space8dp"
+                    android:layout_marginBottom="@dimen/_space12dp"/>
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="350dp"
+                    android:layout_height="400dp"
                     android:id="@+id/rv_device"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/space_screen_small"
-                    android:layout_marginBottom="@dimen/space_screen_super_small"
-                    android:background="@color/gray" />
+                    android:background="@color/light_gray"
+                    android:layout_marginTop="@dimen/_space8dp"
+                    android:layout_marginBottom="@dimen/_space12dp"/>
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/btn_config"
                     android:text="@string/config"
-                    android:id="@+id/btn_config"/>
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_button"
+                    android:paddingVertical="13dp"
+                    android:background="@color/emerald"
+                    android:textAllCaps="false" />
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/cancel"
+                    android:layout_weight="1"
                     android:id="@+id/btn_cancel"
-                    android:layout_marginTop="@dimen/space_screen_small"/>
+                    android:text="@string/cancel"
+                    android:textSize="@dimen/text_button"
+                    android:textColor="@color/white"
+                    android:paddingVertical="13dp"
+                    android:background="@color/light_gray_10"
+                    android:textAllCaps="false"
+                    android:layout_marginTop="16dp"/>
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

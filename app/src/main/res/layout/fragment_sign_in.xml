@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_in"
-            android:textSize="24sp"
+            android:textSize="@dimen/text_headline5"
             android:textColor="@color/black"
             android:layout_marginTop="145dp"
             android:layout_gravity="center"/>
@@ -26,7 +26,7 @@
             android:id="@+id/tip_email"
             android:hint="@string/insert_your_email"
             android:textColor="@color/black"
-            android:textSize="13sp"
+            android:textSize="@dimen/text_body2"
             android:layout_marginTop="44dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:text="tungrogo24@gmail.com"
                 android:paddingHorizontal="13dp"
                 android:paddingVertical="14dp"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_body2"
                 android:textColor="@color/black"
                 android:background="@drawable/bg_text_input_gray"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -45,7 +45,7 @@
             android:id="@+id/tip_pwd"
             android:hint="@string/insert_your_password"
             android:textColor="@color/black"
-            android:textSize="13sp"
+            android:textSize="@dimen/text_body2"
             android:layout_marginTop="20dp"
             app:passwordToggleEnabled="true">
             <com.google.android.material.textfield.TextInputEditText
@@ -55,7 +55,7 @@
                 android:text="123456"
                 android:paddingHorizontal="13dp"
                 android:paddingVertical="14dp"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_body2"
                 android:textColor="@color/black"
                 android:background="@drawable/bg_text_input_gray"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/txt_noti"
             android:text="@string/at_least_6_characters"
-            android:textSize="10sp"
+            android:textSize="@dimen/text_overline"
             android:textColor="@color/black"
             android:layout_marginTop="5dp"/>
         <TextView
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/txt_forgot_pwd"
             android:text="@string/forgot_password"
-            android:textSize="13sp"
+            android:textSize="@dimen/text_body2"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:layout_marginTop="5dp"/>
@@ -80,6 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btn_sign_in"
+            android:textSize="@dimen/text_button"
             android:text="@string/sign_in"
             android:textColor="@color/white"
             android:paddingVertical="13dp"
@@ -90,6 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btn_sign_up"
+            android:textSize="@dimen/text_button"
             android:text="@string/sign_up"
             android:textColor="@color/black"
             android:paddingVertical="13dp"

@@ -10,24 +10,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingHorizontal="40dp">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/list_of_flow_scenario"
-            android:textSize="@dimen/text_size_24"
+            android:textSize="@dimen/text_headline5"
             android:textColor="@color/black"
-            android:layout_marginTop="40dp" />
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="40dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/list_of_using_flow_scenario"
-            android:textSize="@dimen/text_size_10"
+            android:textSize="@dimen/text_overline"
             android:textColor="@color/black"
-            android:layout_marginTop="@dimen/space_screen_small" />
+            android:layout_marginTop="@dimen/space_screen_small"
+            android:layout_marginStart="40dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,13 +39,14 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="140dp"
-                android:layout_height="140dp" />
+                android:layout_height="140dp"
+                android:src="@drawable/ic_box"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/you_dont_have_any_scenario"
-                android:textSize="@dimen/text_size_15"
+                android:textSize="@dimen/text_subtitle1"
                 android:textColor="@color/black"
                 android:layout_marginTop="@dimen/space_screen_small" />
 
@@ -68,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/create_flow_scenario"
-                    android:textSize="@dimen/text_size_15"
+                    android:textSize="@dimen/text_subtitle1"
                     android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>

@@ -26,7 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/assign_gateway_to_group"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/text_headline5"
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/space_screen_small"/>
@@ -35,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/helpful_when_lots_of_gateway"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_body2"
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/space_screen_super_small"/>
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/available_group"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body2"
                 android:textColor="@color/black"
                 android:layout_marginVertical="@dimen/space_screen_small"/>
             <LinearLayout
@@ -79,7 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/create_new_group"
-                        android:textSize="@dimen/text_size_13"
+                        android:textSize="@dimen/text_body2"
                         android:textColor="@color/black"
                         android:textStyle="bold"/>
                 </LinearLayout>
@@ -90,6 +90,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_continue"
                 android:text="@string/to_continue"
+                android:textSize="@dimen/text_button"
                 android:textColor="@color/white"
                 android:paddingVertical="13dp"
                 android:background="@color/black"
@@ -103,6 +104,7 @@
                 android:textColor="@color/black"
                 android:paddingVertical="13dp"
                 android:layout_marginTop="@dimen/space_screen_small"
+                android:textSize="@dimen/text_button"
                 android:textAllCaps="false"
                 android:background="@drawable/bg_white_stroke_black"/>
 

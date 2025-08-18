@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sign_up"
-                android:textSize="24sp"
+                android:textSize="@dimen/text_headline5"
                 android:textColor="@color/black"
                 android:layout_gravity="center"/>
             <com.google.android.material.textfield.TextInputLayout
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/insert_your_username"
                 android:textColor="@color/black"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_body2"
                 android:layout_marginTop="45dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -42,7 +42,7 @@
                     android:id="@+id/edt_username"
                     android:paddingHorizontal="13dp"
                     android:paddingVertical="14dp"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_body2"
                     android:textColor="@color/black"
                     android:background="@drawable/bg_text_input_gray"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -52,7 +52,7 @@
                 android:id="@+id/tip_email"
                 android:hint="@string/insert_your_email"
                 android:textColor="@color/black"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_body2"
                 android:layout_marginTop="20dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -60,7 +60,7 @@
                     android:id="@+id/edt_email"
                     android:paddingHorizontal="13dp"
                     android:paddingVertical="14dp"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_body2"
                     android:textColor="@color/black"
                     android:background="@drawable/bg_text_input_gray"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/insert_your_password"
                 android:textColor="@color/black"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_body2"
                 android:layout_marginTop="20dp"
                 app:passwordToggleEnabled="true">
                 <com.google.android.material.textfield.TextInputEditText
@@ -78,7 +78,7 @@
                     android:id="@+id/edt_pwd"
                     android:paddingHorizontal="13dp"
                     android:paddingVertical="14dp"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_body2"
                     android:textColor="@color/black"
                     android:background="@drawable/bg_text_input_gray"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_noti"
                 android:text="@string/at_least_6_characters"
-                android:textSize="10sp"
+                android:textSize="@dimen/text_overline"
                 android:textColor="@color/black"
                 android:layout_marginTop="5dp"/>
             <androidx.appcompat.widget.AppCompatButton
@@ -95,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_continue"
                 android:text="@string/to_continue"
+                android:textSize="@dimen/text_button"
                 android:textColor="@color/white"
                 android:paddingVertical="13dp"
                 android:background="@color/black"

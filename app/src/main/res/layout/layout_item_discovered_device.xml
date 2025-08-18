@@ -22,7 +22,7 @@
             android:id="@+id/txt_label"
             android:layout_weight="1"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_13"
+            android:textSize="@dimen/text_body2"
             android:layout_marginEnd="@dimen/space_screen_super_small"
             android:maxLines="1"
             android:ellipsize="end"/>

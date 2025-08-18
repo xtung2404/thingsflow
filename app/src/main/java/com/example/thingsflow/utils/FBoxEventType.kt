@@ -1,8 +1,8 @@
 package com.example.thingsflow.utils
 
-class FBoxEventType {
+public class FBoxEventType {
     companion object {
-        val FBOX_EVENT_TYPE_DEVICE = 1
-        val FBOX_EVENT_TYPE_MQTT = 2
+        public const val FBOX_EVENT_TYPE_DEVICE = 1
+        public const val FBOX_EVENT_TYPE_MQTT = 2
     }
 }

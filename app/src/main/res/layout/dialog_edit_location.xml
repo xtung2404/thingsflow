@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/name_location_after"
-                    android:textSize="@dimen/text_size_10"
+                    android:textSize="@dimen/text_overline"
                     android:textColor="@color/black"
                     android:layout_marginTop="@dimen/space_screen_super_small"/>
                 <androidx.appcompat.widget.AppCompatButton
@@ -58,6 +58,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_save"
                     android:text="@string/save_location"
+                    android:textSize="@dimen/text_button"
                     android:textColor="@color/white"
                     android:paddingVertical="13dp"
                     android:background="@color/black"
@@ -67,6 +68,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_delete_location"
+                    android:textSize="@dimen/text_button"
                     android:text="@string/delete_location"
                     android:textColor="@color/black"
                     android:paddingVertical="13dp"

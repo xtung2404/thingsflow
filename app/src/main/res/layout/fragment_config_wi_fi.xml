@@ -26,7 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/connect_to_wifi"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/text_headline5"
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/space_screen_small"/>
@@ -35,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/make_sure_that_gateway_is_plugged"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_body2"
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/space_screen_super_small"/>
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/available_wifi"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body2"
                 android:textColor="@color/black"
                 android:layout_marginVertical="@dimen/space_screen_small"/>
             <LinearLayout
@@ -73,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/rescan_wifi"
-                        android:textSize="@dimen/text_size_13"
+                        android:textSize="@dimen/text_body2"
                         android:textColor="@color/black"
                         android:textStyle="bold"/>
                 </LinearLayout>
@@ -87,7 +87,8 @@
                 android:paddingVertical="13dp"
                 android:background="@color/black"
                 android:textAllCaps="false"
-                android:layout_marginTop="@dimen/space_screen_small"/>
+                android:layout_marginTop="@dimen/space_screen_small"
+                android:textSize="@dimen/text_button"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +98,8 @@
                 android:paddingVertical="13dp"
                 android:layout_marginTop="@dimen/space_screen_small"
                 android:textAllCaps="false"
-                android:background="@drawable/bg_white_stroke_black"/>
+                android:background="@drawable/bg_white_stroke_black"
+                android:textSize="@dimen/text_button"/>
 
         </LinearLayout>
     </LinearLayout>

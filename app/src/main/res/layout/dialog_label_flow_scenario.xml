@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:paddingVertical="@dimen/_space50dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="45dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/label_flow_scenario"
+                        android:textSize="@dimen/text_headline6"
+                        android:textColor="@color/black"/>
+                    <ImageView
+                        android:layout_width="@dimen/_space24dp"
+                        android:layout_height="@dimen/_space24dp"
+                        android:id="@+id/btn_close"
+                        android:src="@drawable/ic_exit"/>
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/_space24dp"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="@dimen/_space20dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/edt_ssid"
+                        android:paddingHorizontal="13dp"
+                        android:paddingVertical="14dp"
+                        android:textSize="13sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/bg_text_input_gray"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/btn_cancel"
+                        android:text="@string/cancel"
+                        android:textColor="@color/emerald"
+                        android:paddingVertical="13dp"
+                        android:textAllCaps="true"
+                        android:layout_marginEnd="@dimen/_space12dp"
+                        android:background="@drawable/bg_white_stroke_gray"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/btn_save"
+                        android:text="@string/save"
+                        android:textSize="@dimen/text_body2"
+                        android:textColor="@color/white"
+                        android:paddingVertical="13dp"
+                        android:textAllCaps="true"
+                        android:background="@color/emerald"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

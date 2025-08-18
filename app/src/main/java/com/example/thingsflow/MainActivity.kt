@@ -2,6 +2,9 @@ package com.example.thingsflow
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -31,6 +34,18 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
 
-//        binding.bottomNavigationView?.setupWithNavController(navController)
+        binding.bottomNavigationView?.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.homeFragment,
+                R.id.fragmentFlowScenManagement
+                -> {
+                    binding.bottomNavigationView?.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.bottomNavigationView?.visibility = View.GONE
+                }
+            }
+        }
     }
 }

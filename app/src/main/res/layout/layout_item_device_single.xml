@@ -10,21 +10,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/root"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center_vertical"
         android:paddingVertical="@dimen/_space10dp"
         android:paddingHorizontal="@dimen/space_screen_super_small"
-        android:background="@color/white"
-        android:layout_marginTop="@dimen/_space4dp">
+        android:layout_marginBottom="@dimen/_space12dp"
+        android:background="@color/light_gray">
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txt_label"
-            android:layout_weight="1"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:textSize="@dimen/text_body2"
+            android:textStyle="bold"
+            android:layout_marginEnd="@dimen/space_screen_super_small"
             android:maxLines="1"
             android:ellipsize="end"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_location"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_overline"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginTop="@dimen/_space4dp"/>
     </LinearLayout>
 </layout>

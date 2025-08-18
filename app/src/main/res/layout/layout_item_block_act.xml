@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="@dimen/text_overline"
-            android:text="Loại box" />
+            android:text="@string/action" />
 
         <TextView
             android:id="@+id/txt_box_act_type"
@@ -27,8 +27,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_overline"
             android:textStyle="bold"
-            android:layout_marginTop="4dp"
-            android:text="Mục đích của box" />
+            android:layout_marginTop="4dp"/>
 
         <TextView
             android:id="@+id/txt_box_act_action"

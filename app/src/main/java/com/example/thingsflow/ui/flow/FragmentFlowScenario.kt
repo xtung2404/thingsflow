@@ -12,6 +12,9 @@ import com.example.thingsflow.ui.adapter.AdapterAttributes
 import com.example.thingsflow.ui.adapter.AdapterSpinnerBoxEventType
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.ui.customview.ViewBox
+import com.example.thingsflow.ui.dialog.DialogDeviceList
+import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
+import com.example.thingsflow.utils.FBoxEventType
 import com.example.thingsflow.utils.getSupportedAttribue
 import com.example.thingsflow.utils.getSupportedBoxEvent
 import com.example.thingsflow.utils.getSupportedDeviceType
@@ -31,6 +34,7 @@ import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRemove
 import rogo.iot.module.flowcommon.box.action.FBoxActionHandlerAnotherBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionPublishMqtt
 import rogo.iot.module.flowcommon.box.action.FBoxActionSendWebSocket
+import rogo.iot.module.flowcommon.box.event.FBoxEvent
 import rogo.iot.module.flowcommon.box.event.FBoxEventCameraStreaming
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.box.event.FBoxEventFaceID
@@ -54,8 +58,17 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
         get() = R.layout.fragment_flow_scenario
 
     private val TAG = "FragmentFlowScenario"
+    val boxes = mutableListOf<FBox>()
+    private var attrMap: MutableMap<Int, Boolean> = mutableMapOf()
+
     private val adapterSpinnerBoxEventType: AdapterSpinnerBoxEventType by lazy {
         AdapterSpinnerBoxEventType(requireContext(), getSupportedBoxEvent())
+    }
+    private val dialogLabelFlowScenario: DialogLabelFlowScenario by lazy {
+        DialogLabelFlowScenario(
+            requireContext(),
+            requireActivity()
+        )
     }
 
     private val adapterSpinnerDeviceType: AdapterSpinnerDeviceType by lazy {
@@ -70,13 +83,18 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
             }
         )
     }
-    private var attrMap: MutableMap<Int, Boolean> = mutableMapOf()
+
+    private val dialogDeviceList: DialogDeviceList by lazy {
+        DialogDeviceList(
+            requireContext(),
+            requireActivity()
+        )
+    }
 
     override fun initVariable() {
         super.initVariable()
         binding.apply {
             overlayBoxEvent.visibility = View.GONE
-            dimBackground.visibility = View.GONE
             spinnerEventInput.adapter = adapterSpinnerBoxEventType
             spinnerDeviceType.adapter = adapterSpinnerDeviceType
             rvAttr.adapter = adapterAttributes
@@ -89,59 +107,63 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
         super.initView()
         binding.apply {
             // Khởi tạo một danh sách FBox mới
-            val boxes = mutableListOf<FBox>()
-
+            boxes.clear()
+            if (boxes.isEmpty()) {
+                btnEditScene.visibility = View.GONE
+            } else {
+                btnEditScene.visibility = View.VISIBLE
+            }
             val fBoxEvent = FBoxEventDevice()
-            fBoxEvent.devId = "123"
-            fBoxEvent.devType = IoTDeviceType.SWITCH
-            fBoxEvent.targetSegId = 1
+//            fBoxEvent.devId = "123"
+//            fBoxEvent.devType = IoTDeviceType.SWITCH
+//            fBoxEvent.targetSegId = 1
             boxes.add(fBoxEvent)
 
-            val fActionBox = FBoxActionControlDevice()
-            fActionBox.devId = "1222"
-            fActionBox.segId = 1
-            boxes.add(fActionBox)
-
-            val fActionBox1 = FBoxActionControlDevice()
-            fActionBox1.devId = "1223"
-            fActionBox1.segId = 1
-            fActionBox1.positiveSegId = 2
-            fActionBox1.negativeSegId = 3
-            boxes.add(fActionBox1)
-
-            val fActionBox2 = FBoxActionControlDevice()
-            fActionBox2.devId = "12223"
-            fActionBox2.segId = 2
-            fActionBox2.positiveSegId = 6
-            fActionBox2.negativeSegId = 7
-            boxes.add(fActionBox2)
-
-            val fActionBox3 = FBoxActionControlDevice()
-            fActionBox3.devId = "12224"
-            fActionBox3.segId = 3
-            fActionBox3.negativeSegId = 4
-            fActionBox3.positiveSegId = 5
-            boxes.add(fActionBox3)
-
-            val fActionBox4 = FBoxActionControlDevice()
-            fActionBox4.devId = "12224"
-            fActionBox4.segId = 4
-            boxes.add(fActionBox4)
-
-            val fActionBox5 = FBoxActionControlDevice()
-            fActionBox5.devId = "12224"
-            fActionBox5.segId = 5
-            boxes.add(fActionBox5)
-
-            val fActionBox6 = FBoxActionControlDevice()
-            fActionBox6.devId = "12224"
-            fActionBox6.segId = 6
-            boxes.add(fActionBox6)
-
-            val fActionBox7 = FBoxActionControlDevice()
-            fActionBox7.devId = "12224"
-            fActionBox7.segId = 7
-            boxes.add(fActionBox7)
+//            val fActionBox = FBoxActionControlDevice()
+//            fActionBox.devId = "1222"
+//            fActionBox.segId = 1
+//            boxes.add(fActionBox)
+//
+//            val fActionBox1 = FBoxActionControlDevice()
+//            fActionBox1.devId = "1223"
+//            fActionBox1.segId = 1
+//            fActionBox1.positiveSegId = 2
+//            fActionBox1.negativeSegId = 3
+//            boxes.add(fActionBox1)
+//
+//            val fActionBox2 = FBoxActionControlDevice()
+//            fActionBox2.devId = "12223"
+//            fActionBox2.segId = 2
+//            fActionBox2.positiveSegId = 6
+//            fActionBox2.negativeSegId = 7
+//            boxes.add(fActionBox2)
+//
+//            val fActionBox3 = FBoxActionControlDevice()
+//            fActionBox3.devId = "12224"
+//            fActionBox3.segId = 3
+//            fActionBox3.negativeSegId = 4
+//            fActionBox3.positiveSegId = 5
+//            boxes.add(fActionBox3)
+//
+//            val fActionBox4 = FBoxActionControlDevice()
+//            fActionBox4.devId = "12224"
+//            fActionBox4.segId = 4
+//            boxes.add(fActionBox4)
+//
+//            val fActionBox5 = FBoxActionControlDevice()
+//            fActionBox5.devId = "12224"
+//            fActionBox5.segId = 5
+//            boxes.add(fActionBox5)
+//
+//            val fActionBox6 = FBoxActionControlDevice()
+//            fActionBox6.devId = "12224"
+//            fActionBox6.segId = 6
+//            boxes.add(fActionBox6)
+//
+//            val fActionBox7 = FBoxActionControlDevice()
+//            fActionBox7.devId = "12224"
+//            fActionBox7.segId = 7
+//            boxes.add(fActionBox7)
             // Gán danh sách cho boxList của LayoutZoomPan
             boxLayout.boxList = ArrayList(boxes)
 
@@ -153,23 +175,40 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
         super.initAction()
         binding.apply {
             btnBackOverlayEvent.setOnClickListener {
-                dimBackground.visibility = View.GONE
                 overlayBoxEvent.visibility = View.GONE
             }
 
+            btnUpdateLabel.setOnClickListener {
+                dialogLabelFlowScenario.show()
+            }
 
-            cbAllAttr.setOnCheckedChangeListener(
-                object : OnCheckedChangeListener {
-                    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-                        attrMap.keys.forEach { key ->
-                            attrMap[key] = isChecked
+            btnEditScene.setOnClickListener {
+
+            }
+
+            btnSelectDevice.setOnClickListener {
+                dialogDeviceList.show()
+            }
+
+            btnBackOverlayEvent.setOnClickListener {
+                handleOverlayAnimation(false)
+
+            }
+            btnEvtConfig.setOnClickListener {
+                when(spinnerEventInput.selectedItem as Int) {
+                    FBoxEventType.FBOX_EVENT_TYPE_DEVICE -> {
+                        val boxEvt = FBoxEventDevice()
+                        boxEvt.apply {
+                            devType = spinnerDeviceType.selectedItem as Int
+                            attrTypes = attrMap.filter { it.value }.keys.toIntArray()
                         }
-                        adapterAttributes.notifyDataSetChanged()
+                        boxes.clear()
+                        boxes.add(boxEvt)
+                        boxLayout.boxList = ArrayList(boxes)
+                        handleOverlayAnimation(false)
                     }
-
                 }
-            )
-
+            }
         }
     }
 
@@ -191,7 +230,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
             is FBoxEventStatistic
             -> {
                 binding.overlayBoxEvent.visibility = View.VISIBLE
-                binding.dimBackground.visibility = View.VISIBLE
+                handleOverlayAnimation(true)
             }
 
             is FBoxActionConditionGeneral,
@@ -219,6 +258,31 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
             else -> {
 
             }
+        }
+    }
+
+    fun handleOverlayAnimation(isOpen: Boolean) {
+        val displayMetrics = resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels.toFloat()
+
+        if (isOpen) {
+            binding.overlayBoxEvent.visibility = View.VISIBLE
+            binding.overlayBoxEvent.translationX = screenWidth
+
+            binding.overlayBoxEvent.animate()
+                .translationX(0f)
+                .setDuration(300)
+                .start()
+
+        } else {
+            binding.overlayBoxEvent.animate()
+                .translationX(screenWidth)
+                .setDuration(300)
+                .withEndAction {
+                    binding.overlayBoxEvent.visibility = View.GONE
+                    binding.overlayBoxEvent.translationX = 0f
+                }
+                .start()
         }
     }
 }

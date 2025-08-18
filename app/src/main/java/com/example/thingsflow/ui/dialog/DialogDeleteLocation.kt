@@ -31,32 +31,32 @@ class DialogDeleteLocation(
             btnCancel.setOnClickListener {
                 ioTLocation?.let(onCancel)
             }
-            btnDeleteLocation.setOnClickListener {
-                ioTLocation?.let {
-                    vmLocation.delete(
-                        it.uuid,
-                        object: RequestCallback<Boolean> {
-                            override fun onSuccess(p0: Boolean?) {
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    vmLocation.refresh()
-                                    dismiss()
-                                }
-                            }
-
-                            override fun onFailure(p0: Int, p1: String?) {
-                                ILogR.D(TAG, "ON_DELETE:onFailure", p0, p1)
-                            }
-                        }
-                    )
-                }
-            }
+//            btnDeleteLocation.setOnClickListener {
+//                ioTLocation?.let {
+//                    vmLocation.delete(
+//                        it.uuid,
+//                        object: RequestCallback<Boolean> {
+//                            override fun onSuccess(p0: Boolean?) {
+//                                CoroutineScope(Dispatchers.Main).launch {
+//                                    vmLocation.refresh()
+//                                    dismiss()
+//                                }
+//                            }
+//
+//                            override fun onFailure(p0: Int, p1: String?) {
+//                                ILogR.D(TAG, "ON_DELETE:onFailure", p0, p1)
+//                            }
+//                        }
+//                    )
+//                }
+//            }
         }
     }
 
     override fun onDialogShown() {
         super.onDialogShown()
         binding.apply {
-            txtLabel.text = ioTLocation?.label
+//            txtLabel.text = ioTLocation?.label
         }
     }
 
