@@ -11,16 +11,5 @@
         android:layout_height="match_parent"
         tools:context=".ui.FragmentDashboard">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_continue"
-            android:text="@string/to_continue"
-            android:textColor="@color/white"
-            android:paddingVertical="13dp"
-            android:background="@color/black"
-            android:textAllCaps="false"
-            android:layout_marginVertical="@dimen/space_screen_small"/>
-
     </LinearLayout>
 </layout>

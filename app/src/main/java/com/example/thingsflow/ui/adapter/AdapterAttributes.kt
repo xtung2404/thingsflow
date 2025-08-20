@@ -7,36 +7,34 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemAttributeBinding
-import com.example.thingsflow.databinding.LayoutItemDiscoveredDeviceBinding
 import com.example.thingsflow.utils.getAttrLabel
-import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
 
 class AdapterAttributes(
-    val onItemClicked: (Int) -> Unit
+    val onItemClicked: (Pair<Int, String>) -> Unit
 ):
-ListAdapter<Map.Entry<Int, Boolean>, AdapterAttributes.AttributesViewHolder>(
-    object : DiffUtil.ItemCallback<Map.Entry<Int, Boolean>>() {
+ListAdapter<MutableMap.MutableEntry<Pair<Int, String>, Boolean>, AdapterAttributes.AttributesViewHolder>(
+    object : DiffUtil.ItemCallback<MutableMap.MutableEntry<Pair<Int, String>, Boolean>>() {
         override fun areItemsTheSame(
-            oldItem: Map.Entry<Int, Boolean>,
-            newItem: Map.Entry<Int, Boolean>
+            oldItem: MutableMap.MutableEntry<Pair<Int, String>, Boolean>,
+            newItem: MutableMap.MutableEntry<Pair<Int, String>, Boolean>
         ): Boolean {
-            return oldItem.key == newItem.key && oldItem.value == newItem.value
+            return oldItem.key.first == newItem.key.first && oldItem.value == newItem.value
         }
 
         override fun areContentsTheSame(
-            oldItem: Map.Entry<Int, Boolean>,
-            newItem: Map.Entry<Int, Boolean>
+            oldItem: MutableMap.MutableEntry<Pair<Int, String>, Boolean>,
+            newItem: MutableMap.MutableEntry<Pair<Int, String>, Boolean>
         ): Boolean {
-            return oldItem.key == newItem.key && oldItem.value == newItem.value
+            return oldItem.key.first == newItem.key.first && oldItem.value == newItem.value
         }
     }
 ) {
     inner class AttributesViewHolder(
         private val binding: LayoutItemAttributeBinding
     ): RecyclerView.ViewHolder(binding.root) {
-        fun onBind(attr: Map.Entry<Int, Boolean>) {
+        fun onBind(attr: MutableMap.MutableEntry<Pair<Int, String>, Boolean>) {
             binding.apply {
-                txtLabel.text = getAttrLabel(binding.root.context, attr.key)
+                txtLabel.text = attr.key.second
                 if (attr.value) {
                     root.setBackgroundResource(R.drawable.bg_white_stroke_emerald)
                 } else {

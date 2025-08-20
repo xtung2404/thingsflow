@@ -1,10 +1,14 @@
 package com.example.thingsflow.ui.flow
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowScenarioBinding
 import com.example.thingsflow.ui.FragmentBase
@@ -15,6 +19,7 @@ import com.example.thingsflow.ui.customview.ViewBox
 import com.example.thingsflow.ui.dialog.DialogDeviceList
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
 import com.example.thingsflow.utils.FBoxEventType
+import com.example.thingsflow.utils.getAttrLabel
 import com.example.thingsflow.utils.getSupportedAttribue
 import com.example.thingsflow.utils.getSupportedBoxEvent
 import com.example.thingsflow.utils.getSupportedDeviceType
@@ -53,13 +58,14 @@ import rogo.iot.module.platform.define.IoTDeviceType
 import java.util.Arrays
 
 @AndroidEntryPoint
-class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBox.OnBoxClickListener {
+class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
+    ViewBox.OnBoxClickListener {
     override val layoutId: Int
         get() = R.layout.fragment_flow_scenario
 
     private val TAG = "FragmentFlowScenario"
     val boxes = mutableListOf<FBox>()
-    private var attrMap: MutableMap<Int, Boolean> = mutableMapOf()
+    private var attrMap: MutableMap<Pair<Int, String>, Boolean>  = mutableMapOf()
 
     private val adapterSpinnerBoxEventType: AdapterSpinnerBoxEventType by lazy {
         AdapterSpinnerBoxEventType(requireContext(), getSupportedBoxEvent())
@@ -98,7 +104,11 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
             spinnerEventInput.adapter = adapterSpinnerBoxEventType
             spinnerDeviceType.adapter = adapterSpinnerDeviceType
             rvAttr.adapter = adapterAttributes
-            attrMap = getSupportedAttribue().associateWith { false } as MutableMap<Int, Boolean>
+
+            attrMap = getSupportedAttribue()
+                .map { (it to getAttrLabel(requireContext(), it)) to false }
+                .toMap()
+                .toMutableMap()
             adapterAttributes.submitList(attrMap.entries.toList())
         }
     }
@@ -106,6 +116,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
     override fun initView() {
         super.initView()
         binding.apply {
+            cbLater.isChecked = true
             // Khởi tạo một danh sách FBox mới
             boxes.clear()
             if (boxes.isEmpty()) {
@@ -119,54 +130,9 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
 //            fBoxEvent.targetSegId = 1
             boxes.add(fBoxEvent)
 
-//            val fActionBox = FBoxActionControlDevice()
-//            fActionBox.devId = "1222"
-//            fActionBox.segId = 1
-//            boxes.add(fActionBox)
-//
-//            val fActionBox1 = FBoxActionControlDevice()
-//            fActionBox1.devId = "1223"
-//            fActionBox1.segId = 1
-//            fActionBox1.positiveSegId = 2
-//            fActionBox1.negativeSegId = 3
-//            boxes.add(fActionBox1)
-//
-//            val fActionBox2 = FBoxActionControlDevice()
-//            fActionBox2.devId = "12223"
-//            fActionBox2.segId = 2
-//            fActionBox2.positiveSegId = 6
-//            fActionBox2.negativeSegId = 7
-//            boxes.add(fActionBox2)
-//
-//            val fActionBox3 = FBoxActionControlDevice()
-//            fActionBox3.devId = "12224"
-//            fActionBox3.segId = 3
-//            fActionBox3.negativeSegId = 4
-//            fActionBox3.positiveSegId = 5
-//            boxes.add(fActionBox3)
-//
-//            val fActionBox4 = FBoxActionControlDevice()
-//            fActionBox4.devId = "12224"
-//            fActionBox4.segId = 4
-//            boxes.add(fActionBox4)
-//
-//            val fActionBox5 = FBoxActionControlDevice()
-//            fActionBox5.devId = "12224"
-//            fActionBox5.segId = 5
-//            boxes.add(fActionBox5)
-//
-//            val fActionBox6 = FBoxActionControlDevice()
-//            fActionBox6.devId = "12224"
-//            fActionBox6.segId = 6
-//            boxes.add(fActionBox6)
-//
-//            val fActionBox7 = FBoxActionControlDevice()
-//            fActionBox7.devId = "12224"
-//            fActionBox7.segId = 7
-//            boxes.add(fActionBox7)
-            // Gán danh sách cho boxList của LayoutZoomPan
-            boxLayout.boxList = ArrayList(boxes)
 
+//             Gán danh sách cho boxList của LayoutZoomPan
+            boxLayout.boxList = ArrayList(boxes)
             binding.boxLayout.onBoxClickListener = this@FragmentFlowScenario
         }
     }
@@ -194,16 +160,116 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(), ViewBo
                 handleOverlayAnimation(false)
 
             }
+
+            edtAttr.addTextChangedListener(
+                object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        s?.let {searchInput ->
+                            val searchedMap = attrMap.filter {
+                                it.key.second.contains(searchInput, true)
+                            }.toMutableMap().entries.toMutableList()
+
+                            adapterAttributes.submitList(searchedMap)
+                        }
+
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+
+                    }
+
+                }
+            )
+
+            cbLater.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    cbSelectDevice.isChecked = false
+                    btnSelectDevice.isEnabled = false
+                }
+            }
+
+            cbSelectDevice.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    cbLater.isChecked = false
+                    btnSelectDevice.isEnabled = true
+                } else {
+                    btnSelectDevice.isEnabled = false
+                }
+            }
+
             btnEvtConfig.setOnClickListener {
-                when(spinnerEventInput.selectedItem as Int) {
+                when (spinnerEventInput.selectedItem as Int) {
                     FBoxEventType.FBOX_EVENT_TYPE_DEVICE -> {
                         val boxEvt = FBoxEventDevice()
                         boxEvt.apply {
                             devType = spinnerDeviceType.selectedItem as Int
-                            attrTypes = attrMap.filter { it.value }.keys.toIntArray()
+                            attrTypes = attrMap
+                                .filter { it.value }
+                                .keys
+                                .map { it.first }.toIntArray()
+                            targetSegId = 1
                         }
                         boxes.clear()
                         boxes.add(boxEvt)
+                        val fActionBox = FBoxActionControlDevice()
+                        fActionBox.devId = "1222"
+                        fActionBox.segId = 1
+                        boxes.add(fActionBox)
+
+                        val fActionBox1 = FBoxActionControlDevice()
+                        fActionBox1.devId = "1223"
+                        fActionBox1.segId = 1
+                        fActionBox1.positiveSegId = 2
+                        fActionBox1.negativeSegId = 3
+                        boxes.add(fActionBox1)
+
+                        val fActionBox2 = FBoxActionControlDevice()
+                        fActionBox2.devId = "12223"
+                        fActionBox2.segId = 2
+                        fActionBox2.positiveSegId = 6
+                        fActionBox2.negativeSegId = 7
+                        boxes.add(fActionBox2)
+
+                        val fActionBox3 = FBoxActionControlDevice()
+                        fActionBox3.devId = "12224"
+                        fActionBox3.segId = 3
+                        fActionBox3.negativeSegId = 4
+                        fActionBox3.positiveSegId = 5
+                        boxes.add(fActionBox3)
+
+                        val fActionBox4 = FBoxActionControlDevice()
+                        fActionBox4.devId = "12224"
+                        fActionBox4.segId = 4
+                        boxes.add(fActionBox4)
+//
+                        val fActionBox5 = FBoxActionControlDevice()
+                        fActionBox5.devId = "12224"
+                        fActionBox5.segId = 5
+                        boxes.add(fActionBox5)
+
+                        val fActionBox6 = FBoxActionControlDevice()
+                        fActionBox6.devId = "12224"
+                        fActionBox6.segId = 6
+                        boxes.add(fActionBox6)
+
+                        val fActionBox7 = FBoxActionControlDevice()
+                        fActionBox7.devId = "12224"
+                        fActionBox7.segId = 7
+                        boxes.add(fActionBox7)
                         boxLayout.boxList = ArrayList(boxes)
                         handleOverlayAnimation(false)
                     }

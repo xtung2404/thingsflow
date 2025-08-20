@@ -24,9 +24,7 @@ class FragmentDashboard : FragmentBase<FragmentHomeBinding>() {
         super.initAction()
         initializeBluetoothOrRequestPermission()
         binding.apply {
-            btnContinue.setOnClickListener {
-                findNavController().navigate(R.id.fragmentFlowScenManagement)
-            }
+
         }
     }
 

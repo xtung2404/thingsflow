@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingflowsdk.core.FlowSdk
+import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemDeviceGridBinding
 import com.example.thingsflow.databinding.LayoutItemDeviceSingleBinding
 import com.example.thingsflow.databinding.LayoutItemElementBinding
@@ -13,7 +14,9 @@ import rogo.iot.module.platform.entity.IoTElementInfo
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import java.util.concurrent.Flow
 
-class AdapterDevices:
+class AdapterDevices(
+    private val onDeviceSelected: (String, IntArray) -> Unit
+):
 ListAdapter<IoTDevice, RecyclerView.ViewHolder>(
     object : DiffUtil.ItemCallback<IoTDevice>() {
         override fun areItemsTheSame(oldItem: IoTDevice, newItem: IoTDevice): Boolean {
@@ -29,6 +32,9 @@ ListAdapter<IoTDevice, RecyclerView.ViewHolder>(
         private const val TYPE_SINGLE = 0
         private const val TYPE_GRID = 1
     }
+
+    private var selectedDeviceUuid: String? = null
+    private var selectedElementKeys: MutableSet<Int> = mutableSetOf()
     inner class SingleViewHolder(
         private val binding: LayoutItemDeviceSingleBinding
     ): RecyclerView.ViewHolder(binding.root) {
@@ -37,8 +43,18 @@ ListAdapter<IoTDevice, RecyclerView.ViewHolder>(
                 val location = FlowSdk.locationHandler().get(device.locationId)
                 txtLabel.text = device.label
                 txtLocation.text = location?.label
-                root.setOnClickListener {
+                root.isSelected = (device.uuid == selectedDeviceUuid)
 
+                if (device.uuid == selectedDeviceUuid) {
+                    root.setBackgroundResource(R.drawable.bg_light_gray_stroke_blue)
+                } else {
+                    root.setBackgroundColor(root.context.getColor(R.color.light_gray))
+                }
+                root.setOnClickListener {
+                    selectedDeviceUuid = device.uuid
+                    selectedElementKeys = device.elementIds.toMutableSet()
+                    onDeviceSelected.invoke(device.uuid, device.elementIds)
+                    notifyDataSetChanged()
                 }
             }
         }
@@ -50,7 +66,28 @@ ListAdapter<IoTDevice, RecyclerView.ViewHolder>(
         fun onBind(device: IoTDevice) {
             binding.apply {
                 val location = FlowSdk.locationHandler().get(device.locationId)
-                val adapterElm = AdapterElement()
+                val adapterElm = AdapterElement(
+                    device.uuid,
+                    onElementClick = {
+                            elmKey ->
+                        // callback khi chọn element
+                        if (device.uuid != selectedDeviceUuid) {
+                            // chọn device mới -> reset
+                            selectedDeviceUuid = device.uuid
+                            selectedElementKeys = mutableSetOf()
+                        }
+                        // toggle chọn element
+                        if (!selectedElementKeys.contains(elmKey)) {
+                            selectedElementKeys.add(elmKey)
+                        }
+
+                        onDeviceSelected.invoke(
+                            device.uuid,
+                            selectedElementKeys.toIntArray()
+                        )
+                        notifyDataSetChanged()
+                    }
+                )
                 rvElm.adapter = adapterElm
                 adapterElm.submitList(device.elementInfos.entries.toList())
                 txtLabel.text = device.label
@@ -95,7 +132,10 @@ ListAdapter<IoTDevice, RecyclerView.ViewHolder>(
         }
     }
 
-    inner class AdapterElement:
+    inner class AdapterElement(
+        private val deviceUuid: String,
+        private val onElementClick: (Int) -> Unit
+    ):
         ListAdapter<MutableMap.MutableEntry<Int, IoTElementInfo>, AdapterElement.ElementViewHolder>(object: DiffUtil.ItemCallback<MutableMap.MutableEntry<Int, IoTElementInfo>>() {
             override fun areItemsTheSame(
                 oldItem: MutableMap.MutableEntry<Int, IoTElementInfo>,
@@ -117,6 +157,16 @@ ListAdapter<IoTDevice, RecyclerView.ViewHolder>(
                     fun onBind(elmInfo: MutableMap.MutableEntry<Int, IoTElementInfo>) {
                         binding.apply {
                             txtLabel.text = elmInfo.value.label
+                            val isSelected = (selectedDeviceUuid == deviceUuid && selectedElementKeys.contains(elmInfo.key))
+                            root.isSelected = isSelected
+                            if (isSelected) {
+                                root.setBackgroundResource(R.drawable.bg_light_gray_stroke_blue)
+                            } else {
+                                root.setBackgroundColor(root.context.getColor(R.color.light_gray))
+                            }
+                            root.setOnClickListener {
+                                onElementClick.invoke(elmInfo.key)
+                            }
                         }
                     }
                 }

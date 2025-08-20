@@ -69,7 +69,13 @@ class ViewBox @JvmOverloads constructor(
             field = value
             updateBlockContent()
         }
-    var onBlockTouched: ((FBox) -> Unit)? = null
+
+    var isEditMode: Boolean = false
+        set(value) {
+            field = value
+            updateEditModeUI()
+        }
+
     var onBoxClickListener: OnBoxClickListener? = null
 
     init {
@@ -199,6 +205,86 @@ class ViewBox @JvmOverloads constructor(
 
     }
 
+    private fun updateEditModeUI() {
+        fBox?.let { boxVal ->
+            when (boxVal) {
+                is FBoxEventDevice,
+                is FBoxEventMqtt,
+                is FBoxEventWeather,
+                is FBoxEventSchedule,
+                is FBoxEventCameraStreaming,
+                is FBoxEventFaceID,
+                is FBoxEventHttpServerApi,
+                is FBoxEventIORS232,
+                is FBoxEventIORS485,
+                is FBoxEventTouchID,
+                is FBoxEventVoiceRecognize,
+                is FBoxEventTimerInterval,
+                is FBoxEventStatistic
+                -> {
+                    txtBoxEvtLabel = findViewById<TextView>(R.id.txt_box_evt_label)
+                    txtBoxEvtType = findViewById<TextView>(R.id.txt_box_evt_device)
+                    txtBoxEvtDeviceType = findViewById<TextView>(R.id.txt_box_evt_device_type)
+                    lnEvtContent = findViewById<LinearLayout>(R.id.ln_evt_content)
+                    lnEvtEmpty = findViewById<LinearLayout>(R.id.ln_evt_empty)
+                    when (boxVal) {
+                        is FBoxEventDevice -> {
+                            ILogR.D(TAG, "updateBlockContent: BoxEventInfo ", boxVal.devType, Arrays.toString(boxVal.attrTypes), boxVal.devType)
+                            if (boxVal.devId == null &&
+                                boxVal.attrTypes == null &&
+                                boxVal.devType == 0
+                            ) {
+                                lnEvtContent.visibility = View.GONE
+                                lnEvtEmpty.visibility = View.VISIBLE
+                            } else {
+                                lnEvtContent.visibility = View.VISIBLE
+                                lnEvtEmpty.visibility = View.GONE
+                                txtBoxEvtType.text = context.resources.getString(R.string.event_from_device)
+                                txtBoxEvtDeviceType.text = getDeviceTypeLabel(context, boxVal.devType)
+                            }
+                        }
+                    }
+                }
+
+                is FBoxActionConditionGeneral,
+                is FBoxActionConditionTime,
+                is FBoxActionConditionDeviceState
+                -> {
+                    txtBoxCdtLabel = findViewById<TextView>(R.id.txt_box_cdt_label)
+                    txtBoxCdtInput = findViewById<TextView>(R.id.txt_box_cdt_input)
+                    txtBoxCdtCondition = findViewById<TextView>(R.id.txt_box_cdt_condition)
+                }
+
+                is FBoxActionAIGPT,
+                is FBoxActionAIGemini,
+                is FBoxActionCallHttp,
+                is FBoxActionControlDevice,
+                is FBoxActionCodeFunction,
+                is FBoxActionFaceIDLearn,
+                is FBoxActionFaceIDRecognize,
+                is FBoxActionFaceIDRemove,
+                is FBoxActionHandlerAnotherBox,
+                is FBoxActionPublishMqtt,
+                is FBoxActionSendWebSocket
+                -> {
+                    txtBoxActLabel = findViewById<TextView>(R.id.txt_box_act_label)
+                    txtBoxActType = findViewById<TextView>(R.id.txt_box_act_type)
+                    txtBoxActAction = findViewById<TextView>(R.id.txt_box_act_action)
+                    when(boxVal) {
+                        is FBoxActionControlDevice -> {
+                            txtBoxActType.text = context.getString(R.string.control_device)
+                        }
+                    }
+                }
+
+                else -> {
+                    txtBoxEvtLabel = findViewById<TextView>(R.id.txt_box_evt_label)
+                    txtBoxEvtType = findViewById<TextView>(R.id.txt_box_evt_device)
+                    txtBoxEvtDeviceType = findViewById<TextView>(R.id.txt_box_evt_device_type)
+                }
+            }
+        }
+    }
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 //        val currentFBox = fBox ?: return super.onTouchEvent(event)
 //        return when (event?.action) {

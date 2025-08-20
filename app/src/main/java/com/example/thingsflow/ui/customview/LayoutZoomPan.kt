@@ -96,7 +96,8 @@ class LayoutZoomPan @JvmOverloads constructor(
             view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
             view.x = startXPadding
             view.y = topMargin
-            boxPositions[it] = RectF(view.x, view.y, view.x + view.measuredWidth, view.y + view.measuredHeight)
+            boxPositions[it] =
+                RectF(view.x, view.y, view.x + view.measuredWidth, view.y + view.measuredHeight)
         }
 
         // 2) Tính chiều cao tất cả segment
@@ -138,7 +139,8 @@ class LayoutZoomPan @JvmOverloads constructor(
 
             // X -> ngay sau parent
             val parentBoxRect = parentBox?.let { boxPositions[it] }
-            val groupLeft = if (parentBoxRect != null) parentBoxRect.right + horizontalSpacing else startXPadding
+            val groupLeft =
+                if (parentBoxRect != null) parentBoxRect.right + horizontalSpacing else startXPadding
 
             // ✅ Y -> căn top segment con = top ô xám của segment cha (nếu có)
             var boundingBoxTop = topMargin
@@ -185,7 +187,8 @@ class LayoutZoomPan @JvmOverloads constructor(
 
                 view.x = groupLeft + groupPadding
                 view.y = currentBoxY
-                boxPositions[box] = RectF(view.x, view.y, view.x + view.measuredWidth, view.y + view.measuredHeight)
+                boxPositions[box] =
+                    RectF(view.x, view.y, view.x + view.measuredWidth, view.y + view.measuredHeight)
 
                 if (firstBoxInSegment[segId] == null) {
                     firstBoxInSegment[segId] = box
@@ -213,7 +216,12 @@ class LayoutZoomPan @JvmOverloads constructor(
             val evView = findViewByFBox(ev)
             if (targetRect != null && evView != null) {
                 evView.y = targetRect.top
-                boxPositions[ev] = RectF(evView.x, evView.y, evView.x + evView.measuredWidth, evView.y + evView.measuredHeight)
+                boxPositions[ev] = RectF(
+                    evView.x,
+                    evView.y,
+                    evView.x + evView.measuredWidth,
+                    evView.y + evView.measuredHeight
+                )
             }
         }
 
@@ -303,167 +311,100 @@ class LayoutZoomPan @JvmOverloads constructor(
         }
     }
 
-//    private fun drawConnections(canvas: Canvas) {
-//        val circleRadius = dpToPx(6f) // bán kính tròn nhỏ ở đầu line
-//        val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-//            color = Color.DKGRAY
-//            style = Paint.Style.FILL
-//        }
-//
-//        val eventBox = boxList.firstOrNull { it is FBoxEventDevice } as? FBoxEventDevice
-//        if (eventBox != null) {
-//            val startBoxRect = boxPositions[eventBox]
-//            val firstBox = firstBoxInSegment[eventBox.targetSegId]
-//            val endBoundingBox = segmentPositions[eventBox.targetSegId]
-//            if (startBoxRect != null && firstBox != null && endBoundingBox != null) {
-//                val endBoxRect = boxPositions[firstBox]
-//                if (endBoxRect != null) {
-//                    val startX = startBoxRect.right
-//                    val startY = startBoxRect.centerY()
-//                    val endX = endBoundingBox.left
-//                    val endY = endBoxRect.centerY()
-//
-//                    canvas.drawLine(startX, startY, endX, endY, connectionPaint)
-//                    canvas.drawCircle(startX, startY, circleRadius, circlePaint)
-//                    canvas.drawCircle(endX, endY, circleRadius, circlePaint)
-//                }
-//            }
-//        }
-//
-//        boxList.filterIsInstance<FBoxActionControlDevice>().forEach { box ->
-//            val startBoxRect = boxPositions[box]
-//            if (startBoxRect != null) {
-//                if (box.positiveSegId != 0) {
-//                    val firstBox = firstBoxInSegment[box.positiveSegId]
-//                    val endBoundingBox = segmentPositions[box.positiveSegId]
-//                    if (firstBox != null && endBoundingBox != null) {
-//                        val endBoxRect = boxPositions[firstBox]
-//                        if (endBoxRect != null) {
-//                            val startX = startBoxRect.right
-//                            val startY = startBoxRect.centerY()
-//                            val endX = endBoundingBox.left
-//                            val endY = endBoxRect.centerY()
-//
-//                            canvas.drawLine(startX, startY, endX, endY, connectionPaint)
-//                            canvas.drawCircle(startX, startY, circleRadius, circlePaint)
-//                            canvas.drawCircle(endX, endY, circleRadius, circlePaint)
-//                        }
-//                    }
-//                }
-//                if (box.negativeSegId != 0) {
-//                    val firstBox = firstBoxInSegment[box.negativeSegId]
-//                    val endBoundingBox = segmentPositions[box.negativeSegId]
-//                    if (firstBox != null && endBoundingBox != null) {
-//                        val endBoxRect = boxPositions[firstBox]
-//                        if (endBoxRect != null) {
-//                            val startX = startBoxRect.right
-//                            val startY = startBoxRect.centerY()
-//                            val endX = endBoundingBox.left
-//                            val endY = endBoxRect.centerY()
-//
-//                            canvas.drawLine(startX, startY, endX, endY, connectionPaint)
-//                            canvas.drawCircle(startX, startY, circleRadius, circlePaint)
-//                            canvas.drawCircle(endX, endY, circleRadius, circlePaint)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-private fun drawConnections(canvas: Canvas) {
-    val circleRadius = dpToPx(6f)
-    val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = resources.getColor(R.color.flow_box_connections)
-        style = Paint.Style.FILL
-    }
-    val path = Path()
-
-    // Vẽ kết nối từ EventBox
-    val eventBox = boxList.firstOrNull { it is FBoxEventDevice } as? FBoxEventDevice
-    if (eventBox != null) {
-        val startBoxRect = boxPositions[eventBox]
-        val firstBox = firstBoxInSegment[eventBox.targetSegId]
-        val endBoundingBox = segmentPositions[eventBox.targetSegId]
-        if (startBoxRect != null && firstBox != null && endBoundingBox != null) {
-            val endBoxRect = boxPositions[firstBox]
-            if (endBoxRect != null) {
-                val startX = startBoxRect.right
-                val startY = startBoxRect.centerY()
-                val endX = endBoundingBox.left
-                val endY = endBoxRect.centerY()
-                val midX = startX + (endX - startX) / 2
-
-                path.reset()
-                path.moveTo(startX, startY)
-                path.lineTo(midX, startY)
-                path.lineTo(midX, endY)
-                path.lineTo(endX, endY)
-
-                canvas.drawPath(path, connectionPaint)
-                canvas.drawCircle(startX, startY, circleRadius, circlePaint)
-                canvas.drawCircle(endX, endY, circleRadius, circlePaint)
-            }
+    private fun drawConnections(canvas: Canvas) {
+        val circleRadius = dpToPx(6f)
+        val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = resources.getColor(R.color.flow_box_connections)
+            style = Paint.Style.FILL
         }
-    }
+        val path = Path()
 
-    // Vẽ kết nối giữa các ActionBoxes
-    boxList.filterIsInstance<FBoxActionControlDevice>().forEach { box ->
-        val startBoxRect = boxPositions[box]
-        if (startBoxRect != null) {
-            // Nhánh Positive
-            if (box.positiveSegId != 0) {
-                val firstBox = firstBoxInSegment[box.positiveSegId]
-                val endBoundingBox = segmentPositions[box.positiveSegId]
-                if (firstBox != null && endBoundingBox != null) {
-                    val endBoxRect = boxPositions[firstBox]
-                    if (endBoxRect != null) {
-                        val startX = startBoxRect.right
-                        val startY = startBoxRect.centerY()
-                        val endX = endBoundingBox.left
-                        val endY = endBoxRect.centerY()
-                        val midX = startX + (endX - startX) / 2
+        // Vẽ kết nối từ EventBox
+        val eventBox = boxList.firstOrNull { it is FBoxEventDevice } as? FBoxEventDevice
+        if (eventBox != null) {
+            val startBoxRect = boxPositions[eventBox]
+            val firstBox = firstBoxInSegment[eventBox.targetSegId]
+            val endBoundingBox = segmentPositions[eventBox.targetSegId]
+            if (startBoxRect != null && firstBox != null && endBoundingBox != null) {
+                val endBoxRect = boxPositions[firstBox]
+                if (endBoxRect != null) {
+                    val startX = startBoxRect.right
+                    val startY = startBoxRect.centerY()
+                    val endX = endBoundingBox.left
+                    val endY = endBoxRect.centerY()
+                    val midX = startX + (endX - startX) / 2
 
-                        path.reset()
-                        path.moveTo(startX, startY)
-                        path.lineTo(midX, startY)
-                        path.lineTo(midX, endY)
-                        path.lineTo(endX, endY)
+                    path.reset()
+                    path.moveTo(startX, startY)
+                    path.lineTo(midX, startY)
+                    path.lineTo(midX, endY)
+                    path.lineTo(endX, endY)
 
-                        canvas.drawPath(path, connectionPaint)
-                        canvas.drawCircle(startX, startY, circleRadius, circlePaint)
-                        canvas.drawCircle(endX, endY, circleRadius, circlePaint)
-                    }
+                    canvas.drawPath(path, connectionPaint)
+                    canvas.drawCircle(startX, startY, circleRadius, circlePaint)
+                    canvas.drawCircle(endX, endY, circleRadius, circlePaint)
                 }
             }
+        }
 
-            // Nhánh Negative
-            if (box.negativeSegId != 0) {
-                val firstBox = firstBoxInSegment[box.negativeSegId]
-                val endBoundingBox = segmentPositions[box.negativeSegId]
-                if (firstBox != null && endBoundingBox != null) {
-                    val endBoxRect = boxPositions[firstBox]
-                    if (endBoxRect != null) {
-                        val startX = startBoxRect.right
-                        val startY = startBoxRect.centerY()
-                        val endX = endBoundingBox.left
-                        val endY = endBoxRect.centerY()
-                        val midX = startX + (endX - startX) / 2
+        // Vẽ kết nối giữa các ActionBoxes
+        boxList.filterIsInstance<FBoxActionControlDevice>().forEach { box ->
+            val startBoxRect = boxPositions[box]
+            if (startBoxRect != null) {
+                // Nhánh Positive
+                if (box.positiveSegId != 0) {
+                    val firstBox = firstBoxInSegment[box.positiveSegId]
+                    val endBoundingBox = segmentPositions[box.positiveSegId]
+                    if (firstBox != null && endBoundingBox != null) {
+                        val endBoxRect = boxPositions[firstBox]
+                        if (endBoxRect != null) {
+                            val startX = startBoxRect.right
+                            val startY = startBoxRect.centerY()
+                            val endX = endBoundingBox.left
+                            val endY = endBoxRect.centerY()
+                            val midX = startX + (endX - startX) / 2
 
-                        path.reset()
-                        path.moveTo(startX, startY)
-                        path.lineTo(midX, startY)
-                        path.lineTo(midX, endY)
-                        path.lineTo(endX, endY)
+                            path.reset()
+                            path.moveTo(startX, startY)
+                            path.lineTo(midX, startY)
+                            path.lineTo(midX, endY)
+                            path.lineTo(endX, endY)
 
-                        canvas.drawPath(path, connectionPaint)
-                        canvas.drawCircle(startX, startY, circleRadius, circlePaint)
-                        canvas.drawCircle(endX, endY, circleRadius, circlePaint)
+                            canvas.drawPath(path, connectionPaint)
+                            canvas.drawCircle(startX, startY, circleRadius, circlePaint)
+                            canvas.drawCircle(endX, endY, circleRadius, circlePaint)
+                        }
+                    }
+                }
+
+                // Nhánh Negative
+                if (box.negativeSegId != 0) {
+                    val firstBox = firstBoxInSegment[box.negativeSegId]
+                    val endBoundingBox = segmentPositions[box.negativeSegId]
+                    if (firstBox != null && endBoundingBox != null) {
+                        val endBoxRect = boxPositions[firstBox]
+                        if (endBoxRect != null) {
+                            val startX = startBoxRect.right
+                            val startY = startBoxRect.centerY()
+                            val endX = endBoundingBox.left
+                            val endY = endBoxRect.centerY()
+                            val midX = startX + (endX - startX) / 2
+
+                            path.reset()
+                            path.moveTo(startX, startY)
+                            path.lineTo(midX, startY)
+                            path.lineTo(midX, endY)
+                            path.lineTo(endX, endY)
+
+                            canvas.drawPath(path, connectionPaint)
+                            canvas.drawCircle(startX, startY, circleRadius, circlePaint)
+                            canvas.drawCircle(endX, endY, circleRadius, circlePaint)
+                        }
                     }
                 }
             }
         }
     }
-}
 
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -475,7 +416,12 @@ private fun drawConnections(canvas: Canvas) {
     }
 
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
-        override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+        override fun onScroll(
+            e1: MotionEvent?,
+            e2: MotionEvent,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean {
             val newTranslateX = translateX - distanceX
             val newTranslateY = translateY
 

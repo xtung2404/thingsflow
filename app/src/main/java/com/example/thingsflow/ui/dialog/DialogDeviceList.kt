@@ -26,7 +26,11 @@ class DialogDeviceList(
 )  {
     private val TAG = "DialogDeviceList"
     private val adapterDevices: AdapterDevices by lazy {
-        AdapterDevices()
+        AdapterDevices(
+            onDeviceSelected = { _, _ ->  
+
+            }
+        )
     }
     private val vmLocation: VMLocation by lazy {
         ViewModelProvider(viewModelOwner)[VMLocation::class.java]

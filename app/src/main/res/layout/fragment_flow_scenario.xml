@@ -69,7 +69,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/overlay_box_event">
+            android:id="@+id/overlay_box_event"
+            android:visibility="visible">
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -209,7 +210,9 @@
 
                             <CheckBox
                                 android:layout_width="@dimen/_space32dp"
-                                android:layout_height="@dimen/_space32dp" />
+                                android:layout_height="@dimen/_space32dp"
+                                android:id="@+id/cb_later"
+                                android:button="@drawable/custom_checkbox_emerald"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -217,7 +220,7 @@
                                 android:text="@string/later"
                                 android:textColor="@color/black"
                                 android:textSize="13sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -229,7 +232,9 @@
 
                             <CheckBox
                                 android:layout_width="@dimen/_space32dp"
-                                android:layout_height="@dimen/_space32dp" />
+                                android:layout_height="@dimen/_space32dp"
+                                android:id="@+id/cb_select_device"
+                                android:button="@drawable/custom_checkbox_emerald"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
