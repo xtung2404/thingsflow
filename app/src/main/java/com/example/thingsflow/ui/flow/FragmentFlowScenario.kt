@@ -55,6 +55,7 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventVoiceRecognize
 import rogo.iot.module.flowcommon.box.event.FBoxEventWeather
 import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.define.IoTDeviceType
+import rogo.iot.module.rogocore.sdk.SmartSdk
 import java.util.Arrays
 
 @AndroidEntryPoint
@@ -93,7 +94,12 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     private val dialogDeviceList: DialogDeviceList by lazy {
         DialogDeviceList(
             requireContext(),
-            requireActivity()
+            requireActivity(),
+            onDeviceSelected = {
+                binding.apply {
+                    txtDeviceLabel.text = SmartSdk.deviceHandler().get(it.first)?.label
+                }
+            }
         )
     }
 
@@ -104,7 +110,6 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             spinnerEventInput.adapter = adapterSpinnerBoxEventType
             spinnerDeviceType.adapter = adapterSpinnerDeviceType
             rvAttr.adapter = adapterAttributes
-
             attrMap = getSupportedAttribue()
                 .map { (it to getAttrLabel(requireContext(), it)) to false }
                 .toMap()
@@ -117,6 +122,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
         super.initView()
         binding.apply {
             cbLater.isChecked = true
+            btnSelectDevice.isEnabled = false
             // Khởi tạo một danh sách FBox mới
             boxes.clear()
             if (boxes.isEmpty()) {
@@ -140,6 +146,8 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     override fun initAction() {
         super.initAction()
         binding.apply {
+            handleOverlayEventAction()
+
             btnBackOverlayEvent.setOnClickListener {
                 overlayBoxEvent.visibility = View.GONE
             }
@@ -152,64 +160,6 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
 
             }
 
-            btnSelectDevice.setOnClickListener {
-                dialogDeviceList.show()
-            }
-
-            btnBackOverlayEvent.setOnClickListener {
-                handleOverlayAnimation(false)
-
-            }
-
-            edtAttr.addTextChangedListener(
-                object : TextWatcher {
-                    override fun beforeTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        count: Int,
-                        after: Int
-                    ) {
-
-                    }
-
-                    override fun onTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        before: Int,
-                        count: Int
-                    ) {
-                        s?.let {searchInput ->
-                            val searchedMap = attrMap.filter {
-                                it.key.second.contains(searchInput, true)
-                            }.toMutableMap().entries.toMutableList()
-
-                            adapterAttributes.submitList(searchedMap)
-                        }
-
-                    }
-
-                    override fun afterTextChanged(s: Editable?) {
-
-                    }
-
-                }
-            )
-
-            cbLater.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    cbSelectDevice.isChecked = false
-                    btnSelectDevice.isEnabled = false
-                }
-            }
-
-            cbSelectDevice.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    cbLater.isChecked = false
-                    btnSelectDevice.isEnabled = true
-                } else {
-                    btnSelectDevice.isEnabled = false
-                }
-            }
 
             btnEvtConfig.setOnClickListener {
                 when (spinnerEventInput.selectedItem as Int) {
@@ -278,6 +228,71 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
         }
     }
 
+    private fun handleOverlayEventAction() {
+        binding.apply {
+            btnSelectDevice.setOnClickListener {
+                dialogDeviceList.show()
+            }
+
+            btnBackOverlayEvent.setOnClickListener {
+                handleOverlayAnimation(false)
+
+            }
+
+            edtAttr.addTextChangedListener(
+                object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        s?.let {searchInput ->
+                            //filter attributes according to user
+                            val searchedList = attrMap.entries
+                                .filter { it.key.second.contains(searchInput, true) }
+                                .sortedBy { it.key.second }
+                                .toMutableList()
+
+                            adapterAttributes.submitList(searchedList)
+                        }
+
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+
+                    }
+
+                }
+            )
+
+            cbLater.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    cbSelectDevice.isChecked = false
+                    btnSelectDevice.isEnabled = false
+                }
+            }
+
+            cbSelectDevice.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    cbLater.isChecked = false
+                    btnSelectDevice.isEnabled = true
+                } else {
+                    btnSelectDevice.isEnabled = false
+                }
+            }
+        }
+    }
+
     override fun onBoxClick(box: FBox?) {
         ILogR.D(TAG, "onBoxClick")
         when (box) {
@@ -327,10 +342,12 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
         }
     }
 
+    /**
+     * @param isOpen: Boolean indicates if to show the overlay event or hide
+     */
     fun handleOverlayAnimation(isOpen: Boolean) {
         val displayMetrics = resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels.toFloat()
-
         if (isOpen) {
             binding.overlayBoxEvent.visibility = View.VISIBLE
             binding.overlayBoxEvent.translationX = screenWidth

@@ -20,26 +20,32 @@ import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 class DialogDeviceList(
     context: Context,
     private val viewModelOwner: ViewModelStoreOwner,
+    private val onDeviceSelected: (Pair<String?, IntArray>) -> Unit
 ): DialogBase<DialogDeviceListBinding>(
     context,
     R.layout.dialog_device_list
 )  {
     private val TAG = "DialogDeviceList"
+    private var selectedDeviceId: String?= null
+    private var selectedElms: IntArray = intArrayOf()
     private val adapterDevices: AdapterDevices by lazy {
         AdapterDevices(
-            onDeviceSelected = { _, _ ->  
-
+            onDeviceSelected = { devId, elms ->
+                selectedDeviceId = devId
+                selectedElms = elms
             }
         )
-    }
-    private val vmLocation: VMLocation by lazy {
-        ViewModelProvider(viewModelOwner)[VMLocation::class.java]
     }
 
     override fun setupView(binding: DialogDeviceListBinding) {
         binding.apply {
             btnCancel.setOnClickListener {
                 dismiss()
+            }
+
+            btnConfig.setOnClickListener {
+                dismiss()
+                onDeviceSelected.invoke(Pair(selectedDeviceId, selectedElms))
             }
         }
     }
@@ -49,6 +55,8 @@ class DialogDeviceList(
         super.onDialogShown()
         binding.apply {
             rvDevice.adapter = adapterDevices
+            selectedDeviceId = null
+            selectedElms = intArrayOf()
             adapterDevices.submitList(
                 SmartSdk.deviceHandler().all.toList()
             )

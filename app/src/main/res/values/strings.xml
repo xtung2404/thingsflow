@@ -60,8 +60,10 @@
     <string name="finish">Hoàn thành</string>
     <string name="list_of_flow_scenario">Danh sách các Flow Scenario</string>
     <string name="list_of_using_flow_scenario">Danh sách Flow Scenario đang sử dụng</string>
+    <string name="list_of_functioning_flow_scenario">Danh sách Flow Scenario đang hoạt động</string>
     <string name="you_dont_have_any_scenario">Bạn chưa có Flow Scenario nào</string>
     <string name="create_flow_scenario">Tạo Flow Scenario</string>
+    <string name="create_blank_flow_scenario">Tạo Flow Scenario trống</string>
     <string name="connect_box_to_create_a_flow_scenario">Hãy nối các box để tạo thành Flow Scenario</string>
     <string name="input_event">Sự kiện đầu vào</string>
     <string name="device_type">Loại thiết bị</string>
@@ -109,6 +111,13 @@
     <string name="label_flow_scenario">Đặt tên Flow Scenario</string>
     <string name="action">Hành động</string>
     <string name="control_device">Điều khiển thiết bị</string>
+    <string name="execute_flow">Triển khai Flow Scenario</string>
+    <string name="show_flow">Xem Flow Scenario</string>
+    <string name="or_duplicate_from_existed_flow_scenario">Hoặc nhân đôi từ các Flow Scenario đã có</string>
+    <string name="execute_flow_on_device">Triển khai Flow lên thiết bị</string>
+    <string name="list_of_functioning_node">Danh sách các Node đang hoạt động</string>
+    <string name="choose_all_node">Chọn tất cả các Node</string>
+    <string name="add_new_node">Thêm Node mới</string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>

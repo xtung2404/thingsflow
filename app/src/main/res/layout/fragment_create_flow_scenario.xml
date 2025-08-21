@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="40dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="36dp"
+                android:text="@string/create_flow_scenario"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_headline6" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_create_blank"
+                android:layout_marginTop="40dp"
+                android:background="@color/gray"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="@dimen/_space18dp">
+
+                <CheckBox
+                    android:layout_width="@dimen/_space24dp"
+                    android:layout_height="@dimen/_space24dp"
+                    android:id="@+id/cb_create_blank"
+                    android:layout_marginEnd="@dimen/_space8dp"
+                    android:button="@drawable/custom_checkbox" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_blank_flow_scenario"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_button"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/or_duplicate_from_existed_flow_scenario"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_caption" />
+
+            <EditText
+                android:id="@+id/edt_flow_scene"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_space16dp"
+                android:paddingHorizontal="@dimen/_space8dp"
+                android:paddingVertical="@dimen/_space16dp"
+                android:hint="@string/insert_attribute_value"
+                android:textSize="@dimen/text_caption"
+                android:background="@drawable/bg_white_stroke_gray"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/_space8dp"
+                android:background="@color/gray" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_flow_scene"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/_space8dp"
+                android:background="@color/gray" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_continue"
+                android:background="@color/emerald"
+                android:text="@string/to_continue"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_button"
+                android:textAllCaps="false"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>

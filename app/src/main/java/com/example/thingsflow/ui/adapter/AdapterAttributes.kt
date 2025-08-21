@@ -18,14 +18,14 @@ ListAdapter<MutableMap.MutableEntry<Pair<Int, String>, Boolean>, AdapterAttribut
             oldItem: MutableMap.MutableEntry<Pair<Int, String>, Boolean>,
             newItem: MutableMap.MutableEntry<Pair<Int, String>, Boolean>
         ): Boolean {
-            return oldItem.key.first == newItem.key.first && oldItem.value == newItem.value
+            return false
         }
 
         override fun areContentsTheSame(
             oldItem: MutableMap.MutableEntry<Pair<Int, String>, Boolean>,
             newItem: MutableMap.MutableEntry<Pair<Int, String>, Boolean>
         ): Boolean {
-            return oldItem.key.first == newItem.key.first && oldItem.value == newItem.value
+            return false
         }
     }
 ) {

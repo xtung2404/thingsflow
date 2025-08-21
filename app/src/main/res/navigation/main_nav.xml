@@ -144,9 +144,37 @@
         <action
             android:id="@+id/action_fragmentFlowScenManagement_to_fragmentFlowScenario"
             app:destination="@id/fragmentFlowScenario" />
+        <action
+            android:id="@+id/action_fragmentFlowScenManagement_to_fragmentCreateFlowScenario"
+            app:destination="@id/fragmentCreateFlowScenario" />
+        <action
+            android:id="@+id/action_fragmentFlowScenManagement_to_fragmentFlowScenarioInfo"
+            app:destination="@id/fragmentFlowScenarioInfo" />
     </fragment>
     <fragment
         android:id="@+id/fragmentFlowScenario"
         android:name="com.example.thingsflow.ui.flow.FragmentFlowScenario"
         android:label="FragmentFlowScenario" />
+    <fragment
+        android:id="@+id/fragmentCreateFlowScenario"
+        android:name="com.example.thingsflow.ui.flow.FragmentCreateFlowScenario"
+        android:label="FragmentCreateFlowScenario" >
+        <action
+            android:id="@+id/action_fragmentCreateFlowScenario_to_fragmentFlowScenManagement"
+            app:destination="@id/fragmentFlowScenManagement" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentFlowScenarioInfo"
+        android:name="com.example.thingsflow.ui.flow.FragmentFlowScenarioInfo"
+        android:label="FragmentFlowScenarioInfo" >
+        <action
+            android:id="@+id/action_fragmentFlowScenarioInfo_to_fragmentFlowScenManagement"
+            app:destination="@id/fragmentFlowScenManagement" />
+        <action
+            android:id="@+id/action_fragmentFlowScenarioInfo_to_fragmentFlowScenario"
+            app:destination="@id/fragmentFlowScenario" />
+        <action
+            android:id="@+id/action_fragmentFlowScenarioInfo_to_identifyDeviceFragment"
+            app:destination="@id/identifyDeviceFragment" />
+    </fragment>
 </navigation>

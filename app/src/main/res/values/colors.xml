@@ -13,4 +13,5 @@
     <color name="bg_segment">#FFCFCFCF</color>
     <color name="stroke_button">#FFE0E0E0</color>
     <color name="flow_box_connections">#FFA2A2A2</color>
+    <color name="bg_flow_scenario">#FFFBFBFB</color>
 </resources>
