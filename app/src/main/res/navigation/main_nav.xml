@@ -151,7 +151,7 @@
             android:id="@+id/action_fragmentFlowScenManagement_to_fragmentFlowScenarioInfo"
             app:destination="@id/fragmentFlowScenarioInfo" />
     </fragment>
-    <fragment
+     <fragment
         android:id="@+id/fragmentFlowScenario"
         android:name="com.example.thingsflow.ui.flow.FragmentFlowScenario"
         android:label="FragmentFlowScenario" />

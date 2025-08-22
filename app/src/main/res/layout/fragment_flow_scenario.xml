@@ -57,14 +57,26 @@
                 android:layout_height="1dp"
                 android:background="@color/gray"
                 android:layout_marginTop="@dimen/_space32dp"/>
-            <com.example.thingsflow.ui.customview.LayoutZoomPan
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:id="@+id/boxLayout">
-            </com.example.thingsflow.ui.customview.LayoutZoomPan>
+                android:layout_height="match_parent">
+                <com.example.thingsflow.ui.customview.LayoutZoomPan
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/boxLayout">
+                </com.example.thingsflow.ui.customview.LayoutZoomPan>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
-
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_edit_scene"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add"
+            android:contentDescription="@string/create_flow_scenario"
+            app:backgroundTint="@color/emerald"
+            app:tint="@color/white"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/_space16dp"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -291,16 +303,5 @@
             </LinearLayout>
         </FrameLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_edit_scene"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:contentDescription="TODO"
-            android:src="@drawable/ic_edit"
-            app:backgroundTint="@color/white"
-            app:tint="@color/emerald"
-            />
     </FrameLayout>
 </layout>

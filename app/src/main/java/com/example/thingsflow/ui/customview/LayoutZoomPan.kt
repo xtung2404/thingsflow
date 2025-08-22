@@ -33,7 +33,13 @@ class LayoutZoomPan @JvmOverloads constructor(
     private val gestureDetector: GestureDetector
 
     var onBoxClickListener: ViewBox.OnBoxClickListener? = null
+    var onBoxActionListener: OnBoxActionListener? = null
 
+    var isEditMode: Boolean = false
+        set(value) {
+            field = value
+            invalidate() // redraw khi đổi mode
+        }
     var boxList: ArrayList<FBox> = arrayListOf()
         set(value) {
             field = value
@@ -302,6 +308,9 @@ class LayoutZoomPan @JvmOverloads constructor(
         drawBoundingBoxes(canvas)
         super.dispatchDraw(canvas)
         drawConnections(canvas)
+        if (isEditMode) {
+            drawAddRemoveButtons(canvas) // ✅ chỉ vẽ khi edit
+        }
         canvas.restore()
     }
 
@@ -406,8 +415,71 @@ class LayoutZoomPan @JvmOverloads constructor(
         }
     }
 
+    private fun drawAddRemoveButtons(canvas: Canvas) {
+        val buttonRadius = dpToPx(12f)
+        val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.BLACK
+            style = Paint.Style.FILL
+        }
+        val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            textSize = dpToPx(12f)
+            textAlign = Paint.Align.CENTER
+        }
+
+        boxList.filterIsInstance<FBoxActionControlDevice>().forEach { box ->
+            // ✅ chỉ box lá (không có nhánh con)
+            if (box.positiveSegId == 0 && box.negativeSegId == 0) {
+                val rect = boxPositions[box] ?: return@forEach
+                val centerY = rect.centerY()
+
+                // Nút "-" ngay trung điểm cạnh trái
+                val leftCx = rect.left
+                val leftCy = centerY
+                canvas.drawCircle(leftCx, leftCy, buttonRadius, circlePaint)
+                canvas.drawText("-", leftCx, leftCy + (textPaint.textSize / 3), textPaint)
+
+                // Nút "+" ngay trung điểm cạnh phải
+                val rightCx = rect.right
+                val rightCy = centerY
+                canvas.drawCircle(rightCx, rightCy, buttonRadius, circlePaint)
+                canvas.drawText("+", rightCx, rightCy + (textPaint.textSize / 3), textPaint)
+            }
+        }
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (isEditMode && event.action == MotionEvent.ACTION_UP) {
+            val touchX = event.x - translateX
+            val touchY = event.y - translateY
+            val buttonRadius = dpToPx(12f)
+
+            boxList.filterIsInstance<FBoxActionControlDevice>().forEach { box ->
+                if (box.positiveSegId == 0 && box.negativeSegId == 0) {
+                    val rect = boxPositions[box] ?: return@forEach
+                    val centerY = rect.centerY()
+
+                    val leftCx = rect.left
+                    val rightCx = rect.right
+
+                    // Check nút "-"
+                    val distToLeft = (touchX - leftCx) * (touchX - leftCx) +
+                            (touchY - centerY) * (touchY - centerY)
+                    if (distToLeft <= buttonRadius * buttonRadius) {
+                        onBoxActionListener?.onRemoveBoxClicked(box)
+                        return true
+                    }
+
+                    // Check nút "+"
+                    val distToRight = (touchX - rightCx) * (touchX - rightCx) +
+                            (touchY - centerY) * (touchY - centerY)
+                    if (distToRight <= buttonRadius * buttonRadius) {
+                        onBoxActionListener?.onAddBoxClicked(box)
+                        return true
+                    }
+                }
+            }
+        }
         return gestureDetector.onTouchEvent(event)
     }
 
@@ -461,5 +533,10 @@ class LayoutZoomPan @JvmOverloads constructor(
 
     private fun dpToPx(dp: Float): Float {
         return dp * resources.displayMetrics.density
+    }
+
+    interface OnBoxActionListener {
+        fun onAddBoxClicked(box: FBoxActionControlDevice)
+        fun onRemoveBoxClicked(box: FBoxActionControlDevice)
     }
 }

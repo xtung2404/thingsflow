@@ -33,9 +33,9 @@ class RepoConfigWileDirect @Inject constructor() {
                         override fun onSmartDeviceFound(p0: IoTDirectDeviceInfo?) {
                             p0?.let {
                                 isEmpty = false
-//                                if (it.typeConnect == IoTDirectDeviceInfo.TypeConnect.WILEDIRECTLAN) {
+                                if (it.typeConnect == IoTDirectDeviceInfo.TypeConnect.WILEDIRECTLAN) {
                                     callback.onDeviceFound(it)
-//                                }
+                                }
                             }
                         }
 

@@ -7,6 +7,7 @@ import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import com.example.thingsflow.R
@@ -15,6 +16,7 @@ import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterAttributes
 import com.example.thingsflow.ui.adapter.AdapterSpinnerBoxEventType
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
+import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.example.thingsflow.ui.customview.ViewBox
 import com.example.thingsflow.ui.dialog.DialogDeviceList
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
@@ -127,8 +129,10 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             boxes.clear()
             if (boxes.isEmpty()) {
                 btnEditScene.visibility = View.GONE
+                boxLayout.isEditMode = true
             } else {
                 btnEditScene.visibility = View.VISIBLE
+                boxLayout.isEditMode = false
             }
             val fBoxEvent = FBoxEventDevice()
 //            fBoxEvent.devId = "123"
@@ -148,16 +152,12 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
         binding.apply {
             handleOverlayEventAction()
 
-            btnBackOverlayEvent.setOnClickListener {
-                overlayBoxEvent.visibility = View.GONE
-            }
-
             btnUpdateLabel.setOnClickListener {
                 dialogLabelFlowScenario.show()
             }
 
             btnEditScene.setOnClickListener {
-
+                boxLayout.isEditMode = !boxLayout.isEditMode
             }
 
 
@@ -181,49 +181,50 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                         boxes.add(fActionBox)
 
                         val fActionBox1 = FBoxActionControlDevice()
-                        fActionBox1.devId = "1223"
+                        fActionBox1.devId = "1"
                         fActionBox1.segId = 1
                         fActionBox1.positiveSegId = 2
                         fActionBox1.negativeSegId = 3
                         boxes.add(fActionBox1)
 
                         val fActionBox2 = FBoxActionControlDevice()
-                        fActionBox2.devId = "12223"
+                        fActionBox2.devId = "2"
                         fActionBox2.segId = 2
                         fActionBox2.positiveSegId = 6
                         fActionBox2.negativeSegId = 7
                         boxes.add(fActionBox2)
 
                         val fActionBox3 = FBoxActionControlDevice()
-                        fActionBox3.devId = "12224"
+                        fActionBox3.devId = "3"
                         fActionBox3.segId = 3
                         fActionBox3.negativeSegId = 4
                         fActionBox3.positiveSegId = 5
                         boxes.add(fActionBox3)
 
                         val fActionBox4 = FBoxActionControlDevice()
-                        fActionBox4.devId = "12224"
+                        fActionBox4.devId = "4"
                         fActionBox4.segId = 4
                         boxes.add(fActionBox4)
 //
                         val fActionBox5 = FBoxActionControlDevice()
-                        fActionBox5.devId = "12224"
+                        fActionBox5.devId = "5"
                         fActionBox5.segId = 5
                         boxes.add(fActionBox5)
 
                         val fActionBox6 = FBoxActionControlDevice()
-                        fActionBox6.devId = "12224"
+                        fActionBox6.devId = "6"
                         fActionBox6.segId = 6
                         boxes.add(fActionBox6)
 
                         val fActionBox7 = FBoxActionControlDevice()
-                        fActionBox7.devId = "12224"
+                        fActionBox7.devId = "7"
                         fActionBox7.segId = 7
                         boxes.add(fActionBox7)
                         boxLayout.boxList = ArrayList(boxes)
                         handleOverlayAnimation(false)
                     }
                 }
+                btnEditScene.visibility = View.VISIBLE
             }
         }
     }
@@ -288,6 +289,17 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     btnSelectDevice.isEnabled = true
                 } else {
                     btnSelectDevice.isEnabled = false
+                }
+            }
+            boxLayout.onBoxActionListener = object : LayoutZoomPan.OnBoxActionListener {
+                override fun onAddBoxClicked(box: FBoxActionControlDevice) {
+                    // ✅ biết box nào vừa bấm nút "+"
+                    Toast.makeText(context, "Add vào box ${box.devId}", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onRemoveBoxClicked(box: FBoxActionControlDevice) {
+                    // ✅ biết box nào vừa bấm nút "-"
+                    Toast.makeText(context, "Remove box ${box.devId}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
