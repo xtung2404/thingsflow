@@ -118,6 +118,7 @@
     <string name="list_of_functioning_node">Danh sách các Node đang hoạt động</string>
     <string name="choose_all_node">Chọn tất cả các Node</string>
     <string name="add_new_node">Thêm Node mới</string>
+    <string name="list_of_device">Danh sách các thiết bị</string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>

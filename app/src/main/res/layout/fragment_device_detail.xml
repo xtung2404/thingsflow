@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.device.FragmentDeviceDetail">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_get"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_screen_small"
+            android:background="@drawable/bg_white_stroke_black"
+            android:paddingVertical="13dp"
+            android:text="get Hello World"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_button" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:hint="insert string for set"
+            android:textColor="@color/black"
+            android:textSize="13sp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_text_input_gray"
+                android:paddingHorizontal="13dp"
+                android:paddingVertical="14dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_body2" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_set"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_screen_small"
+            android:background="@drawable/bg_white_stroke_black"
+            android:paddingVertical="13dp"
+            android:text="set Hello World"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_button" />
+
+    </LinearLayout>
+</layout>

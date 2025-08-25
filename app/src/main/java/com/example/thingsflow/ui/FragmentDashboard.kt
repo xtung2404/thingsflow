@@ -8,10 +8,14 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import rogo.iot.module.platform.ILogR
+import rogo.iot.module.platform.feature.IoTFeature
+import rogo.iot.module.rogocore.sdk.SmartSdk
+import rogo.iot.module.rogocore.sdk.callback.FeatureMethodRequestCallback
 
 @AndroidEntryPoint
 class FragmentDashboard : FragmentBase<FragmentHomeBinding>() {

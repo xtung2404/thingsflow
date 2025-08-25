@@ -11,9 +11,9 @@ class ThingsFlowApplication: Application() {
         super.onCreate()
         FlowSdk.initV2(
             this,
-            true,
-            "f78f5dd2fc594475a27bef7c2caf9ab4",
-            "41d96be770b2902f801b1689c5edae29c16a068e8f87"
+            false,
+            "e4b75a6b23fc4f30bd5fab35436c6a90",
+            "964e2c974f001a0468bf2734ce88e96652afff328886",
         )
 //        SmartSdk.isForceStagingSvr = true
 //        SmartSdk.isForceProduction = false

@@ -45,7 +45,6 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/space_screen_super_small"/>
             </LinearLayout>
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,6 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/scanning_gateway"
+                    android:id="@+id/txt_scanning"
                     android:textSize="14sp"
                     android:textColor="@color/black"
                     android:layout_gravity="center"
@@ -74,7 +74,7 @@
             android:orientation="vertical"
             android:paddingHorizontal="45dp"
             android:id="@+id/ln_select_device"
-            android:visibility="visible">
+            android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

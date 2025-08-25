@@ -1,8 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.ThingsFlow" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
     <style name="Theme.ThingsFlow" parent="Base.Theme.ThingsFlow" />
@@ -11,17 +8,16 @@
         <item name="itemActiveIndicatorStyle">@style/Widget.MyApp.BottomNavigationView.ActiveIndicator</item>
     </style>
 
-    <style name="Widget.MyApp.BottomNavigationView.ActiveIndicator" parent="">
-        <!-- Bo tròn theo cả icon + text -->
+    <style name="Widget.MyApp.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:insetLeft">0dp</item>
         <item name="android:insetRight">0dp</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.BottomNav.Indicator</item>
+<!--        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.BottomNav.Indicator</item>-->
     </style>
 
-    <style name="ShapeAppearanceOverlay.MyApp.BottomNav.Indicator" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
-    </style>
+<!--    <style name="ShapeAppearanceOverlay.MyApp.BottomNav.Indicator">-->
+<!--        <item name="cornerFamily">rounded</item>-->
+<!--        <item name="cornerSize">16dp</item>-->
+<!--    </style>-->
 </resources>

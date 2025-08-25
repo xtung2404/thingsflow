@@ -15,7 +15,7 @@
         android:icon="@null" />
 
     <item
-        android:id="@+id/nav_device"
+        android:id="@+id/fragmentDevice"
         android:title="Device"
         android:icon="@null" />
 </menu>

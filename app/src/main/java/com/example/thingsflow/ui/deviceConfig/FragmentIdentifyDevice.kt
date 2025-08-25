@@ -42,6 +42,7 @@ class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
                 requireContext(),
                 findNavController().previousBackStackEntry?.destination?.id
             )
+            txtScanning.text = resources.getString(R.string.scanning_gateway)
             clScanning.visibility = View.VISIBLE
             lnSelectDevice.visibility = View.GONE
             btnRescan.isEnabled = false
@@ -85,19 +86,24 @@ class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
                 DISCOVERY_TIMEOUT_SECONDS,
                 object : ScanningIoTDeviceCallback {
                     override fun onDeviceFound(device: IoTDirectDeviceInfo) {
-                        if (discoveredGateways.isEmpty()) {
-                            binding.lnSelectDevice.visibility = View.VISIBLE
-                            binding.clScanning.visibility = View.GONE
-                        }
-                        if (!discoveredGateways.contains(device)) {
-                            ILogR.D(TAG, "discovery:deviceFound ", device.label)
-                            discoveredGateways.add(device)
-                            adapterDiscoveredDevices.notifyItemInserted(discoveredGateways.size - 1)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            if (discoveredGateways.isEmpty()) {
+                                binding.lnSelectDevice.visibility = View.VISIBLE
+                                binding.clScanning.visibility = View.GONE
+                            }
+                            if (!discoveredGateways.contains(device)) {
+                                ILogR.D(TAG, "discovery:deviceFound ", device.label)
+                                discoveredGateways.add(device)
+                                adapterDiscoveredDevices.notifyItemInserted(discoveredGateways.size - 1)
+                            }
                         }
                     }
 
                     override fun onTimeOut() {
-                        binding.btnRescan.isEnabled = true
+                        CoroutineScope(Dispatchers.Main).launch {
+                            binding.txtScanning.text = "Không tìm thấy gateway nào!"
+                            binding.btnRescan.isEnabled = true
+                        }
                     }
                 }
             )

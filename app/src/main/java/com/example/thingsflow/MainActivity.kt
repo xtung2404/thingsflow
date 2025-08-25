@@ -38,7 +38,8 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.homeFragment,
-                R.id.fragmentFlowScenManagement
+                R.id.fragmentFlowScenManagement,
+                    R.id.fragmentDevice
                 -> {
                     binding.bottomNavigationView?.visibility = View.VISIBLE
                 }

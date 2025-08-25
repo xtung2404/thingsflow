@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             app:menu="@menu/bottom_nav_menu"
             app:labelVisibilityMode="labeled"
-            style="@style/Widget.MyApp.BottomNavigationView"
             app:itemHorizontalTranslationEnabled="true"
             app:itemIconSize="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
