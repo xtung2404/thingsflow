@@ -12,7 +12,7 @@ import rogo.iot.module.rogocore.sdk.handler.LocationHandler;
 interface FlowSdkBaseHandler {
     void initV2(Context context, Boolean isForceStaging, String appKey, String appSecretKey);
 
-    void signIn(String username, String email, String password, String phoneNumber, AuthRequestCallback callback);
+    void signIn(String username, String email, String phoneNumber, String password, AuthRequestCallback callback);
 
     void signUp(String username, String email, String password, String phoneNumber, AuthRequestCallback callback);
 

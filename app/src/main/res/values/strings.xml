@@ -119,6 +119,8 @@
     <string name="choose_all_node">Chọn tất cả các Node</string>
     <string name="add_new_node">Thêm Node mới</string>
     <string name="list_of_device">Danh sách các thiết bị</string>
+    <string name="to_break">Bỏ qua</string>
+    <string name="select_a_gateway">Chọn thiết bị trung gian</string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>

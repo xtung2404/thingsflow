@@ -111,7 +111,7 @@
     </fragment>
     <fragment
         android:id="@+id/identifyDeviceFragment"
-        android:name="com.example.thingsflow.ui.deviceConfig.FragmentIdentifyDevice"
+        android:name="com.example.thingsflow.ui.deviceConfig.gateway.FragmentIdentifyDevice"
         android:label="IdentifyDeviceFragment" >
         <action
             android:id="@+id/action_identifyDeviceFragment_to_homeFragment"
@@ -122,7 +122,7 @@
     </fragment>
     <fragment
         android:id="@+id/configWiFiFragment"
-        android:name="com.example.thingsflow.ui.deviceConfig.FragmentConfigWiFi"
+        android:name="com.example.thingsflow.ui.deviceConfig.gateway.FragmentConfigWiFi"
         android:label="ConfigWiFiFragment" >
         <action
             android:id="@+id/action_configWiFiFragment_to_assignDeviceToGroupFragment"
@@ -130,7 +130,7 @@
     </fragment>
     <fragment
         android:id="@+id/assignDeviceToGroupFragment"
-        android:name="com.example.thingsflow.ui.deviceConfig.FragmentAssignDeviceToGroup"
+        android:name="com.example.thingsflow.ui.deviceConfig.gateway.FragmentAssignDeviceToGroup"
         android:label="AssignDeviceToGroupFragment" >
         <action
             android:id="@+id/action_assignDeviceToGroupFragment_to_setDeviceLabelFragment"
@@ -138,7 +138,7 @@
     </fragment>
     <fragment
         android:id="@+id/setDeviceLabelFragment"
-        android:name="com.example.thingsflow.ui.deviceConfig.FragmentSetDeviceLabel"
+        android:name="com.example.thingsflow.ui.deviceConfig.gateway.FragmentSetDeviceLabel"
         android:label="SetDeviceLabelFragment" >
         <action
             android:id="@+id/action_setDeviceLabelFragment_to_homeFragment"

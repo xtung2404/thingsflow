@@ -1,4 +1,4 @@
-package com.example.thingsflow.ui.deviceConfig
+package com.example.thingsflow.ui.deviceConfig.zigbee
 
 import android.view.View
 import androidx.fragment.app.activityViewModels
@@ -19,7 +19,7 @@ import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
 import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
 
 @AndroidEntryPoint
-class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
+class FragmentIdentifyZigbeeDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_identify_device
     private val TAG = "IdentifyDeviceFragment"

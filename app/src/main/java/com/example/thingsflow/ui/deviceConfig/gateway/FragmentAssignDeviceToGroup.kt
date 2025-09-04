@@ -1,4 +1,4 @@
-package com.example.thingsflow.ui.deviceConfig
+package com.example.thingsflow.ui.deviceConfig.gateway
 
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels

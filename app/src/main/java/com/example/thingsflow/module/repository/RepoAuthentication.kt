@@ -30,8 +30,8 @@ class RepoAuthentication @Inject constructor() {
         val username = if (isEmail) null else input
         val emailAdr = if (isEmail) input else null
         FlowSdk.signIn(
-            username,
-            emailAdr,
+            null,
+            input,
             null,
             pwd,
             callback

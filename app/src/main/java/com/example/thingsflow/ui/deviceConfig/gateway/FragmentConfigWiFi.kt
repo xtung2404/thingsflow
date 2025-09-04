@@ -1,4 +1,4 @@
-package com.example.thingsflow.ui.deviceConfig
+package com.example.thingsflow.ui.deviceConfig.gateway
 
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -60,6 +60,10 @@ class FragmentConfigWiFi : FragmentBase<FragmentConfigWiFiBinding>() {
 
             btnConnectToAnotherWifi.setOnClickListener {
                 dialogConfigWiFi.show(null)
+            }
+
+            btnBreak.setOnClickListener {
+                findNavController().navigate(R.id.assignDeviceToGroupFragment)
             }
         }
     }

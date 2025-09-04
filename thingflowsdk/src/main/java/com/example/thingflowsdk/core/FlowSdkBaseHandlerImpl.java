@@ -37,8 +37,8 @@ public class FlowSdkBaseHandlerImpl implements FlowSdkBaseHandler{
     public void signIn(
             String username,
             String email,
-            String password,
             String phoneNumber,
+            String password,
             AuthRequestCallback callback
     ) {
         SmartSdk.signIn(
