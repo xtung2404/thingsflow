@@ -73,7 +73,7 @@ class FragmentSignIn : FragmentBase<FragmentSignInBinding>() {
                         override fun onSuccess() {
                             CoroutineScope(Dispatchers.Main).launch {
                                 dialog?.cancel()
-                                findNavController().navigate(R.id.locationManagementFragment)
+                                findNavController().navigate(R.id.homeFragment)
                             }
                         }
 

@@ -11,12 +11,22 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentDeviceBinding
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterDevices
+import com.example.thingsflow.ui.dialog.DialogDeviceType
+import rogo.iot.module.platform.define.IoTDeviceType
 import rogo.iot.module.rogocore.sdk.SmartSdk
 
 class FragmentDevice : FragmentBase<FragmentDeviceBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_device
 
+    private val dialogDeviceType: DialogDeviceType by lazy {
+        DialogDeviceType(
+            requireContext(),
+            onDeviceTypeSelected =  {devType ->
+                val bundle = bundleOf("deviceType" to devType)
+                findNavController().navigate(R.id.locationManagementFragment, bundle)
+        })
+    }
     private val adapterDevices: AdapterDevices by lazy {
         AdapterDevices(
             onDeviceSelected = { uuid, elm ->
@@ -37,13 +47,12 @@ class FragmentDevice : FragmentBase<FragmentDeviceBinding>() {
         super.initView()
         binding.apply {
             btnConnect.setOnClickListener {
-                findNavController().navigate(R.id.identifyDeviceFragment)
+                dialogDeviceType.show()
             }
         }
     }
 
     override fun initAction() {
         super.initAction()
-
     }
 }

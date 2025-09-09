@@ -142,7 +142,7 @@ class FragmentVerifyOTP : FragmentBase<FragmentVerifyOTPBinding>() {
                 override fun onSuccess() {
                     CoroutineScope(Dispatchers.Main).launch {
                         countdownJob?.cancel()
-                        findNavController().navigate(R.id.createLocationFragment)
+                        findNavController().navigate(R.id.homeFragment)
                     }
                 }
 

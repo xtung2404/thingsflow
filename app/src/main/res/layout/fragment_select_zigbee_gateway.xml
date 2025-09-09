@@ -30,15 +30,29 @@
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/space_screen_small"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/helpful_when_lots_of_gateway"
-                    android:textSize="@dimen/text_body2"
-                    android:textColor="@color/black"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/space_screen_super_small"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_space8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/gateway_belongs_to"
+                        android:textSize="@dimen/text_body2"
+                        android:textColor="@color/black"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/_space5dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_current_location"
+                        android:textSize="@dimen/text_body2"
+                        android:textColor="@color/emerald"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"/>
+                </LinearLayout>
             </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"

@@ -9,6 +9,7 @@ import rogo.iot.module.rogocore.sdk.SmartSdk;
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback;
 import rogo.iot.module.rogocore.sdk.entity.IoTProductModel;
 import rogo.iot.module.rogocore.sdk.handler.ConfigWileDirectDeviceHandler;
+import rogo.iot.module.rogocore.sdk.handler.ConfigZigbeeDeviceHandler;
 import rogo.iot.module.rogocore.sdk.handler.GroupHandler;
 import rogo.iot.module.rogocore.sdk.handler.LocationHandler;
 
@@ -127,5 +128,10 @@ public class FlowSdkBaseHandlerImpl implements FlowSdkBaseHandler{
     @Override
     public ConfigWileDirectDeviceHandler configWileDirectDeviceHandler() {
         return SmartSdk.configWileDirectDeviceHandler();
+    }
+
+    @Override
+    public ConfigZigbeeDeviceHandler configZigbeeDeviceHandler() {
+        return SmartSdk.configZigbeeDeviceHandler();
     }
 }

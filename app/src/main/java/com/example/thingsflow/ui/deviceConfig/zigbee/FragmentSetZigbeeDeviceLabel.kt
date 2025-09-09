@@ -1,53 +1,56 @@
-package com.example.thingsflow.ui.deviceConfig.gateway
+package com.example.thingsflow.ui.deviceConfig.zigbee
 
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentSetDeviceLabelBinding
 import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
+import com.example.thingsflow.module.viewmodel.VMConfigZigbee
 import com.example.thingsflow.ui.FragmentBase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
+import rogo.iot.module.rogocore.sdk.entity.IoTPairedZigbeeDevice
 
 @AndroidEntryPoint
-class FragmentSetDeviceLabel : FragmentBase<FragmentSetDeviceLabelBinding>() {
+class FragmentSetZigbeeDeviceLabel : FragmentBase<FragmentSetDeviceLabelBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_set_device_label
+    private var gatewayId: String?= null
+    private var ioTPairedZigbeeDevice: IoTPairedZigbeeDevice?= null
 
-    private val TAG = "FragmentSetDeviceLabel"
-    private var identifiedDevice: IoTDirectDeviceInfo?= null
-    private var selectedGroup: String?= null
-    private val vmConfigWileDirect by activityViewModels<VMConfigWileDirect>()
+    private val vmConfigZigbee by activityViewModels<VMConfigZigbee>()
     override fun initVariable() {
         super.initVariable()
-        identifiedDevice = vmConfigWileDirect.getIdentifiedDevice()
         arguments?.let {
-            selectedGroup = it.getString("group")
+            gatewayId = it.getString("gatewayId")
+            ioTPairedZigbeeDevice = it.getParcelable("pairedDevice")
         }
     }
 
     override fun initView() {
         super.initView()
         binding.apply {
-            ILogR.D(TAG, "deviceInfo:", identifiedDevice?.productId, SmartSdk.getProductModel(identifiedDevice?.productId).name)
-            edtLabel.setText(SmartSdk.getProductModel(identifiedDevice?.productId).name)
+            ioTPairedZigbeeDevice?.let {
+                edtLabel.setText(it.ioTProductModel.name)
+            }
         }
     }
     override fun initAction() {
         super.initAction()
         binding.apply {
             btnFinish.setOnClickListener {
-                vmConfigWileDirect.setupAndSyncDeviceToCloud(
+                vmConfigZigbee.syncDeviceToCloud(
+                    gatewayId!!,
+                    ioTPairedZigbeeDevice!!,
                     edtLabel.text.toString(),
-                    selectedGroup,
-                    SmartSdk.getProductModel(identifiedDevice?.productId).devSubType,
+                    null,
+                    ioTPairedZigbeeDevice!!.ioTProductModel.devSubType,
                     object : RequestCallback<IoTDevice> {
                         override fun onSuccess(p0: IoTDevice?) {
                             CoroutineScope(Dispatchers.Main).launch {

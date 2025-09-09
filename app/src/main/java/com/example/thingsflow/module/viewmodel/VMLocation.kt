@@ -20,6 +20,10 @@ class VMLocation @Inject constructor(val repo: RepoLocation): ViewModel() {
     fun refresh() {
         _locationsLiveData.value = repo.getLocationList()
     }
+
+    fun getLocation(uuid: String?): IoTLocation? {
+        return repo.getLocation(uuid)
+    }
     fun createLocation(
         label: String,
         type: String,
@@ -32,7 +36,6 @@ class VMLocation @Inject constructor(val repo: RepoLocation): ViewModel() {
                 callback
             )
         }
-
     }
 
     fun update(

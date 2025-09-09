@@ -7,14 +7,16 @@ import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 import javax.inject.Inject
 
 class RepoLocation @Inject constructor() {
-    fun getLocationList(): List<IoTLocation> = SmartSdk.locationHandler().all.toList()
+    val handler = FlowSdk.locationHandler()
+    fun getLocationList(): List<IoTLocation> = handler.all.toList()
 
+    fun getLocation(uuid: String?): IoTLocation? = handler.get(uuid)
     fun createLocation(
         label: String,
         type: String,
         callback: RequestCallback<IoTLocation>
     ) {
-        FlowSdk.locationHandler().createLocation(
+        handler.createLocation(
             label,
             type,
             callback
@@ -26,7 +28,7 @@ class RepoLocation @Inject constructor() {
         label: String,
         callback: RequestCallback<IoTLocation>
     ) {
-        FlowSdk.locationHandler().updateLocation(
+        handler.updateLocation(
             ioTLocation.uuid,
             label,
             ioTLocation.desc,
@@ -38,7 +40,7 @@ class RepoLocation @Inject constructor() {
         uuid: String,
         callback: RequestCallback<Boolean>
     ) {
-        FlowSdk.locationHandler().delete(
+        handler.delete(
             uuid,
             callback
         )

@@ -12,9 +12,6 @@
             android:id="@+id/action_splashFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
         <action
-            android:id="@+id/action_splashFragment_to_locationManagementFragment"
-            app:destination="@id/locationManagementFragment" />
-        <action
             android:id="@+id/action_splashFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
@@ -25,9 +22,6 @@
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
-        <action
-            android:id="@+id/action_signInFragment_to_locationManagementFragment"
-            app:destination="@id/locationManagementFragment" />
         <action
             android:id="@+id/action_signInFragment_to_resetPasswordFragment"
             app:destination="@id/resetPasswordFragment" />
@@ -46,33 +40,28 @@
     <fragment
         android:id="@+id/verifyOTPFragment"
         android:name="com.example.thingsflow.ui.authentication.FragmentVerifyOTP"
-        android:label="VerifyOTPFragment" >
-        <action
-            android:id="@+id/action_verifyOTPFragment_to_createLocationFragment"
-            app:destination="@id/createLocationFragment" />
-    </fragment>
+        android:label="VerifyOTPFragment" />
     <fragment
         android:id="@+id/locationManagementFragment"
         android:name="com.example.thingsflow.ui.location.FragmentLocationManagement"
         android:label="LocationManagementFragment" >
         <action
+            android:id="@+id/action_locationManagementFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
             android:id="@+id/action_locationManagementFragment_to_createLocationFragment"
             app:destination="@id/createLocationFragment" />
         <action
-            android:id="@+id/action_locationManagementFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_locationManagementFragment_to_identifyDeviceFragment"
+            app:destination="@id/identifyDeviceFragment" />
+        <action
+            android:id="@+id/action_locationManagementFragment_to_fragmentSelectZigbeeGateway"
+            app:destination="@id/fragmentSelectZigbeeGateway" />
     </fragment>
     <fragment
         android:id="@+id/createLocationFragment"
         android:name="com.example.thingsflow.ui.location.FragmentCreateLocation"
-        android:label="CreateLocationFragment" >
-          <action
-            android:id="@+id/action_createLocationFragment_to_locationManagementFragment"
-            app:destination="@id/locationManagementFragment" />
-        <action
-            android:id="@+id/action_createLocationFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
-    </fragment>
+        android:label="CreateLocationFragment" />
     <fragment
         android:id="@+id/resetPasswordFragment"
         android:name="com.example.thingsflow.ui.authentication.FragmentResetPassword"
@@ -91,34 +80,31 @@
         <action
             android:id="@+id/action_verifyResetPwdOtpFragment_to_resetPasswordFragment"
             app:destination="@id/resetPasswordFragment" />
-        <action
-            android:id="@+id/action_verifyResetPwdOtpFragment_to_locationManagementFragment"
-            app:destination="@id/locationManagementFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.thingsflow.ui.FragmentDashboard"
         android:label="HomeFragment" >
         <action
-            android:id="@+id/action_homeFragment_to_identifyDeviceFragment"
-            app:destination="@id/identifyDeviceFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_fragmentFlowScenManagement"
             app:destination="@id/fragmentFlowScenManagement" />
         <action
             android:id="@+id/action_homeFragment_to_fragmentDevice"
             app:destination="@id/fragmentDevice" />
+        <action
+            android:id="@+id/action_homeFragment_to_locationManagementFragment"
+            app:destination="@id/locationManagementFragment" />
     </fragment>
     <fragment
         android:id="@+id/identifyDeviceFragment"
         android:name="com.example.thingsflow.ui.deviceConfig.gateway.FragmentIdentifyDevice"
         android:label="IdentifyDeviceFragment" >
         <action
-            android:id="@+id/action_identifyDeviceFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-        <action
             android:id="@+id/action_identifyDeviceFragment_to_configWiFiFragment"
             app:destination="@id/configWiFiFragment" />
+        <action
+            android:id="@+id/action_identifyDeviceFragment_to_assignDeviceToGroupFragment"
+            app:destination="@id/assignDeviceToGroupFragment" />
     </fragment>
     <fragment
         android:id="@+id/configWiFiFragment"
@@ -194,6 +180,12 @@
         <action
             android:id="@+id/action_fragmentDevice_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_fragmentDevice_to_fragmentSelectZigbeeGateway"
+            app:destination="@id/fragmentSelectZigbeeGateway" />
+        <action
+            android:id="@+id/action_fragmentDevice_to_identifyDeviceFragment"
+            app:destination="@id/identifyDeviceFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragmentDeviceDetail"
@@ -203,4 +195,24 @@
             android:id="@+id/action_fragmentDeviceDetail_to_fragmentDevice"
             app:destination="@id/fragmentDevice" />
     </fragment>
+    <fragment
+        android:id="@+id/fragmentSelectZigbeeGateway"
+        android:name="com.example.thingsflow.ui.deviceConfig.zigbee.FragmentSelectZigbeeGateway"
+        android:label="FragmentSelectZigbeeGateway" >
+        <action
+            android:id="@+id/action_fragmentSelectZigbeeGateway_to_fragmentIdentifyZigbeeDevice"
+            app:destination="@id/fragmentIdentifyZigbeeDevice" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentIdentifyZigbeeDevice"
+        android:name="com.example.thingsflow.ui.deviceConfig.zigbee.FragmentIdentifyZigbeeDevice"
+        android:label="FragmentIdentifyZigbeeDevice" >
+        <action
+            android:id="@+id/action_fragmentIdentifyZigbeeDevice_to_fragmentSetZigbeeDeviceLabel"
+            app:destination="@id/fragmentSetZigbeeDeviceLabel" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentSetZigbeeDeviceLabel"
+        android:name="com.example.thingsflow.ui.deviceConfig.zigbee.FragmentSetZigbeeDeviceLabel"
+        android:label="FragmentSetZigbeeDeviceLabel" />
 </navigation>

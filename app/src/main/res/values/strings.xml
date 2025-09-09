@@ -70,6 +70,7 @@
     <string name="attribute_of_device">Thuộc tính thiết bị</string>
     <string name="choose_every_attributes">Chọn tất cả các thuộc tính</string>
     <string name="choose_device">Chọn thiết bị</string>
+    <string name="choose_device_type">Chọn loại thiết bị</string>
     <string name="later">Để sau</string>
     <string name="device_list">Danh sách thiết bị</string>
     <string name="config">Thiết lập</string>
@@ -121,6 +122,7 @@
     <string name="list_of_device">Danh sách các thiết bị</string>
     <string name="to_break">Bỏ qua</string>
     <string name="select_a_gateway">Chọn thiết bị trung gian</string>
+    <string name="gateway_belongs_to">Gateway thuộc </string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>

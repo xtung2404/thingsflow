@@ -22,7 +22,7 @@ class LayoutZoomPan @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), ViewBox.OnBoxClickListener {
+) : FrameLayout(context, attrs, defStyleAttr) {
 
     private var scaleFactor = 1.0f
     private var translateX = 0f
@@ -274,7 +274,7 @@ class LayoutZoomPan @JvmOverloads constructor(
         return ViewBox(context).apply {
             this.fBox = fBox
             this.background = null
-            this.onBoxClickListener = this@LayoutZoomPan
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         }
     }
 
@@ -483,9 +483,9 @@ class LayoutZoomPan @JvmOverloads constructor(
         return gestureDetector.onTouchEvent(event)
     }
 
-    override fun onBoxClick(box: FBox?) {
-        onBoxClickListener?.onBoxClick(box)
-    }
+//    override fun onBoxClick(box: FBox?) {
+//        onBoxClickListener?.onBoxClick(box)
+//    }
 
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
         override fun onScroll(
@@ -514,15 +514,33 @@ class LayoutZoomPan @JvmOverloads constructor(
         override fun onDown(e: MotionEvent): Boolean = true
 
         override fun onSingleTapUp(e: MotionEvent): Boolean {
+//            for (i in 0 until childCount) {
+//                val child = getChildAt(i)
+//                if (child is ViewBox) {
+//                    val childRect = RectF(
+//                        child.x + translateX, child.y + translateY,
+//                        child.x + child.width + translateX, child.y + child.height + translateY
+//                    )
+//                    if (childRect.contains(e.x, e.y)) {
+//                        child.performClick()
+//                        return true
+//                    }
+//                }
+//            }
+//            return false
+            val touchX = e.x - translateX
+            val touchY = e.y - translateY
+
             for (i in 0 until childCount) {
                 val child = getChildAt(i)
                 if (child is ViewBox) {
                     val childRect = RectF(
-                        child.x + translateX, child.y + translateY,
-                        child.x + child.width + translateX, child.y + child.height + translateY
+                        child.x, child.y,
+                        child.x + child.width, child.y + child.height
                     )
-                    if (childRect.contains(e.x, e.y)) {
-                        child.performClick()
+                    if (childRect.contains(touchX, touchY)) {
+                        // Gọi trực tiếp listener của box
+                        onBoxClickListener?.onBoxClick(child.fBox)
                         return true
                     }
                 }

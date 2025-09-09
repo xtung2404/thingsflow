@@ -14,7 +14,6 @@ class FragmentSplash : FragmentBase<FragmentSplashBinding>() {
         get() = R.layout.fragment_splash
 
     private val vmAuthentication by viewModels<VMAuthentication>()
-    private val vmLocation by viewModels<VMLocation>()
 
     /**
      * check if fundamental requirements of phone, if it supports the background service
@@ -26,11 +25,7 @@ class FragmentSplash : FragmentBase<FragmentSplashBinding>() {
         vmAuthentication
             .connectService(result = { isAuthenticated ->
                 if (isAuthenticated) {
-                    if (vmLocation.getDefaultLocation() != null) {
-                        findNavController().navigate(R.id.homeFragment)
-                    } else {
-                        findNavController().navigate(R.id.locationManagementFragment)
-                    }
+                    findNavController().navigate(R.id.homeFragment)
                 } else {
                     findNavController().navigate(R.id.signInFragment)
                 }

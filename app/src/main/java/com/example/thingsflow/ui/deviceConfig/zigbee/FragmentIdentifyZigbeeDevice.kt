@@ -1,13 +1,17 @@
 package com.example.thingsflow.ui.deviceConfig.zigbee
 
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentIdentifyDeviceBinding
+import com.example.thingsflow.databinding.FragmentIdentifyZigbeeDeviceBinding
 import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
+import com.example.thingsflow.module.viewmodel.VMConfigZigbee
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterDiscoveredDevices
+import com.example.thingsflow.ui.adapter.AdapterDiscoveredZigbeeDevices
 import com.example.thingsflow.utils.ScanningIoTDeviceCallback
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,25 +20,37 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
+import rogo.iot.module.rogocore.sdk.callback.PairZigbeeDeviceCallback
 import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
+import rogo.iot.module.rogocore.sdk.entity.IoTPairedZ2mDevice
+import rogo.iot.module.rogocore.sdk.entity.IoTPairedZigbeeDevice
 
 @AndroidEntryPoint
-class FragmentIdentifyZigbeeDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
+class FragmentIdentifyZigbeeDevice : FragmentBase<FragmentIdentifyZigbeeDeviceBinding>() {
     override val layoutId: Int
-        get() = R.layout.fragment_identify_device
-    private val TAG = "IdentifyDeviceFragment"
-    // Time to discover for available devices
-    private val DISCOVERY_TIMEOUT_SECONDS: Long = 15
-    private val vmConfigWileDirect by activityViewModels<VMConfigWileDirect>()
-    // list of discovered devices
-    private val discoveredGateways = arrayListOf<IoTDirectDeviceInfo>()
-    private val adapterDiscoveredDevices: AdapterDiscoveredDevices by lazy {
-        AdapterDiscoveredDevices(
+        get() = R.layout.fragment_identify_zigbee_device
+    private val TAG = "FragmentIdentifyZigbeeDevice"
+    private val vmConfigZigbee by activityViewModels<VMConfigZigbee>()
+    private val discoveredZigbeeDevices = arrayListOf<IoTPairedZigbeeDevice>()
+    private val ioTPairedZigbeeDevice: IoTPairedZigbeeDevice?= null
+    private val adapterDiscoveredZigbeeDevices: AdapterDiscoveredZigbeeDevices by lazy {
+        AdapterDiscoveredZigbeeDevices(
             onItemSelected = {
-                identifyAndConnectToDevice(it)
+                val bundle = bundleOf("gatewayId" to gatewayId, "pairedDevice" to ioTPairedZigbeeDevice)
+                findNavController().navigate(R.id.fragmentSetZigbeeDeviceLabel, bundle)
             }
         )
     }
+    private var gatewayId: String?= null
+
+    override fun initVariable() {
+        super.initVariable()
+        discoveredZigbeeDevices.clear()
+        arguments?.let {
+            gatewayId = it.getString("gatewayId")
+        }
+    }
+
     override fun initView() {
         super.initView()
         binding.apply {
@@ -54,84 +70,67 @@ class FragmentIdentifyZigbeeDevice : FragmentBase<FragmentIdentifyDeviceBinding>
                     rvGateway.requestLayout()
                 }
             }
-            rvGateway.adapter = adapterDiscoveredDevices
+            rvGateway.adapter = adapterDiscoveredZigbeeDevices
+            adapterDiscoveredZigbeeDevices.submitList(discoveredZigbeeDevices)
         }
     }
 
     override fun initAction() {
         super.initAction()
         binding.apply {
-            discovery()
-
+            startPairingZigbee()
             toolbar.btnBack.setOnClickListener {
-                vmConfigWileDirect.cancelDiscovery()
                 findNavController().popBackStack()
             }
 
             btnRescan.setOnClickListener {
-                discovery()
+                startPairingZigbee()
             }
         }
     }
 
-    /**
-     * discovery for available devices nearby in spanning time of 15 seconds
-     * the callback can be triggered by a device several times so it needs filtering
-     */
-    private fun discovery() {
-        discoveredGateways.clear()
-        adapterDiscoveredDevices.submitList(discoveredGateways)
-        vmConfigWileDirect
-            .discovery(
-                DISCOVERY_TIMEOUT_SECONDS,
-                object : ScanningIoTDeviceCallback {
-                    override fun onDeviceFound(device: IoTDirectDeviceInfo) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            if (discoveredGateways.isEmpty()) {
-                                binding.lnSelectDevice.visibility = View.VISIBLE
-                                binding.clScanning.visibility = View.GONE
-                            }
-                            if (!discoveredGateways.contains(device)) {
-                                ILogR.D(TAG, "discovery:deviceFound ", device.label)
-                                discoveredGateways.add(device)
-                                adapterDiscoveredDevices.notifyItemInserted(discoveredGateways.size - 1)
-                            }
-                        }
-                    }
+    fun startPairingZigbee() {
+        vmConfigZigbee.startPairingDevice(
+            gatewayId!!,
+            60,
+            0,
+            object : PairZigbeeDeviceCallback {
+                override fun onPairingStatus(p0: Int) {
 
-                    override fun onTimeOut() {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            binding.txtScanning.text = "Không tìm thấy gateway nào!"
-                            binding.btnRescan.isEnabled = true
-                        }
-                    }
                 }
-            )
-    }
 
-    /**
-     * connect to one of discovered devices
-     */
-    private fun identifyAndConnectToDevice(ioTDirectDeviceInfo: IoTDirectDeviceInfo) {
-        vmConfigWileDirect.connectAndIdentifyDevice(
-            ioTDirectDeviceInfo,
-            object : SuccessStatusCallback {
-                override fun onSuccess() {
+                override fun onPairedDevice(p0: IoTPairedZigbeeDevice?) {
                     CoroutineScope(Dispatchers.Main).launch {
-                        findNavController().navigate(R.id.configWiFiFragment)
+                        if (discoveredZigbeeDevices.isEmpty()) {
+                            binding.lnSelectDevice.visibility = View.VISIBLE
+                            binding.clScanning.visibility = View.GONE
+                        }
+                        if (!discoveredZigbeeDevices.contains(p0)) {
+                            p0?.let {
+                                ILogR.D(TAG, "discovery:deviceFound ", it.ioTProductModel.name)
+                                discoveredZigbeeDevices.add(p0)
+                                adapterDiscoveredZigbeeDevices.notifyItemInserted(discoveredZigbeeDevices.size)
+                            }
+                        }
                     }
                 }
 
-                override fun onFailure(p0: Int, p1: String?) {
+                override fun onPairedDevice(p0: IoTPairedZ2mDevice?) {
+
+                }
+
+                override fun onPairedUnknownDevice(
+                    p0: String?,
+                    p1: String?,
+                    p2: String?
+                ) {
+
+                }
+
+                override fun onNotDevicePaired() {
 
                 }
             }
         )
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        discoveredGateways.clear()
-        adapterDiscoveredDevices.submitList(discoveredGateways)
     }
 }

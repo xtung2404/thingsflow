@@ -143,7 +143,8 @@ class FragmentVerifyResetPwdOtp : FragmentBase<FragmentVerifyResetPwdOtpBinding>
                 override fun onSuccess() {
                     CoroutineScope(Dispatchers.Main).launch {
                         countdownJob?.cancel()
-                        findNavController().navigate(R.id.locationManagementFragment)
+                        findNavController().navigate(R.id.homeFragment)
+
                     }
                 }
 

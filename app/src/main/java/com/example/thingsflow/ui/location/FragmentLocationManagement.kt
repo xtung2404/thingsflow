@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
+import rogo.iot.module.platform.define.IoTDeviceType
 
 @AndroidEntryPoint
 class FragmentLocationManagement : FragmentBase<FragmentLocationManagementBinding>() {
@@ -24,6 +25,7 @@ class FragmentLocationManagement : FragmentBase<FragmentLocationManagementBindin
 
     private val vmLocation by activityViewModels<VMLocation>()
     private val vmAuthentication by viewModels<VMAuthentication>()
+    private var devType: Int?= IoTDeviceType.GATEWAY
     private val dialogEditLocation: DialogEditLocation by lazy {
         DialogEditLocation(
             requireContext(),
@@ -57,6 +59,9 @@ class FragmentLocationManagement : FragmentBase<FragmentLocationManagementBindin
     override fun initVariable() {
         super.initVariable()
         binding.apply {
+            arguments?.let {
+                devType = it.getInt("deviceType")
+            }
             vmLocation.refresh()
             rvLocation.adapter = locationAdapter
             vmLocation.locationsLiveData.observe(requireActivity()) {
@@ -87,7 +92,14 @@ class FragmentLocationManagement : FragmentBase<FragmentLocationManagementBindin
                 val selectedLocation = locationAdapter.getSelectedLocation()
                 selectedLocation?.let {
                     vmLocation.setDefaultLocation(it.uuid)
-                    findNavController().navigate(R.id.homeFragment)
+                    when(devType) {
+                        IoTDeviceType.GATEWAY -> {
+                            findNavController().navigate(R.id.identifyDeviceFragment)
+                        }
+                        IoTDeviceType.OTHER -> {
+                            findNavController().navigate(R.id.fragmentSelectZigbeeGateway)
+                        }
+                    }
                 }
             }
 

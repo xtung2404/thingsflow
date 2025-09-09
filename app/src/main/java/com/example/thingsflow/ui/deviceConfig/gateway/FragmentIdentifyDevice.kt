@@ -118,7 +118,7 @@ class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
             object : SuccessStatusCallback {
                 override fun onSuccess() {
                     CoroutineScope(Dispatchers.Main).launch {
-                        findNavController().navigate(R.id.configWiFiFragment)
+                        findNavController().navigate(R.id.assignDeviceToGroupFragment)
                     }
                 }
 

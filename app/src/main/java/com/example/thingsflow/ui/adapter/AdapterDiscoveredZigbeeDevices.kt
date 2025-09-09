@@ -7,34 +7,35 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.databinding.LayoutItemDiscoveredDeviceBinding
 import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
-import rogo.iot.module.rogocore.sdk.SmartSdk
+import rogo.iot.module.rogocore.sdk.entity.IoTPairedZigbeeDevice
 
-class AdapterDiscoveredDevices(
-    private val onItemSelected: (IoTDirectDeviceInfo) -> Unit
+class AdapterDiscoveredZigbeeDevices(
+    private val onItemSelected: (IoTPairedZigbeeDevice) -> Unit
 ):
-ListAdapter<IoTDirectDeviceInfo, AdapterDiscoveredDevices.DiscoveredDevicesViewHolder>(
-    object : DiffUtil.ItemCallback<IoTDirectDeviceInfo>() {
+ListAdapter<IoTPairedZigbeeDevice, AdapterDiscoveredZigbeeDevices.DiscoveredZigbeeDevicesViewHolder>(
+    object : DiffUtil.ItemCallback<IoTPairedZigbeeDevice>() {
         override fun areItemsTheSame(
-            oldItem: IoTDirectDeviceInfo,
-            newItem: IoTDirectDeviceInfo
+            oldItem: IoTPairedZigbeeDevice,
+            newItem: IoTPairedZigbeeDevice
         ): Boolean {
-            return oldItem.mac == newItem.mac && oldItem.label.contentEquals(newItem.label)
+            return false
         }
 
         override fun areContentsTheSame(
-            oldItem: IoTDirectDeviceInfo,
-            newItem: IoTDirectDeviceInfo
+            oldItem: IoTPairedZigbeeDevice,
+            newItem: IoTPairedZigbeeDevice
         ): Boolean {
-            return oldItem.mac == newItem.mac
+            return false
         }
+
     }
 ) {
-    inner class DiscoveredDevicesViewHolder(
+    inner class DiscoveredZigbeeDevicesViewHolder(
         private val binding: LayoutItemDiscoveredDeviceBinding
     ): RecyclerView.ViewHolder(binding.root) {
-        fun onBind(device: IoTDirectDeviceInfo) {
+        fun onBind(device: IoTPairedZigbeeDevice) {
             binding.apply {
-                txtLabel.text = SmartSdk.getProductModel(device.productId).name
+                txtLabel.text = device.ioTProductModel.name
                 root.setOnClickListener {
                     onItemSelected.invoke(device)
                 }
@@ -42,16 +43,19 @@ ListAdapter<IoTDirectDeviceInfo, AdapterDiscoveredDevices.DiscoveredDevicesViewH
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoveredDevicesViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoveredZigbeeDevicesViewHolder {
         val inflater = LayoutItemDiscoveredDeviceBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return DiscoveredDevicesViewHolder(inflater)
+        return DiscoveredZigbeeDevicesViewHolder(inflater)
     }
 
-    override fun onBindViewHolder(holder: DiscoveredDevicesViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: DiscoveredZigbeeDevicesViewHolder,
+        position: Int
+    ) {
         holder.onBind(getItem(position))
     }
 }

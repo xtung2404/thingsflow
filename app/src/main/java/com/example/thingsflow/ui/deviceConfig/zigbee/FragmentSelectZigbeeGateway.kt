@@ -1,12 +1,16 @@
 package com.example.thingsflow.ui.deviceConfig.zigbee
 
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentIdentifyDeviceBinding
 import com.example.thingsflow.databinding.FragmentSelectZigbeeGatewayBinding
 import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
+import com.example.thingsflow.module.viewmodel.VMConfigZigbee
+import com.example.thingsflow.module.viewmodel.VMLocation
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterDevices
 import com.example.thingsflow.ui.adapter.AdapterDiscoveredDevices
@@ -28,11 +32,14 @@ class FragmentSelectZigbeeGateway : FragmentBase<FragmentSelectZigbeeGatewayBind
     override val layoutId: Int
         get() = R.layout.fragment_select_zigbee_gateway
     private val TAG = "FragmentSelectZigbeeGateway"
+    private val vmConfigZigbee by activityViewModels<VMConfigZigbee>()
+    private val vmLocation by viewModels<VMLocation>()
     private val gatewayList: ArrayList<IoTDevice> = arrayListOf()
     private val adapterDevices: AdapterDevices by lazy {
         AdapterDevices(
             onDeviceSelected = {uuid, elms ->
-
+                val bundle = bundleOf("gatewayId" to uuid)
+                findNavController().navigate(R.id.fragmentIdentifyZigbeeDevice, bundle)
             }
         )
     }
@@ -47,13 +54,19 @@ class FragmentSelectZigbeeGateway : FragmentBase<FragmentSelectZigbeeGatewayBind
     override fun initView() {
         super.initView()
         binding.apply {
-            SmartSdk.configZigbeeDeviceHandler().checkZigbeeGatewayAvailable(
+
+            txtCurrentLocation.text = vmLocation.getLocation(vmLocation.getDefaultLocation())?.label
+
+            vmConfigZigbee.checkGatewayAvailable(
                 object : CheckDeviceAvailableCallback {
                     override fun onDeviceAvailable(p0: String?) {
-                        val device = SmartSdk.deviceHandler().get(p0)
-                        device?.let {
-                            gatewayList.add(gatewayList.size, device)
-                            adapterDevices.notifyItemInserted(gatewayList.size)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            ILogR.D(TAG, "availableGateway: ", p0)
+                            val device = SmartSdk.deviceHandler().get(p0)
+                            device?.let {
+                                gatewayList.add(device)
+                                adapterDevices.notifyDataSetChanged()
+                            }
                         }
                     }
                 }
