@@ -22,7 +22,6 @@ import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class DialogFlowNodeList(
     context: Context,
-    private val viewModelOwner: ViewModelStoreOwner,
     private val onConnectNewNode: () -> Unit
 ): DialogBase<DialogFlowNodeListBinding>(
     context,

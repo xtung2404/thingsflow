@@ -16,7 +16,7 @@ fun getFragmentLabel(context: Context, destination: Int?): String =
         else -> " "
     }
 
-fun getDeviceTypeLabel(context: Context, type: Int): String =
+fun getDeviceTypeLabel(context: Context, type: Int): String? =
     when(type) {
         IoTDeviceType.LIGHT -> context.resources.getString(R.string.light)
         IoTDeviceType.SWITCH -> context.resources.getString(R.string.switch_device_type)
@@ -26,18 +26,18 @@ fun getDeviceTypeLabel(context: Context, type: Int): String =
         IoTDeviceType.CAMERA -> context.resources.getString(R.string.camera)
         IoTDeviceType.SPEAKER -> context.resources.getString(R.string.speaker)
         IoTDeviceType.MOTOR_CONTROLLER -> context.resources.getString(R.string.motor_controller)
-        IoTDeviceType.AC_CONTROLLER -> context.resources.getString(R.string.ac_controller)
+//        IoTDeviceType.AC_CONTROLLER -> context.resources.getString(R.string.ac_controller)
         IoTDeviceType.GATE -> context.resources.getString(R.string.gate)
         IoTDeviceType.GATEWAY -> context.resources.getString(R.string.gateway)
-        IoTDeviceType.HEAT_SENSOR -> context.resources.getString(R.string.heat_sensor)
-        IoTDeviceType.TEMP_SENSOR -> context.resources.getString(R.string.temp_sensor)
-        IoTDeviceType.DOOR_SENSOR -> context.resources.getString(R.string.door_sensor)
-        IoTDeviceType.SMOKE_SENSOR -> context.resources.getString(R.string.smoke_sensor)
-        IoTDeviceType.MOTION_LUX_SENSOR -> context.resources.getString(R.string.motion_lux_sensor)
-        IoTDeviceType.MOTION_SENSOR -> context.resources.getString(R.string.motion_sensor)
-        IoTDeviceType.LUX_SENSOR -> context.resources.getString(R.string.lux_sensor)
-        IoTDeviceType.PRESENSCE_SENSOR -> context.resources.getString(R.string.presence_sensor)
-        else -> ""
+//        IoTDeviceType.HEAT_SENSOR -> context.resources.getString(R.string.heat_sensor)
+//        IoTDeviceType.TEMP_SENSOR -> context.resources.getString(R.string.temp_sensor)
+//        IoTDeviceType.DOOR_SENSOR -> context.resources.getString(R.string.door_sensor)
+//        IoTDeviceType.SMOKE_SENSOR -> context.resources.getString(R.string.smoke_sensor)
+//        IoTDeviceType.MOTION_LUX_SENSOR -> context.resources.getString(R.string.motion_lux_sensor)
+//        IoTDeviceType.MOTION_SENSOR -> context.resources.getString(R.string.motion_sensor)
+//        IoTDeviceType.LUX_SENSOR -> context.resources.getString(R.string.lux_sensor)
+//        IoTDeviceType.PRESENSCE_SENSOR -> context.resources.getString(R.string.presence_sensor)
+        else -> null
     }
 
 fun getAttrLabel(context: Context, attr: Int): String =

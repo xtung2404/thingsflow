@@ -39,6 +39,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(group = "", name = "rogocore", ext = "jar")
+    implementation(group = "", name = "flowcommon", ext = "jar")
     implementation(group = "", name = "rogocloudapi", ext = "jar")
     implementation(group = "", name = "rogoplatform", ext = "jar")
     implementation(group = "", name = "rogoplatformandroid-release", ext = "aar")

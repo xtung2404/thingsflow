@@ -7,6 +7,7 @@ import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.DialogDeleteLocationBinding
 import com.example.thingsflow.databinding.DialogDeviceListBinding
+import com.example.thingsflow.module.viewmodel.VMDevice
 import com.example.thingsflow.module.viewmodel.VMLocation
 import com.example.thingsflow.ui.adapter.AdapterDevices
 import kotlinx.coroutines.CoroutineScope
@@ -19,13 +20,17 @@ import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class DialogDeviceList(
     context: Context,
-    private val viewModelOwner: ViewModelStoreOwner,
     private val onDeviceSelected: (Pair<String?, IntArray>) -> Unit
 ): DialogBase<DialogDeviceListBinding>(
     context,
     R.layout.dialog_device_list
 )  {
     private val TAG = "DialogDeviceList"
+    private val vmDevice: VMDevice? by lazy {
+        viewModelOwner?.let {
+            ViewModelProvider(it)[VMDevice::class.java]
+        }
+    }
     private var selectedDeviceId: String?= null
     private var selectedElms: IntArray = intArrayOf()
     private val adapterDevices: AdapterDevices by lazy {
@@ -57,8 +62,13 @@ class DialogDeviceList(
             rvDevice.adapter = adapterDevices
             selectedDeviceId = null
             selectedElms = intArrayOf()
+
+            ILogR.D(TAG, "getList", viewModelOwner, vmDevice?.getAll()?.size, SmartSdk.deviceHandler().all.size)
+            vmDevice?.getAll()?.forEach {
+                ILogR.D(TAG, "deviceInfo", it?.uuid, it?.label, vmDevice?.getAll()?.size)
+            }
             adapterDevices.submitList(
-                SmartSdk.deviceHandler().all.toList()
+                vmDevice?.getAll()
             )
         }
     }

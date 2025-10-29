@@ -9,6 +9,7 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentVerifyResetPwdOtpBinding
 import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.ui.FragmentBase
+import com.example.thingsflow.ui.dialog.showDialogLoadingWithAnimation
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -136,12 +137,19 @@ class FragmentVerifyResetPwdOtp : FragmentBase<FragmentVerifyResetPwdOtpBinding>
         otpCode: String,
         newPwd: String
     ) {
+        val dialogLoading = context?.showDialogLoadingWithAnimation(
+            R.string.reset_password,
+            R.string.reset_password,
+            lifecycle = lifecycle
+        )
+        dialogLoading?.show()
         vmAuthentication.handleOtpVerification(
             otpCode,
             newPwd,
             object : AuthRequestCallback {
                 override fun onSuccess() {
                     CoroutineScope(Dispatchers.Main).launch {
+                        dialogLoading?.dismiss()
                         countdownJob?.cancel()
                         findNavController().navigate(R.id.homeFragment)
 
@@ -149,9 +157,10 @@ class FragmentVerifyResetPwdOtp : FragmentBase<FragmentVerifyResetPwdOtpBinding>
                 }
 
                 override fun onFailure(p0: Int, p1: String?) {
-
+                    CoroutineScope(Dispatchers.Main).launch {
+                        dialogLoading?.dismiss()
+                    }
                 }
-
             }
         )
     }

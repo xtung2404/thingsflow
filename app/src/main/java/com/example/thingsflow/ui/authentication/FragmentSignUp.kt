@@ -46,8 +46,8 @@ class FragmentSignUp : FragmentBase<FragmentSignUpBinding>() {
      */
     private fun signUp() {
         binding.apply {
-            val username = edtUsername.text.toString()
-            val email = edtEmail.text.toString()
+            val username = edtUsername.toString()
+            val email = edtEmail.toString()
             val pwd = edtPwd.text.toString()
             if (isUserInfoValid(username, email, pwd)) {
                 vmAuthentication.signUp(

@@ -13,7 +13,6 @@ import rogo.iot.module.platform.callback.SuccessRequestCallback
 
 class DialogLabelFlowScenario(
     context: Context,
-    private val viewModelOwner: ViewModelStoreOwner
 ): DialogBase<DialogLabelFlowScenarioBinding>(
     context,
     R.layout.dialog_label_flow_scenario

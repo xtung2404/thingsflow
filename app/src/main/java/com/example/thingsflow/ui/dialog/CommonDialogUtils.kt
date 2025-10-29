@@ -18,7 +18,7 @@ import com.example.thingsflow.databinding.DialogLoadingWithAnimationBinding
 fun Context.showDialogLoadingWithAnimation(
     @StringRes titleRes: Int,
     @StringRes messRes: Int? = null,
-    messStr: String,
+    messStr: String? = null,
     @RawRes lottieAnim: Int?= null,
     lifecycle: Lifecycle,
     isAnimLoop: Boolean = false

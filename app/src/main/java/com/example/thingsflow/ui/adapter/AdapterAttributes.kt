@@ -36,9 +36,9 @@ ListAdapter<MutableMap.MutableEntry<Pair<Int, String>, Boolean>, AdapterAttribut
             binding.apply {
                 txtLabel.text = attr.key.second
                 if (attr.value) {
-                    root.setBackgroundResource(R.drawable.bg_white_stroke_emerald)
+                    root.setBackgroundResource(R.drawable.bg_gray_stroke_emerald)
                 } else {
-                    root.setBackgroundResource(R.drawable.bg_white)
+                    root.setBackgroundResource(R.drawable.bg_gray)
                 }
                 root.setOnClickListener {
                     onItemClicked.invoke(attr.key)

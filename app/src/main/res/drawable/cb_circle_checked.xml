@@ -6,13 +6,13 @@
             <solid android:color="@android:color/transparent"/>
             <stroke
                 android:width="2dp"
-                android:color="#000000"/>
+                android:color="@color/emerald"/>
         </shape>
     </item>
 
     <item android:top="6dp" android:bottom="6dp" android:left="6dp" android:right="6dp">
         <shape android:shape="oval">
-            <solid android:color="#000000"/>
+            <solid android:color="@color/emerald"/>
         </shape>
     </item>
 </layer-list>

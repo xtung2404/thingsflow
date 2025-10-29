@@ -31,12 +31,11 @@ class AdapterLocation(
             binding.apply {
                 txtLocLabel.text = loc.label
                 cbLocation.isChecked = isSelected
-                root.setBackgroundColor(
-                    if (isSelected)
-                        root.context.getColor(R.color.light_gray)
-                    else
-                        root.context.getColor(R.color.light_gray_10)
-                )
+                if (isSelected) {
+                    root.setBackgroundResource(R.drawable.bg_gray_stroke_emerald)
+                } else {
+                    root.setBackgroundColor(root.context.getColor(R.color.light_gray_10))
+                }
 
                 root.setOnClickListener {
                     if (selectedLocationId != loc.uuid) {

@@ -14,15 +14,16 @@ import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class DialogEditLocation(
     context: Context,
-    private val viewModelOwner: ViewModelStoreOwner,
     private val onDeleteLoc:(IoTLocation) -> Unit
 ): DialogBase<DialogEditLocationBinding>(
     context,
     R.layout.dialog_edit_location
 ) {
     private var ioTLocation: IoTLocation?= null
-    private val vmLocation: VMLocation by lazy {
-        ViewModelProvider(viewModelOwner)[VMLocation::class.java]
+    private val vmLocation: VMLocation? by lazy {
+        viewModelOwner?.let {
+            ViewModelProvider(it)[VMLocation::class.java]
+        }
     }
     override fun setupView(binding: DialogEditLocationBinding) {
         binding.apply {
@@ -37,13 +38,13 @@ class DialogEditLocation(
 
             btnSave.setOnClickListener {
                 ioTLocation?.let {
-                    vmLocation.update(
+                    vmLocation?.update(
                         it,
                         edtLabel.text.toString(),
                         object : RequestCallback<IoTLocation> {
                             override fun onSuccess(p0: IoTLocation?) {
                                 CoroutineScope(Dispatchers.Main).launch {
-                                    vmLocation.refresh()
+                                    vmLocation?.refresh()
                                     dismiss()
                                 }
                             }

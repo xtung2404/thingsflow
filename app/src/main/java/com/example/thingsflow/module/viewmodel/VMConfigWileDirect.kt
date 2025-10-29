@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thingsflow.module.repository.RepoConfigWileDirect
 import com.example.thingsflow.utils.ScanningIoTDeviceCallback
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import rogo.iot.module.platform.ILogR
@@ -11,9 +12,9 @@ import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.platform.callback.SuccessRequestCallback
 import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
 import rogo.iot.module.platform.entity.IoTNetworkConnectivity
+import rogo.iot.module.platform.entity.IoTSoftwareInfo
 import rogo.iot.module.platform.entity.IoTWifiInfo
 import rogo.iot.module.rogocore.sdk.callback.SetupWileDirectDeviceCallback
-import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import javax.inject.Inject
 
@@ -23,6 +24,7 @@ class VMConfigWileDirect
 {
     private val TAG = "ConfigWileDirectViewModel"
     private var identifiedDevice: IoTDirectDeviceInfo?= null
+    private var supportedConnecitivities: HashMap<IoTNetworkConnectivity, Boolean> = hashMapOf()
     fun discovery(
         scanningTime: Long,
         callback: ScanningIoTDeviceCallback
@@ -37,19 +39,33 @@ class VMConfigWileDirect
 
     fun connectAndIdentifyDevice(
         device: IoTDirectDeviceInfo,
-        callback: SuccessStatusCallback
+        callback: RequestCallback<HashMap<IoTNetworkConnectivity, Boolean>>
     ) {
         identifiedDevice = device
         viewModelScope.launch {
             repo.connectAndIdentifyDevice(
                 device,
                 object : SetupWileDirectDeviceCallback {
+//                    override fun onDeviceIdentifiedAndReadySetup(
+//                        mac: String?,
+//                        firmwareVersion: String?,
+//                        networkConnectivities: MutableCollection<IoTNetworkConnectivity>?
+//                    ) {
+//
+//                    }
+
                     override fun onDeviceIdentifiedAndReadySetup(
                         mac: String?,
-                        firmwareVersion: String?,
-                        networkConnectivities: MutableCollection<IoTNetworkConnectivity>?
+                        softwareInfo: IoTSoftwareInfo?,
+                        networkConnectivities: Collection<IoTNetworkConnectivity?>?
                     ) {
-                        callback.onSuccess()
+                        networkConnectivities?.forEach {
+                            ILogR.D(TAG, "connectAndIdentifyDevice: connectivities", Gson().toJson(it))
+                        }
+                        networkConnectivities?.let {
+                            supportedConnecitivities = networkConnectivities.associateWith { false } as HashMap<IoTNetworkConnectivity, Boolean>
+                            callback.onSuccess(supportedConnecitivities)
+                        }
                     }
 
                     override fun onProgress(p0: Int, p1: String?) {
@@ -109,4 +125,6 @@ class VMConfigWileDirect
         }
     }
     fun getIdentifiedDevice(): IoTDirectDeviceInfo? = identifiedDevice
+
+    fun getSupportedConnectivities(): HashMap<IoTNetworkConnectivity, Boolean> = supportedConnecitivities
 }

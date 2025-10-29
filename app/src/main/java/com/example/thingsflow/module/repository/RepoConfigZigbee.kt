@@ -8,6 +8,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
+import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.platform.callback.SuccessRequestCallback
 import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
@@ -22,7 +23,28 @@ import rogo.iot.module.rogocore.sdk.entity.IoTPairedZigbeeDevice
 import javax.inject.Inject
 
 class RepoConfigZigbee @Inject constructor() {
+    private val TAG = "RepoConfigZigbee"
     val handler = FlowSdk.configZigbeeDeviceHandler()
+    var job: Job? = null
+    fun isGatewayAvailable(
+        gatewayId: String,
+        scanningTime: Int,
+        callback: RequestCallback<Boolean>
+    ) {
+        job = CoroutineScope(Dispatchers.IO).launch {
+            handler.checkZigbeeGatewayAvailable {
+                if (it.contentEquals(gatewayId)) {
+                    ILogR.D(TAG, "isGatewayAvailable:onDeviceFound", gatewayId)
+                    callback.onSuccess(true)
+                    job?.cancel()
+                }
+            }
+            delay(scanningTime * 1000L)
+            callback.onSuccess(false)
+            job?.cancel()
+        }
+
+    }
 
     fun checkGatewayAvailable(callback: CheckDeviceAvailableCallback) {
         handler.checkZigbeeGatewayAvailable(callback)

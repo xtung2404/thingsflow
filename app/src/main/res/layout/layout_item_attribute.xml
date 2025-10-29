@@ -14,7 +14,7 @@
         android:gravity="center_vertical"
         android:paddingVertical="@dimen/_space10dp"
         android:paddingHorizontal="@dimen/space_screen_super_small"
-        android:background="@color/white"
+        android:background="@color/background_color"
         android:layout_marginTop="@dimen/_space4dp">
         <TextView
             android:layout_width="0dp"

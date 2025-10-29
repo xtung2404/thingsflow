@@ -2,6 +2,9 @@ package com.example.thingflowsdk.core;
 
 import android.content.Context;
 
+import com.example.thingflowsdk.core.handler.FlowHandler;
+import com.example.thingflowsdk.core.impl.FlowHandlerImpl;
+
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback;
 import rogo.iot.module.platform.ILogR;
 import rogo.iot.module.rogocore.app.AndroidIoTPlatform;
@@ -10,6 +13,7 @@ import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback;
 import rogo.iot.module.rogocore.sdk.entity.IoTProductModel;
 import rogo.iot.module.rogocore.sdk.handler.ConfigWileDirectDeviceHandler;
 import rogo.iot.module.rogocore.sdk.handler.ConfigZigbeeDeviceHandler;
+import rogo.iot.module.rogocore.sdk.handler.DeviceHandler;
 import rogo.iot.module.rogocore.sdk.handler.GroupHandler;
 import rogo.iot.module.rogocore.sdk.handler.LocationHandler;
 
@@ -123,6 +127,16 @@ public class FlowSdkBaseHandlerImpl implements FlowSdkBaseHandler{
     @Override
     public GroupHandler groupHandler() {
         return SmartSdk.groupHandler();
+    }
+
+    @Override
+    public DeviceHandler deviceHandler() {
+        return SmartSdk.deviceHandler();
+    }
+
+    @Override
+    public FlowHandler flowHandler() {
+        return new FlowHandlerImpl();
     }
 
     @Override

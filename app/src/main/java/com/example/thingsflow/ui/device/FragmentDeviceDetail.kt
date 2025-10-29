@@ -40,57 +40,57 @@ class FragmentDeviceDetail : FragmentBase<FragmentDeviceDetailBinding>() {
         super.initAction()
         binding.apply {
             btnGet.setOnClickListener {
-                SmartSdk.featureHandler().runFeatureMethod(
-                    false,
-                    deviceUUID,
-                    IoTFeature.BUILTIN_SERVICE_FLOW,
-                    "getWorld",
-                    object : IoTInvokingParam {
-
-                    },
-                    30000,
-                    object : FeatureMethodRequestCallback {
-                        override fun onSuccess(p0: Int, p1: String?) {
-                            CoroutineScope(Dispatchers.Main).launch {
-                                Toast.makeText(requireContext(), "getSuccess", Toast.LENGTH_LONG).show()
-                            }
-                        }
-
-                        override fun onFailure(p0: Int, p1: String?) {
-                            CoroutineScope(Dispatchers.Main).launch {
-                                Toast.makeText(requireContext(), "onFailure $p1", Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    }
-                )
+//                SmartSdk.featureHandler().runFeatureMethod(
+//                    false,
+//                    deviceUUID,
+//                    IoTFeature.BUILTIN_SERVICE_FLOW,
+//                    "getWorld",
+//                    object : IoTInvokingParam {
+//
+//                    },
+//                    30000,
+//                    object : FeatureMethodRequestCallback {
+//                        override fun onSuccess(p0: Int, p1: String?) {
+//                            CoroutineScope(Dispatchers.Main).launch {
+//                                Toast.makeText(requireContext(), "getSuccess", Toast.LENGTH_LONG).show()
+//                            }
+//                        }
+//
+//                        override fun onFailure(p0: Int, p1: String?) {
+//                            CoroutineScope(Dispatchers.Main).launch {
+//                                Toast.makeText(requireContext(), "onFailure $p1", Toast.LENGTH_LONG).show()
+//                            }
+//                        }
+//                    }
+//                )
             }
 
             btnSet.setOnClickListener {
-                SmartSdk.featureHandler().runFeatureMethod(
-                    true,
-                    deviceUUID,
-                    IoTFeature.BUILTIN_SERVICE_FLOW,
-                    "setWorld",
-                    object : IoTInvokingParam {
-                        @IoTInvokingProperty("label")
-                        private var label: String = edtInput.text.toString()
-
-                    },
-                    30000,
-                    object : FeatureMethodRequestCallback {
-                        override fun onSuccess(p0: Int, p1: String?) {
-                            CoroutineScope(Dispatchers.Main).launch {
-                                Toast.makeText(requireContext(), "setSuccess", Toast.LENGTH_LONG).show()
-                            }
-                        }
-
-                        override fun onFailure(p0: Int, p1: String?) {
-                            CoroutineScope(Dispatchers.Main).launch {
-                                Toast.makeText(requireContext(), "setFailure $p1", Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    }
-                )
+//                SmartSdk.featureHandler().runFeatureMethod(
+//                    true,
+//                    deviceUUID,
+//                    IoTFeature.BUILTIN_SERVICE_FLOW,
+//                    "setWorld",
+//                    object : IoTInvokingParam {
+//                        @IoTInvokingProperty("label")
+//                        private var label: String = edtInput.text.toString()
+//
+//                    },
+//                    30000,
+//                    object : FeatureMethodRequestCallback {
+//                        override fun onSuccess(p0: Int, p1: String?) {
+//                            CoroutineScope(Dispatchers.Main).launch {
+//                                Toast.makeText(requireContext(), "setSuccess", Toast.LENGTH_LONG).show()
+//                            }
+//                        }
+//
+//                        override fun onFailure(p0: Int, p1: String?) {
+//                            CoroutineScope(Dispatchers.Main).launch {
+//                                Toast.makeText(requireContext(), "setFailure $p1", Toast.LENGTH_LONG).show()
+//                            }
+//                        }
+//                    }
+//                )
             }
         }
     }

@@ -5,12 +5,14 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.Window
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModelStoreOwner
 
 abstract class DialogBase<B: ViewDataBinding> (
     context: Context,
@@ -20,6 +22,13 @@ abstract class DialogBase<B: ViewDataBinding> (
     protected lateinit var binding: B
         private set
 
+    protected val viewModelOwner: ViewModelStoreOwner? by lazy {
+        when (context) {
+            is ViewModelStoreOwner -> context
+            is androidx.fragment.app.FragmentActivity -> context
+            else -> null
+        }
+    }
     init {
         initDialog()
     }
@@ -31,6 +40,7 @@ abstract class DialogBase<B: ViewDataBinding> (
         setContentView(binding.root)
         setCancelable(cancelable)
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.setGravity(Gravity.BOTTOM)
         window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT

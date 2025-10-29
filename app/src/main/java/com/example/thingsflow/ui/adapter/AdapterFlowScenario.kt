@@ -11,26 +11,26 @@ import com.example.thingsflow.databinding.LayoutItemDeviceGridBinding
 import com.example.thingsflow.databinding.LayoutItemDeviceSingleBinding
 import com.example.thingsflow.databinding.LayoutItemElementBinding
 import com.example.thingsflow.databinding.LayoutItemFlowScenarioBinding
-import rogo.iot.module.flowcommon.FlowSceneTemplate
+import rogo.iot.module.flowcommon.FlowScene
 import rogo.iot.module.platform.entity.IoTElementInfo
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import java.util.concurrent.Flow
 
 class AdapterFlowScenario(
-    private val onItemClick: (FlowSceneTemplate) -> Unit
+    private val onItemClick: (FlowScene) -> Unit
 ):
-ListAdapter<FlowSceneTemplate, AdapterFlowScenario.FlowSceneTemplateViewHolder>(
-    object : DiffUtil.ItemCallback<FlowSceneTemplate>() {
+ListAdapter<FlowScene, AdapterFlowScenario.FlowSceneTemplateViewHolder>(
+    object : DiffUtil.ItemCallback<FlowScene>() {
         override fun areItemsTheSame(
-            oldItem: FlowSceneTemplate,
-            newItem: FlowSceneTemplate
+            oldItem: FlowScene,
+            newItem: FlowScene
         ): Boolean {
             return false
         }
 
         override fun areContentsTheSame(
-            oldItem: FlowSceneTemplate,
-            newItem: FlowSceneTemplate
+            oldItem: FlowScene,
+            newItem: FlowScene
         ): Boolean {
             return false
         }
@@ -40,7 +40,7 @@ ListAdapter<FlowSceneTemplate, AdapterFlowScenario.FlowSceneTemplateViewHolder>(
     inner class FlowSceneTemplateViewHolder(
         private val binding: LayoutItemFlowScenarioBinding
     ): RecyclerView.ViewHolder(binding.root) {
-        fun onBind(flowScene: FlowSceneTemplate) {
+        fun onBind(flowScene: FlowScene) {
             binding.apply {
                 txtFlowLabel.text = flowScene.name
                 btnMenu.setOnClickListener {

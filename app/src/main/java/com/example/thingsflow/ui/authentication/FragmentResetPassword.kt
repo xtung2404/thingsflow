@@ -8,6 +8,7 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentResetPasswordBinding
 import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.ui.FragmentBase
+import com.example.thingsflow.ui.dialog.showDialogLoadingWithAnimation
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +21,7 @@ class FragmentResetPassword : FragmentBase<FragmentResetPasswordBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_reset_password
 
+    //the email used to get the otp code
     private var email: String?= ""
     private val vmAuthentication by viewModels<VMAuthentication>()
 
@@ -70,19 +72,27 @@ class FragmentResetPassword : FragmentBase<FragmentResetPasswordBinding>() {
             )
 
             btnContinue.setOnClickListener {
+                val dialogLoading = context?.showDialogLoadingWithAnimation(
+                    R.string.reset_password,
+                    R.string.reset_password,
+                    lifecycle = lifecycle
+                )
+                dialogLoading?.show()
                 vmAuthentication.forgotPwd(
                     email,
                     object : AuthRequestCallback {
                         override fun onSuccess() {
                             CoroutineScope(Dispatchers.Main).launch {
+                                dialogLoading?.dismiss()
                                 findNavController().navigate(R.id.verifyResetPwdOtpFragment)
                             }
                         }
 
                         override fun onFailure(p0: Int, p1: String?) {
-
+                            CoroutineScope(Dispatchers.Main).launch {
+                                dialogLoading?.dismiss()
+                            }
                         }
-
                     }
                 )
             }

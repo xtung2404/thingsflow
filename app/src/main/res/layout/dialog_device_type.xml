@@ -12,33 +12,42 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_rounded"
             android:layout_gravity="center_vertical"
             android:orientation="vertical"
-            android:background="@color/white"
-            android:paddingVertical="@dimen/_space50dp">
+            android:padding="@dimen/_space20dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginHorizontal="45dp">
+                android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_device_type"
                     android:textSize="@dimen/text_headline6"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/device_type_can_be_added"
+                    android:textSize="@dimen/text_body2"
+                    android:textColor="@color/flow_box_connections"
+                    android:layout_marginTop="12dp"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_gateway"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_gray"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="8dp">
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_add"/>
+                        android:src="@mipmap/ic_hub"
+                        android:layout_marginEnd="12dp"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -53,11 +62,15 @@
                     android:id="@+id/btn_other_device"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="20dp"
+                    android:paddingVertical="@dimen/_space10dp"
+                    android:paddingHorizontal="8dp"
+                    android:background="@drawable/bg_gray">
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_add"/>
+                        android:src="@mipmap/ic_sub_device"
+                        android:layout_marginEnd="12dp"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -71,11 +84,11 @@
                     android:layout_weight="1"
                     android:id="@+id/btn_cancel"
                     android:text="@string/cancel"
-                    android:textColor="@color/white"
+                    android:textColor="@color/emerald"
                     android:textSize="@dimen/text_button"
                     android:paddingVertical="13dp"
-                    android:background="@color/emerald"
-                    android:textAllCaps="false"
+                    android:background="@drawable/btn_white_stroke_gray_5dp"
+                    android:textAllCaps="true"
                     android:layout_marginTop="30dp"/>
 
             </LinearLayout>

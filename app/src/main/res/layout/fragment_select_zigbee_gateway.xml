@@ -30,44 +30,59 @@
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/space_screen_small"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/_space8dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/gateway_belongs_to"
-                        android:textSize="@dimen/text_body2"
-                        android:textColor="@color/black"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/_space5dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/txt_current_location"
-                        android:textSize="@dimen/text_body2"
-                        android:textColor="@color/emerald"
-                        android:layout_gravity="center"
-                        android:textStyle="bold"/>
-                </LinearLayout>
+                    android:text="@string/device_will_be_added_to"
+                    android:textSize="@dimen/text_body2"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"/>
             </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/available_gateway"
+                android:text="@string/location"
                 android:textSize="@dimen/text_body2"
                 android:textColor="@color/black"
                 android:layout_marginTop="36dp"
                 android:layout_marginBottom="@dimen/_space4dp"/>
-            <androidx.recyclerview.widget.RecyclerView
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/rv_gateway"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
+                android:id="@+id/spinner_location"
+                android:background="@drawable/bg_text_input_gray"
+                android:paddingHorizontal="13dp"
+                android:paddingVertical="14dp"
+                android:layout_marginTop="@dimen/_space10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/list_of_gateways_that_belong_to_location"
+                android:textSize="@dimen/text_body2"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="@dimen/_space4dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv_gateway"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            </LinearLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_continue"
+                android:text="@string/continue_with_current_devices"
+                android:textSize="@dimen/text_button"
+                android:textColor="@color/white"
+                android:paddingVertical="13dp"
+                android:background="@color/emerald"
+                android:textAllCaps="false"
+                android:layout_marginVertical="20dp"/>
         </LinearLayout>
     </LinearLayout>
 

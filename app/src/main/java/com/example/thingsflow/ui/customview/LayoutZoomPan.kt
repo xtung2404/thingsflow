@@ -12,7 +12,9 @@ import android.view.MotionEvent
 import android.widget.FrameLayout
 import com.example.thingsflow.R
 import rogo.iot.module.flowcommon.box.FBox
+import rogo.iot.module.flowcommon.box.action.FBoxAction
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
+import rogo.iot.module.flowcommon.box.event.FBoxEvent
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import java.util.LinkedList
 import kotlin.math.max
@@ -47,10 +49,10 @@ class LayoutZoomPan @JvmOverloads constructor(
             invalidate()
         }
 
-    private val boundingBoxes = mutableMapOf<Int, RectF>()
+    private val boundingBoxes = mutableMapOf<String, RectF>()
     private val boxPositions = mutableMapOf<FBox, RectF>()
-    private val segmentPositions = mutableMapOf<Int, RectF>()
-    private val firstBoxInSegment = mutableMapOf<Int, FBox>()
+    private val segmentPositions = mutableMapOf<String, RectF>()
+    private val firstBoxInSegment = mutableMapOf<String, FBox>()
 
     private val connectionPaint = Paint().apply {
         color = resources.getColor(R.color.flow_box_connections, null)
@@ -72,8 +74,8 @@ class LayoutZoomPan @JvmOverloads constructor(
     private val startXPadding = dpToPx(20f)
     private val topMargin = dpToPx(50f)
 
-    private lateinit var actionBoxesBySegId: Map<Int, List<FBoxActionControlDevice>>
-    private val segmentHeightCache = mutableMapOf<Int, Float>()
+    private lateinit var actionBoxesBySegId: Map<String, List<FBoxActionControlDevice>>
+    private val segmentHeightCache = mutableMapOf<String, Float>()
 
     init {
         gestureDetector = GestureDetector(context, GestureListener())
@@ -112,10 +114,10 @@ class LayoutZoomPan @JvmOverloads constructor(
         }
 
         // 3) Bố trí các segment theo BFS
-        val queue = LinkedList<Pair<Int, FBox?>>()
-        val processed = mutableSetOf<Int>()
+        val queue = LinkedList<Pair<String, FBox?>>()
+        val processed = mutableSetOf<String>()
         eventBox?.targetSegId?.let { queue.add(Pair(it, eventBox)) }
-        val branchYPositions = mutableMapOf<Int, Float>()
+        val branchYPositions = mutableMapOf<String, Float>()
 
         while (queue.isNotEmpty()) {
             val (segId, parentBox) = queue.poll()
@@ -126,7 +128,7 @@ class LayoutZoomPan @JvmOverloads constructor(
 
             // Ưu tiên box có nhánh
             val boxesInSegment = group.sortedWith(
-                compareByDescending<FBoxActionControlDevice> { (it.positiveSegId != 0 || it.negativeSegId != 0) }
+                compareByDescending<FBoxActionControlDevice> { (!it.positiveSegId.isNullOrEmpty() || !it.negativeSegId.isNullOrEmpty()) }
             )
 
             // đo kích thước group
@@ -154,9 +156,9 @@ class LayoutZoomPan @JvmOverloads constructor(
                 if (parentBox is FBoxActionControlDevice) {
                     val parentSegTop = segmentPositions[parentBox.segId]?.top ?: parentBoxRect.top
 
-                    val branches = mutableListOf<Int>()
-                    if (parentBox.positiveSegId != 0) branches.add(parentBox.positiveSegId)
-                    if (parentBox.negativeSegId != 0) branches.add(parentBox.negativeSegId)
+                    val branches = mutableListOf<String>()
+                    if (parentBox.positiveSegId.isNotEmpty()) branches.add(parentBox.positiveSegId)
+                    if (parentBox.negativeSegId.isNotEmpty()) branches.add(parentBox.negativeSegId)
 
                     if (branches.isNotEmpty()) {
                         var currentY = parentSegTop // ← bắt đầu từ đỉnh ô xám cha
@@ -204,10 +206,10 @@ class LayoutZoomPan @JvmOverloads constructor(
 
             // queue nhánh
             boxesInSegment.forEach { box ->
-                if (box.positiveSegId != 0 && !processed.contains(box.positiveSegId)) {
+                if (!box.positiveSegId.isNullOrEmpty() && !processed.contains(box.positiveSegId)) {
                     queue.add(Pair(box.positiveSegId, box))
                 }
-                if (box.negativeSegId != 0 && !processed.contains(box.negativeSegId)) {
+                if (!box.negativeSegId.isNullOrEmpty() && !processed.contains(box.negativeSegId)) {
                     queue.add(Pair(box.negativeSegId, box))
                 }
             }
@@ -235,8 +237,8 @@ class LayoutZoomPan @JvmOverloads constructor(
     }
 
     private fun calculateSegmentHeight(
-        segId: Int,
-        map: Map<Int, List<FBoxActionControlDevice>>
+        segId: String,
+        map: Map<String, List<FBoxActionControlDevice>>
     ): Float {
         if (segmentHeightCache.containsKey(segId)) {
             return segmentHeightCache[segId]!!
@@ -250,9 +252,9 @@ class LayoutZoomPan @JvmOverloads constructor(
             tempView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
             groupHeight += tempView.measuredHeight + verticalSpacing
 
-            val branches = mutableListOf<Int>()
-            if (box.positiveSegId != 0) branches.add(box.positiveSegId)
-            if (box.negativeSegId != 0) branches.add(box.negativeSegId)
+            val branches = mutableListOf<String>()
+            if (!box.positiveSegId.isNullOrEmpty()) branches.add(box.positiveSegId)
+            if (!box.negativeSegId.isNullOrEmpty()) branches.add(box.negativeSegId)
 
             if (branches.isNotEmpty()) {
                 var currentBranchHeight = 0f
@@ -361,7 +363,7 @@ class LayoutZoomPan @JvmOverloads constructor(
             val startBoxRect = boxPositions[box]
             if (startBoxRect != null) {
                 // Nhánh Positive
-                if (box.positiveSegId != 0) {
+                if (!box.positiveSegId.isNullOrEmpty()) {
                     val firstBox = firstBoxInSegment[box.positiveSegId]
                     val endBoundingBox = segmentPositions[box.positiveSegId]
                     if (firstBox != null && endBoundingBox != null) {
@@ -387,7 +389,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                 }
 
                 // Nhánh Negative
-                if (box.negativeSegId != 0) {
+                if (!box.negativeSegId.isNullOrEmpty()) {
                     val firstBox = firstBoxInSegment[box.negativeSegId]
                     val endBoundingBox = segmentPositions[box.negativeSegId]
                     if (firstBox != null && endBoundingBox != null) {
@@ -427,23 +429,37 @@ class LayoutZoomPan @JvmOverloads constructor(
             textAlign = Paint.Align.CENTER
         }
 
-        boxList.filterIsInstance<FBoxActionControlDevice>().forEach { box ->
+        boxList.filterIsInstance<FBox>().forEach { box ->
             // ✅ chỉ box lá (không có nhánh con)
-            if (box.positiveSegId == 0 && box.negativeSegId == 0) {
-                val rect = boxPositions[box] ?: return@forEach
-                val centerY = rect.centerY()
+            if (box is FBoxEvent) {
+                if (!box.targetSegId.isNullOrEmpty()) {
+                    val rect = boxPositions[box] ?: return@forEach
+                    val centerY = rect.centerY()
 
-                // Nút "-" ngay trung điểm cạnh trái
-                val leftCx = rect.left
-                val leftCy = centerY
-                canvas.drawCircle(leftCx, leftCy, buttonRadius, circlePaint)
-                canvas.drawText("-", leftCx, leftCy + (textPaint.textSize / 3), textPaint)
+                    // Nút "+" ngay trung điểm cạnh phải
+                    val rightCx = rect.right
+                    val rightCy = centerY
+                    canvas.drawCircle(rightCx, rightCy, buttonRadius, circlePaint)
+                    canvas.drawText("+", rightCx, rightCy + (textPaint.textSize / 3), textPaint)
+                }
+            }
+            if (box is FBoxAction) {
+                if (!box.positiveSegId.isNullOrEmpty() && !box.negativeSegId.isNullOrEmpty()) {
+                    val rect = boxPositions[box] ?: return@forEach
+                    val centerY = rect.centerY()
 
-                // Nút "+" ngay trung điểm cạnh phải
-                val rightCx = rect.right
-                val rightCy = centerY
-                canvas.drawCircle(rightCx, rightCy, buttonRadius, circlePaint)
-                canvas.drawText("+", rightCx, rightCy + (textPaint.textSize / 3), textPaint)
+                    // Nút "-" ngay trung điểm cạnh trái
+                    val leftCx = rect.left
+                    val leftCy = centerY
+                    canvas.drawCircle(leftCx, leftCy, buttonRadius, circlePaint)
+                    canvas.drawText("-", leftCx, leftCy + (textPaint.textSize / 3), textPaint)
+
+                    // Nút "+" ngay trung điểm cạnh phải
+                    val rightCx = rect.right
+                    val rightCy = centerY
+                    canvas.drawCircle(rightCx, rightCy, buttonRadius, circlePaint)
+                    canvas.drawText("+", rightCx, rightCy + (textPaint.textSize / 3), textPaint)
+                }
             }
         }
     }
@@ -454,30 +470,50 @@ class LayoutZoomPan @JvmOverloads constructor(
             val touchY = event.y - translateY
             val buttonRadius = dpToPx(12f)
 
-            boxList.filterIsInstance<FBoxActionControlDevice>().forEach { box ->
-                if (box.positiveSegId == 0 && box.negativeSegId == 0) {
-                    val rect = boxPositions[box] ?: return@forEach
-                    val centerY = rect.centerY()
+            boxList.filterIsInstance<FBox>().forEach { box ->
+                if (box is FBoxEvent) {
+                    if (!box.targetSegId.isNullOrEmpty()) {
+                        val rect = boxPositions[box] ?: return@forEach
+                        val centerY = rect.centerY()
 
-                    val leftCx = rect.left
-                    val rightCx = rect.right
+                        val leftCx = rect.left
+                        val rightCx = rect.right
 
-                    // Check nút "-"
-                    val distToLeft = (touchX - leftCx) * (touchX - leftCx) +
-                            (touchY - centerY) * (touchY - centerY)
-                    if (distToLeft <= buttonRadius * buttonRadius) {
-                        onBoxActionListener?.onRemoveBoxClicked(box)
-                        return true
-                    }
-
-                    // Check nút "+"
-                    val distToRight = (touchX - rightCx) * (touchX - rightCx) +
-                            (touchY - centerY) * (touchY - centerY)
-                    if (distToRight <= buttonRadius * buttonRadius) {
-                        onBoxActionListener?.onAddBoxClicked(box)
-                        return true
+                        // Check nút "+"
+                        val distToRight = (touchX - rightCx) * (touchX - rightCx) +
+                                (touchY - centerY) * (touchY - centerY)
+                        if (distToRight <= buttonRadius * buttonRadius) {
+                            onBoxActionListener?.onAddBoxClicked(box)
+                            return true
+                        }
                     }
                 }
+                if (box is FBoxAction) {
+                    if (!box.positiveSegId.isNullOrEmpty() && !box.negativeSegId.isNullOrEmpty()) {
+                        val rect = boxPositions[box] ?: return@forEach
+                        val centerY = rect.centerY()
+
+                        val leftCx = rect.left
+                        val rightCx = rect.right
+
+                        // Check nút "-"
+                        val distToLeft = (touchX - leftCx) * (touchX - leftCx) +
+                                (touchY - centerY) * (touchY - centerY)
+                        if (distToLeft <= buttonRadius * buttonRadius) {
+                            onBoxActionListener?.onRemoveBoxClicked(box)
+                            return true
+                        }
+
+                        // Check nút "+"
+                        val distToRight = (touchX - rightCx) * (touchX - rightCx) +
+                                (touchY - centerY) * (touchY - centerY)
+                        if (distToRight <= buttonRadius * buttonRadius) {
+                            onBoxActionListener?.onAddBoxClicked(box)
+                            return true
+                        }
+                    }
+                }
+
             }
         }
         return gestureDetector.onTouchEvent(event)
@@ -554,7 +590,7 @@ class LayoutZoomPan @JvmOverloads constructor(
     }
 
     interface OnBoxActionListener {
-        fun onAddBoxClicked(box: FBoxActionControlDevice)
-        fun onRemoveBoxClicked(box: FBoxActionControlDevice)
+        fun onAddBoxClicked(box: FBox)
+        fun onRemoveBoxClicked(box: FBox)
     }
 }

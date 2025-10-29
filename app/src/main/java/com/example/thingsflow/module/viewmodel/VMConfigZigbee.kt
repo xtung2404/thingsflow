@@ -2,6 +2,7 @@ package com.example.thingsflow.module.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thingsflow.module.model.ConfigZigbeeDeviceModel
 import com.example.thingsflow.module.repository.RepoConfigWileDirect
 import com.example.thingsflow.module.repository.RepoConfigZigbee
 import com.example.thingsflow.utils.ScanningIoTDeviceCallback
@@ -25,8 +26,25 @@ import javax.inject.Inject
 class VMConfigZigbee
 @Inject constructor(val repo: RepoConfigZigbee) :ViewModel()
 {
-    private val TAG = "ConfigWileDirectViewModel"
-    private var identifiedDevice: IoTDirectDeviceInfo?= null
+    private val TAG = "VMConfigZigbee"
+    private var scannedZigbeeDevices: ArrayList<IoTPairedZigbeeDevice> = arrayListOf()
+    private var syncingZigbeeDevices: ArrayList<ConfigZigbeeDeviceModel> = arrayListOf()
+    private var pairedZigbeeDevice: IoTPairedZigbeeDevice?= null
+    private var selectedGateway: String?= null
+
+    fun isGatewayAvailable(
+        gatewayId: String,
+        scanningTime: Int,
+        callback: RequestCallback<Boolean>
+    ) {
+        viewModelScope.launch {
+            repo.isGatewayAvailable(
+                gatewayId,
+                scanningTime,
+                callback
+            )
+        }
+    }
     fun checkGatewayAvailable(
         callback: CheckDeviceAvailableCallback
     ) {
@@ -44,6 +62,7 @@ class VMConfigZigbee
         callback: PairZigbeeDeviceCallback
     ) {
         viewModelScope.launch {
+            selectedGateway = devId
             repo.startPairingZigbee(
                 devId,
                 second,
@@ -53,9 +72,26 @@ class VMConfigZigbee
         }
     }
 
+    fun setScannedZigbeeDevices(scannedDevices: List<IoTPairedZigbeeDevice>) {
+        viewModelScope.launch {
+            scannedZigbeeDevices.clear()
+            scannedZigbeeDevices.addAll(scannedDevices)
+        }
+    }
+
+    fun setSyncingZigbeeDevices(scannedDevices: List<ConfigZigbeeDeviceModel>) {
+        viewModelScope.launch {
+            syncingZigbeeDevices.clear()
+            syncingZigbeeDevices.addAll(scannedDevices)
+        }
+    }
+
+    fun getScannedZigbeeDevices(): ArrayList<IoTPairedZigbeeDevice> = scannedZigbeeDevices
+    fun getSyncingZigbeeDevices(): ArrayList<ConfigZigbeeDeviceModel> = syncingZigbeeDevices
+    fun getSelectedGateway(): String? = selectedGateway
     fun syncDeviceToCloud(
         gatewayId: String,
-        pairedZigbee: IoTPairedZigbeeDevice,
+        pairedZigbeeDevice: IoTPairedZigbeeDevice,
         label: String,
         groupId: String?= null,
         deviceSubType: Int,
@@ -64,7 +100,7 @@ class VMConfigZigbee
         viewModelScope.launch {
             repo.syncDeviceToCloud(
                 gatewayId,
-                pairedZigbee,
+                pairedZigbeeDevice,
                 label,
                 groupId,
                 deviceSubType,

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:paddingVertical="@dimen/_space50dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="45dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select_connectivity"
+                    android:textSize="@dimen/text_headline6"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_horizontal"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/you_can_continue_when_one_of_two_option_is_enabled"
+                    android:textSize="@dimen/text_caption"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="@dimen/_space10dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/rv_connectivity"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="40dp">
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/btn_cancel"
+                        android:text="@string/cancel"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_button"
+                        android:paddingVertical="13dp"
+                        android:textAllCaps="false"
+                        android:background="@drawable/btn_white_stroke_black"
+                        android:layout_marginEnd="@dimen/_space8dp"/>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/btn_continue"
+                        android:text="@string/to_continue"
+                        android:textSize="@dimen/text_button"
+                        android:textColor="@color/white"
+                        android:paddingVertical="13dp"
+                        android:background="@color/emerald"
+                        android:textAllCaps="false"/>
+                </LinearLayout>
+            </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+</layout>

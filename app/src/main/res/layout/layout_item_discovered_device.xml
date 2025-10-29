@@ -12,10 +12,10 @@
         android:id="@+id/root"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingVertical="@dimen/_space10dp"
+        android:paddingVertical="12dp"
         android:paddingHorizontal="@dimen/space_screen_super_small"
         android:layout_marginBottom="@dimen/_space12dp"
-        android:background="@color/light_gray">
+        android:background="#FFF4F4F4">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -26,5 +26,10 @@
             android:layout_marginEnd="@dimen/space_screen_super_small"
             android:maxLines="1"
             android:ellipsize="end"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/_space32dp"
+            android:layout_height="@dimen/_space32dp"
+            android:id="@+id/img_check"
+            android:src="@drawable/ic_check"/>
     </LinearLayout>
 </layout>

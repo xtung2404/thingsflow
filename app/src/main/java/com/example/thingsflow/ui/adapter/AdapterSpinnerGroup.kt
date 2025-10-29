@@ -21,13 +21,13 @@ class AdapterSpinnerGroup(
         if (items[position] == null) {
             view.text = context.resources.getString(R.string.undefined)
         } else {
-            view.text = items[position]?.label
+            if (items[position]?.uuid.contentEquals("-1")) {
+                view.text = "Thêm nhóm mới"
+            } else {
+                view.text = items[position]?.label
+            }
         }
         return view
-    }
-
-    override fun isEnabled(position: Int): Boolean {
-        return position != 0
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -35,7 +35,11 @@ class AdapterSpinnerGroup(
         if (items[position] == null) {
             view.text = context.resources.getString(R.string.undefined)
         } else {
-            view.text = items[position]?.label
+            if (items[position]?.uuid.contentEquals("-1")) {
+                view.text = "Thêm nhóm mới"
+            } else {
+                view.text = items[position]?.label
+            }
         }
         return view
     }

@@ -1,43 +1,61 @@
 package com.example.thingsflow.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemDiscoveredDeviceBinding
-import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
 import rogo.iot.module.rogocore.sdk.entity.IoTPairedZigbeeDevice
 
 class AdapterDiscoveredZigbeeDevices(
+    private val isAllowToSelect: Boolean = false,
     private val onItemSelected: (IoTPairedZigbeeDevice) -> Unit
 ):
-ListAdapter<IoTPairedZigbeeDevice, AdapterDiscoveredZigbeeDevices.DiscoveredZigbeeDevicesViewHolder>(
-    object : DiffUtil.ItemCallback<IoTPairedZigbeeDevice>() {
+ListAdapter<Map.Entry<IoTPairedZigbeeDevice, Boolean>, AdapterDiscoveredZigbeeDevices.DiscoveredZigbeeDevicesViewHolder>(
+    object : DiffUtil.ItemCallback<Map.Entry<IoTPairedZigbeeDevice, Boolean>>() {
         override fun areItemsTheSame(
-            oldItem: IoTPairedZigbeeDevice,
-            newItem: IoTPairedZigbeeDevice
+            oldItem: Map.Entry<IoTPairedZigbeeDevice, Boolean>,
+            newItem: Map.Entry<IoTPairedZigbeeDevice, Boolean>
         ): Boolean {
             return false
         }
 
         override fun areContentsTheSame(
-            oldItem: IoTPairedZigbeeDevice,
-            newItem: IoTPairedZigbeeDevice
+            oldItem: Map.Entry<IoTPairedZigbeeDevice, Boolean>,
+            newItem: Map.Entry<IoTPairedZigbeeDevice, Boolean>
         ): Boolean {
             return false
         }
-
     }
 ) {
+    private val selectedDeviceSet: MutableSet<IoTPairedZigbeeDevice> = mutableSetOf()
     inner class DiscoveredZigbeeDevicesViewHolder(
         private val binding: LayoutItemDiscoveredDeviceBinding
     ): RecyclerView.ViewHolder(binding.root) {
-        fun onBind(device: IoTPairedZigbeeDevice) {
+        fun onBind(device: Map.Entry<IoTPairedZigbeeDevice, Boolean>) {
             binding.apply {
-                txtLabel.text = device.ioTProductModel.name
-                root.setOnClickListener {
-                    onItemSelected.invoke(device)
+                txtLabel.text = device.key.ioTProductModel.name
+                imgCheck.visibility = View.GONE
+                if (isAllowToSelect) {
+                    if (selectedDeviceSet.contains(device.key)) {
+                        root.setBackgroundResource(R.drawable.bg_gray_stroke_emerald)
+                        imgCheck.visibility = View.VISIBLE
+                    } else {
+                        root.setBackgroundResource(R.drawable.bg_gray)
+                        imgCheck.visibility = View.INVISIBLE
+                    }
+                    root.setOnClickListener {
+                        if (selectedDeviceSet.contains(device.key)) {
+                            selectedDeviceSet.remove(device.key)
+                        } else {
+                            selectedDeviceSet.add(device.key)
+                        }
+                        notifyItemChanged(position)
+                        onItemSelected.invoke(device.key)
+                    }
                 }
             }
         }
@@ -58,4 +76,6 @@ ListAdapter<IoTPairedZigbeeDevice, AdapterDiscoveredZigbeeDevices.DiscoveredZigb
     ) {
         holder.onBind(getItem(position))
     }
+
+    fun getSelectedDevices(): List<IoTPairedZigbeeDevice> = selectedDeviceSet.toList()
 }

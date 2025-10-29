@@ -43,7 +43,7 @@
         android:label="VerifyOTPFragment" />
     <fragment
         android:id="@+id/locationManagementFragment"
-        android:name="com.example.thingsflow.ui.location.FragmentLocationManagement"
+        android:name="com.example.thingsflow.ui.deviceConfig.gateway.FragmentLocationManagement"
         android:label="LocationManagementFragment" >
         <action
             android:id="@+id/action_locationManagementFragment_to_homeFragment"
@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_locationManagementFragment_to_fragmentSelectZigbeeGateway"
             app:destination="@id/fragmentSelectZigbeeGateway" />
+        <action
+            android:id="@+id/action_locationManagementFragment_to_homeFragment2"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/createLocationFragment"
@@ -94,6 +97,9 @@
         <action
             android:id="@+id/action_homeFragment_to_locationManagementFragment"
             app:destination="@id/locationManagementFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_locationManagementFragment2"
+            app:destination="@id/locationManagementFragment" />
     </fragment>
     <fragment
         android:id="@+id/identifyDeviceFragment"
@@ -102,37 +108,18 @@
         <action
             android:id="@+id/action_identifyDeviceFragment_to_configWiFiFragment"
             app:destination="@id/configWiFiFragment" />
-        <action
-            android:id="@+id/action_identifyDeviceFragment_to_assignDeviceToGroupFragment"
-            app:destination="@id/assignDeviceToGroupFragment" />
     </fragment>
     <fragment
         android:id="@+id/configWiFiFragment"
         android:name="com.example.thingsflow.ui.deviceConfig.gateway.FragmentConfigWiFi"
         android:label="ConfigWiFiFragment" >
         <action
-            android:id="@+id/action_configWiFiFragment_to_assignDeviceToGroupFragment"
-            app:destination="@id/assignDeviceToGroupFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/assignDeviceToGroupFragment"
-        android:name="com.example.thingsflow.ui.deviceConfig.gateway.FragmentAssignDeviceToGroup"
-        android:label="AssignDeviceToGroupFragment" >
-        <action
-            android:id="@+id/action_assignDeviceToGroupFragment_to_setDeviceLabelFragment"
-            app:destination="@id/setDeviceLabelFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/setDeviceLabelFragment"
-        android:name="com.example.thingsflow.ui.deviceConfig.gateway.FragmentSetDeviceLabel"
-        android:label="SetDeviceLabelFragment" >
-        <action
-            android:id="@+id/action_setDeviceLabelFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_configWiFiFragment_to_fragmentConfigGateway"
+            app:destination="@id/fragmentConfigGateway" />
     </fragment>
     <fragment
         android:id="@+id/fragmentFlowScenManagement"
-        android:name="com.example.thingsflow.ui.flow.FragmentFlowScenManagement"
+        android:name="com.example.thingsflow.ui.flowScene.FragmentFlowScenManagement"
         android:label="FragmentFlowScenManagement" >
         <action
             android:id="@+id/action_fragmentFlowScenManagement_to_fragmentFlowScenario"
@@ -146,11 +133,15 @@
     </fragment>
      <fragment
         android:id="@+id/fragmentFlowScenario"
-        android:name="com.example.thingsflow.ui.flow.FragmentFlowScenario"
-        android:label="FragmentFlowScenario" />
+        android:name="com.example.thingsflow.ui.flowScene.FragmentFlowScenario"
+        android:label="FragmentFlowScenario" >
+         <action
+             android:id="@+id/action_fragmentFlowScenario_to_fragmentFlowScenManagement"
+             app:destination="@id/fragmentFlowScenManagement" />
+     </fragment>
     <fragment
         android:id="@+id/fragmentCreateFlowScenario"
-        android:name="com.example.thingsflow.ui.flow.FragmentCreateFlowScenario"
+        android:name="com.example.thingsflow.ui.flowScene.FragmentCreateFlowScenario"
         android:label="FragmentCreateFlowScenario" >
         <action
             android:id="@+id/action_fragmentCreateFlowScenario_to_fragmentFlowScenManagement"
@@ -158,7 +149,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentFlowScenarioInfo"
-        android:name="com.example.thingsflow.ui.flow.FragmentFlowScenarioInfo"
+        android:name="com.example.thingsflow.ui.flowScene.FragmentFlowScenarioInfo"
         android:label="FragmentFlowScenarioInfo" >
         <action
             android:id="@+id/action_fragmentFlowScenarioInfo_to_fragmentFlowScenManagement"
@@ -169,6 +160,9 @@
         <action
             android:id="@+id/action_fragmentFlowScenarioInfo_to_identifyDeviceFragment"
             app:destination="@id/identifyDeviceFragment" />
+        <action
+            android:id="@+id/action_fragmentFlowScenarioInfo_to_fragmentFlowBinding"
+            app:destination="@id/fragmentFlowBinding" />
     </fragment>
     <fragment
         android:id="@+id/fragmentDevice"
@@ -208,11 +202,52 @@
         android:name="com.example.thingsflow.ui.deviceConfig.zigbee.FragmentIdentifyZigbeeDevice"
         android:label="FragmentIdentifyZigbeeDevice" >
         <action
-            android:id="@+id/action_fragmentIdentifyZigbeeDevice_to_fragmentSetZigbeeDeviceLabel"
-            app:destination="@id/fragmentSetZigbeeDeviceLabel" />
+            android:id="@+id/action_fragmentIdentifyZigbeeDevice_to_fragmentSelectPairedZigbee"
+            app:destination="@id/fragmentSelectPairedZigbee" />
+        <action
+            android:id="@+id/action_fragmentIdentifyZigbeeDevice_to_fragmentSelectZigbeeGateway"
+            app:destination="@id/fragmentSelectZigbeeGateway" />
     </fragment>
     <fragment
-        android:id="@+id/fragmentSetZigbeeDeviceLabel"
-        android:name="com.example.thingsflow.ui.deviceConfig.zigbee.FragmentSetZigbeeDeviceLabel"
-        android:label="FragmentSetZigbeeDeviceLabel" />
+        android:id="@+id/fragmentConfigGateway"
+        android:name="com.example.thingsflow.ui.deviceConfig.gateway.FragmentConfigGateway"
+        android:label="FragmentConfigGateway" >
+        <action
+            android:id="@+id/action_fragmentConfigGateway_to_fragmentDevice"
+            app:destination="@id/fragmentDevice" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentSelectPairedZigbee"
+        android:name="com.example.thingsflow.ui.deviceConfig.zigbee.FragmentSelectPairedZigbee"
+        android:label="FragmentSelectPairedZigbee" >
+        <action
+            android:id="@+id/action_fragmentSelectPairedZigbee_to_fragmentConfigZigbeeDevices"
+            app:destination="@id/fragmentConfigZigbeeDevices" />
+        <action
+            android:id="@+id/action_fragmentSelectPairedZigbee_to_fragmentSelectZigbeeGateway"
+            app:destination="@id/fragmentSelectZigbeeGateway" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentConfigZigbeeDevices"
+        android:name="com.example.thingsflow.ui.deviceConfig.zigbee.FragmentConfigZigbeeDevices"
+        android:label="FragmentConfigZigbeeDevices" >
+        <action
+            android:id="@+id/action_fragmentConfigZigbeeDevices_to_fragmentSyncZigbeeDevices"
+            app:destination="@id/fragmentSyncZigbeeDevices" />
+        <action
+            android:id="@+id/action_fragmentConfigZigbeeDevices_to_fragmentSelectZigbeeGateway"
+            app:destination="@id/fragmentSelectZigbeeGateway" />
+    </fragment>
+     <fragment
+        android:id="@+id/fragmentSyncZigbeeDevices"
+        android:name="com.example.thingsflow.ui.deviceConfig.zigbee.FragmentSyncZigbeeDevices"
+        android:label="FragmentSyncZigbeeDevices" >
+        <action
+            android:id="@+id/action_fragmentSyncZigbeeDevices_to_fragmentDevice"
+            app:destination="@id/fragmentDevice" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentFlowBinding"
+        android:name="com.example.thingsflow.ui.flowbinding.FragmentFlowBinding"
+        android:label="FragmentFlowBinding" />
 </navigation>

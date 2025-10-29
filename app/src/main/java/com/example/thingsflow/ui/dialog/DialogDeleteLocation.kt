@@ -15,7 +15,6 @@ import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class DialogDeleteLocation(
     context: Context,
-    private val viewModelOwner: ViewModelStoreOwner,
     private val onCancel: (IoTLocation) -> Unit
 ): DialogBase<DialogDeleteLocationBinding>(
     context,
@@ -23,33 +22,35 @@ class DialogDeleteLocation(
 )  {
     private val TAG = "DialogDeleteLocation"
     private var ioTLocation: IoTLocation?= null
-    private val vmLocation: VMLocation by lazy {
-        ViewModelProvider(viewModelOwner)[VMLocation::class.java]
+    private val vmLocation: VMLocation? by lazy {
+        viewModelOwner?.let {
+            ViewModelProvider(it)[VMLocation::class.java]
+        }
     }
     override fun setupView(binding: DialogDeleteLocationBinding) {
         binding.apply {
             btnCancel.setOnClickListener {
                 ioTLocation?.let(onCancel)
             }
-//            btnDeleteLocation.setOnClickListener {
-//                ioTLocation?.let {
-//                    vmLocation.delete(
-//                        it.uuid,
-//                        object: RequestCallback<Boolean> {
-//                            override fun onSuccess(p0: Boolean?) {
-//                                CoroutineScope(Dispatchers.Main).launch {
-//                                    vmLocation.refresh()
-//                                    dismiss()
-//                                }
-//                            }
-//
-//                            override fun onFailure(p0: Int, p1: String?) {
-//                                ILogR.D(TAG, "ON_DELETE:onFailure", p0, p1)
-//                            }
-//                        }
-//                    )
-//                }
-//            }
+            btnDeleteLocation.setOnClickListener {
+                ioTLocation?.let {
+                    vmLocation?.delete(
+                        it.uuid,
+                        object: RequestCallback<Boolean> {
+                            override fun onSuccess(p0: Boolean?) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    vmLocation?.refresh()
+                                    dismiss()
+                                }
+                            }
+
+                            override fun onFailure(p0: Int, p1: String?) {
+                                ILogR.D(TAG, "ON_DELETE:onFailure", p0, p1)
+                            }
+                        }
+                    )
+                }
+            }
         }
     }
 

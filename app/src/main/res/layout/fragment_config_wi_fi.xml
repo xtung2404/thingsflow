@@ -26,25 +26,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/connect_to_wifi"
+                    android:fontFamily="@font/roboto_regular"
                     android:textSize="@dimen/text_headline5"
                     android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/space_screen_small"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/make_sure_that_gateway_is_plugged"
-                    android:textSize="@dimen/text_body2"
-                    android:textColor="@color/black"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/space_screen_super_small"/>
             </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_label"
+                android:text="@string/gateway"
+                android:fontFamily="@font/roboto_regular"
+                android:textSize="@dimen/text_caption"
+                android:textColor="@color/black"
+                android:layout_marginTop="@dimen/space_screen_small"
+                android:background="@color/gray"
+                android:paddingVertical="@dimen/_space18dp"
+                android:paddingHorizontal="12dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/available_wifi"
-                android:textSize="@dimen/text_body2"
+                android:textSize="@dimen/text_overline"
+                android:fontFamily="@font/roboto_regular"
                 android:textColor="@color/black"
                 android:layout_marginVertical="@dimen/space_screen_small"/>
             <LinearLayout
@@ -61,6 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_rescan"
+                    android:layout_gravity="center_horizontal"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
                     <androidx.appcompat.widget.AppCompatImageView
@@ -68,49 +74,31 @@
                         android:layout_height="@dimen/_space20dp"
                         android:layout_marginEnd="@dimen/space_screen_super_small"
                         android:src="@drawable/ic_recycle"
-                        android:scaleType="centerInside" />
+                        android:scaleType="centerInside"
+                        app:tint="@color/emerald"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/rescan_wifi"
                         android:textSize="@dimen/text_body2"
-                        android:textColor="@color/black"
+                        android:fontFamily="@font/roboto_regular"
+                        android:textColor="@color/emerald"
                         android:textStyle="bold"/>
                 </LinearLayout>
             </LinearLayout>
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_continue"
-                android:text="@string/to_continue"
-                android:textColor="@color/white"
-                android:paddingVertical="13dp"
-                android:background="@color/black"
-                android:textAllCaps="false"
-                android:layout_marginTop="@dimen/space_screen_small"
-                android:textSize="@dimen/text_button"/>
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/btn_connect_to_another_wifi"
-                android:text="@string/connect_to_another_wifi"
+                android:text="@string/connect_to_wifi_manually"
                 android:textColor="@color/black"
                 android:paddingVertical="13dp"
+                android:fontFamily="@font/roboto_regular"
                 android:layout_marginTop="@dimen/space_screen_small"
                 android:textAllCaps="false"
                 android:background="@drawable/bg_white_stroke_black"
-                android:textSize="@dimen/text_button"/>
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_break"
-                android:text="@string/to_break"
-                android:textColor="@color/black"
-                android:paddingVertical="13dp"
-                android:layout_marginTop="@dimen/space_screen_small"
-                android:textAllCaps="false"
-                android:background="@drawable/bg_white_stroke_black"
-                android:textSize="@dimen/text_button"/>
+                android:textSize="@dimen/text_button"
+                android:layout_marginBottom="@dimen/_space20dp"/>
         </LinearLayout>
     </LinearLayout>
 

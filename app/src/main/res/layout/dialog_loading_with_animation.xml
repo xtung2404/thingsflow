@@ -27,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:fontFamily="@font/roboto_medium"
                 android:textSize="@dimen/text_headline5"
                 app:layout_constraintBottom_toTopOf="@id/txt_message"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -40,7 +41,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:lottie_autoPlay="true"
                 android:layout_marginTop="@dimen/space_screen_super_small"
-                android:layout_gravity="center "/>
+                android:layout_gravity="center"/>
 
 
             <TextView
@@ -51,6 +52,7 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_body1"
+                android:fontFamily="@font/roboto_regular"
                 android:layout_marginTop="@dimen/space_screen_super_small"/>
 
         </LinearLayout>

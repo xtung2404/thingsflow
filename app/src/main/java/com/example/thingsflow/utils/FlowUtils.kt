@@ -6,15 +6,16 @@ import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.event.FBoxEvent
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.box.event.FBoxEventMqtt
+import rogo.iot.module.flowcommon.type.FTypeEvent
 import rogo.iot.module.platform.define.IoTAttribute
 import rogo.iot.module.platform.define.IoTDeviceType
 
 fun getSupportedBoxEvent(): List<Int> = listOf(
-    FBoxEventType.FBOX_EVENT_TYPE_DEVICE,
-    FBoxEventType.FBOX_EVENT_TYPE_MQTT
+    FTypeEvent.EVT_FROM_DEVICE
 )
 
 fun getSupportedDeviceType(): List<Int> = listOf(
+    -1,
     IoTDeviceType.LIGHT,
     IoTDeviceType.SWITCH,
     IoTDeviceType.PLUG,
@@ -23,15 +24,15 @@ fun getSupportedDeviceType(): List<Int> = listOf(
     IoTDeviceType.CAMERA,
     IoTDeviceType.SPEAKER,
     IoTDeviceType.MOTOR_CONTROLLER,
-    IoTDeviceType.AC_CONTROLLER,
+//    IoTDeviceType.AC_CONTROLLER,
     IoTDeviceType.GATE,
     IoTDeviceType.GATEWAY,
-    IoTDeviceType.HEAT_SENSOR,
-    IoTDeviceType.TEMP_SENSOR,
-    IoTDeviceType.DOOR_SENSOR,
-    IoTDeviceType.SMOKE_SENSOR,
-    IoTDeviceType.LUX_SENSOR,
-    IoTDeviceType.PRESENSCE_SENSOR
+//    IoTDeviceType.HEAT_SENSOR,
+//    IoTDeviceType.TEMP_SENSOR,
+//    IoTDeviceType.DOOR_SENSOR,
+//    IoTDeviceType.SMOKE_SENSOR,
+//    IoTDeviceType.LUX_SENSOR,
+//    IoTDeviceType.PRESENSCE_SENSOR
 )
 
 fun getSupportedAttribue(): List<Int> = listOf(
@@ -45,7 +46,11 @@ fun getSupportedAttribue(): List<Int> = listOf(
 )
 fun getBoxEventTypeLabel(context: Context, type: Int): String =
     when(type) {
-        FBoxEventType.FBOX_EVENT_TYPE_DEVICE ->  context.resources.getString(R.string.event_from_device)
-        FBoxEventType.FBOX_EVENT_TYPE_MQTT ->  context.resources.getString(R.string.event_from_mqtt)
+        FTypeEvent.EVT_FROM_DEVICE ->  context.resources.getString(R.string.event_from_device)
         else -> ""
     }
+
+fun getSupportedBoxType(): List<Int> = listOf(
+    FTypeBox.TYPE_BOX_ACTION,
+    FTypeBox.TYPE_BOX_CONDITION
+)

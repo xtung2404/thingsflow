@@ -8,9 +8,15 @@ import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterDiscoveredWiFi
 import com.example.thingsflow.ui.dialog.DialogConfigWiFi
+import com.example.thingsflow.ui.dialog.DialogConfigWiFiManually
+import com.example.thingsflow.ui.dialog.DialogSelectConnectivity
 import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.platform.entity.IoTNetworkConnectivity
 import rogo.iot.module.platform.entity.IoTWifiInfo
 
 @AndroidEntryPoint
@@ -32,9 +38,44 @@ class FragmentConfigWiFi : FragmentBase<FragmentConfigWiFiBinding>() {
     private val dialogConfigWiFi: DialogConfigWiFi by lazy {
         DialogConfigWiFi(
             requireContext(),
-            requireActivity(),
             onConfigSuccess = {
-                findNavController().navigate(R.id.assignDeviceToGroupFragment)
+                CoroutineScope(Dispatchers.Main).launch {
+                    val map = vmConfigWileDirect.getSupportedConnectivities()
+                    map.filter { it.key.infType == IoTNetworkConnectivity.WIFI }
+                        .forEach { entry ->
+                            map[entry.key] = true
+                        }
+                    dialogSelectConnectivity.show(map)
+                }
+
+            }
+        )
+    }
+
+    private val dialogConfigWiFiManually: DialogConfigWiFiManually by lazy {
+        DialogConfigWiFiManually(
+            requireContext(),
+            onConfigSuccess = {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val map = vmConfigWileDirect.getSupportedConnectivities()
+                    map.filter { it.key.infType == IoTNetworkConnectivity.WIFI }
+                        .forEach { entry ->
+                            map[entry.key] = true
+                        }
+                    dialogSelectConnectivity.show(map)
+                }
+            }
+        )
+    }
+
+    private val dialogSelectConnectivity: DialogSelectConnectivity by lazy {
+        DialogSelectConnectivity(
+            requireContext(),
+            onConnectivitySelected = {
+            },
+            onFinish = {
+                dialogSelectConnectivity.dismiss()
+                findNavController().navigate(R.id.fragmentConfigGateway)
             }
         )
     }
@@ -43,6 +84,9 @@ class FragmentConfigWiFi : FragmentBase<FragmentConfigWiFiBinding>() {
         super.initView()
         binding.apply {
             toolbar.txtTitle.text = getFragmentLabel(requireContext(), findNavController().previousBackStackEntry?.destination?.id)
+            vmConfigWileDirect.getIdentifiedDevice()?.let {
+                txtLabel.text = it.label
+            }
         }
     }
     override fun initAction() {
@@ -59,11 +103,7 @@ class FragmentConfigWiFi : FragmentBase<FragmentConfigWiFiBinding>() {
             }
 
             btnConnectToAnotherWifi.setOnClickListener {
-                dialogConfigWiFi.show(null)
-            }
-
-            btnBreak.setOnClickListener {
-                findNavController().navigate(R.id.assignDeviceToGroupFragment)
+                dialogConfigWiFiManually.show()
             }
         }
     }

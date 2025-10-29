@@ -1,5 +1,6 @@
 package com.example.thingsflow.ui.authentication
 
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -13,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
+
 
 @AndroidEntryPoint
 class FragmentSignIn : FragmentBase<FragmentSignInBinding>() {
@@ -59,7 +61,7 @@ class FragmentSignIn : FragmentBase<FragmentSignInBinding>() {
         binding.apply {
             val dialog = context?.showDialogLoadingWithAnimation(
                 R.string.signing_in,
-                messStr = "hi",
+                messRes = R.string.information_will_be_saved_until_signing_out,
                 lifecycle = lifecycle
             )
             val input = edtEmail.text.toString()

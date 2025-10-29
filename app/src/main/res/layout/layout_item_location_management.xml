@@ -15,15 +15,15 @@
         android:paddingVertical="@dimen/_space10dp"
         android:paddingHorizontal="@dimen/space_screen_super_small"
         android:layout_marginBottom="@dimen/_space12dp"
-        android:background="@color/light_gray">
+        android:background="@color/bg_flow_scenario">
         <CheckBox
             android:layout_width="@dimen/_space32dp"
             android:layout_height="@dimen/_space32dp"
             android:id="@+id/cb_location"
             android:button="@drawable/custom_checkbox"
             android:layout_marginEnd="@dimen/_space3dp"
-            android:buttonTint="@null"
-            app:buttonTint="@null"/>
+            android:buttonTint="@color/black"
+            app:buttonTint="@color/black"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

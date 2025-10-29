@@ -24,9 +24,8 @@ import rogo.iot.module.platform.ILogR
 class FragmentVerifyOTP : FragmentBase<FragmentVerifyOTPBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_verify_o_t_p
-
-    private val vmAuthentication by viewModels<VMAuthentication>()
     private val TAG = "VerifyOTPFragment"
+    private val vmAuthentication by viewModels<VMAuthentication>()
     private var countDownTiming = 60
     private var countdownJob: Job? = null
     override fun initVariable() {
