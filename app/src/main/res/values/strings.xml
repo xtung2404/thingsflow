@@ -88,8 +88,12 @@
     <string name="create_blank_flow_scenario">Tạo Flow Scenario trống</string>
     <string name="connect_box_to_create_a_flow_scenario">Hãy nối các box để tạo thành Flow Scenario</string>
     <string name="input_event">Sự kiện đầu vào</string>
+    <string name="box_condition">Box điều kiện</string>
+    <string name="general_condition">Điều kiện chung</string>
     <string name="device_type">Loại thiết bị</string>
     <string name="attribute_of_device">Thuộc tính thiết bị</string>
+    <string name="compared_value">Giá trị cần so sánh</string>
+    <string name="comparision_type">Loại so sánh</string>
     <string name="attribute">Thuộc tính</string>
     <string name="choose_every_attributes">Chọn tất cả các thuộc tính</string>
     <string name="choose_device">Chọn thiết bị</string>
@@ -102,6 +106,7 @@
     <string name="you_can_continue_or_add_another_device">Bạn có thể tiếp tục hoặc thêm thiết bị khác</string>
     <string name="config">Thiết lập</string>
     <string name="condition">Điều kiện</string>
+    <string name="input">Đầu vào</string>
     <string name="condition_general">Điều kiện chung</string>
     <string name="configing_helps_flow_create_condition">Thiết lập giúp Flow tạo ra điều kiện</string>
     <string name="configing_helps_flow_create_action">Thiết lập giúp Flow tạo ra hành động</string>
@@ -135,6 +140,7 @@
     <string name="other_device">Thiết bị khác</string>
     <string name="presence_sensor">Cảm biến hiện diện</string>
     <string name="insert_attribute_value">Nhập tên thuộc tính</string>
+    <string name="value_type">Kiểu giá trị</string>
     <string name="on_splash_off">Bật/Tắt</string>
     <string name="open_splash_close">Mở/Đóng</string>
     <string name="close">Đóng</string>

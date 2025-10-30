@@ -162,7 +162,6 @@ class OverlayConfigBoxEventFromDevice(
 
                             adapterAttributes.submitList(searchedList)
                         }
-
                     }
 
                     override fun afterTextChanged(s: Editable?) {

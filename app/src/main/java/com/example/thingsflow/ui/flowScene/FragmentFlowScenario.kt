@@ -8,6 +8,7 @@ import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.example.thingsflow.ui.customview.ViewBox
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
+import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionConditionGeneral
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxEventFromDevice
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxActionType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxConditionType
@@ -44,6 +45,7 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventTimerInterval
 import rogo.iot.module.flowcommon.box.event.FBoxEventTouchID
 import rogo.iot.module.flowcommon.box.event.FBoxEventVoiceRecognize
 import rogo.iot.module.flowcommon.box.event.FBoxEventWeather
+import rogo.iot.module.flowcommon.type.FTypeAction
 import rogo.iot.module.flowcommon.type.FTypeEvent
 import rogo.iot.module.platform.ILogR
 
@@ -59,6 +61,8 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     private lateinit var overlaySelectBoxType: OverlaySelectBoxType
     private lateinit var overlaySelectBoxActionType: OverlaySelectBoxActionType
     private lateinit var overlaySelectBoxConditionType: OverlaySelectBoxConditionType
+    private lateinit var overlayConfigBoxActionConditionGeneral: OverlayConfigBoxActionConditionGeneral
+
 
     val boxes = mutableListOf<FBox>()
     private val dialogLabelFlowScenario: DialogLabelFlowScenario by lazy {
@@ -132,6 +136,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 binding.overlayContainer,
                 onBoxEventTypeSelected = {
                     overlaySelectBoxEventType.hide()
+                    btnEditScene.visibility = View.VISIBLE
                     when(it) {
                         FTypeEvent.EVT_FROM_DEVICE -> {
                             overlayConfigBoxEventFromDevice.show()
@@ -194,10 +199,25 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 requireActivity(),
                 binding.overlayContainer,
                 onBoxConditionTypeSelected = {
-
+                    when(it) {
+                        FTypeAction.ACT_CONDITION_GENERAL -> {
+                            overlayConfigBoxActionConditionGeneral.show()
+                        }
+                    }
                 },
                 onClose = {
                     overlaySelectBoxConditionType.hide()
+                }
+            )
+
+            overlayConfigBoxActionConditionGeneral = OverlayConfigBoxActionConditionGeneral(
+                requireActivity(),
+                binding.overlayContainer,
+                onBoxActionCondtionGeneralCreated = {
+
+                },
+                onClose = {
+                    overlayConfigBoxActionConditionGeneral.hide()
                 }
             )
         }

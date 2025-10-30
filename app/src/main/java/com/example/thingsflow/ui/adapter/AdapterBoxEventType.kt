@@ -51,7 +51,8 @@ class AdapterBoxEventType(
                 when (boxEvtType) {
                     FTypeEvent.EVT_FROM_DEVICE -> {
                         txtLabel.text = root.context.getString(R.string.event_from_device)
-
+                        txtDesc.text = root.context.getString(R.string.receive_event_from_selected_device)
+                        imgStatus.setImageDrawable(root.context.getDrawable(R.drawable.ic_evt_device))
                     }
                 }
 

@@ -57,10 +57,12 @@ class AdapterBoxType(
                     FTypeBox.TYPE_BOX_ACTION -> {
                         txtLabel.text = root.context.getString(R.string.action)
                         txtDesc.text = root.context.getString(R.string.configing_helps_flow_create_action)
+                        imgStatus.setImageDrawable(root.context.getDrawable(R.drawable.ic_box_act))
                     }
                     FTypeBox.TYPE_BOX_CONDITION -> {
                         txtLabel.text = root.context.getString(R.string.condition)
                         txtDesc.text = root.context.getString(R.string.configing_helps_flow_create_condition)
+                        imgStatus.setImageDrawable(root.context.getDrawable(R.drawable.ic_box_cdt))
                     }
                 }
 

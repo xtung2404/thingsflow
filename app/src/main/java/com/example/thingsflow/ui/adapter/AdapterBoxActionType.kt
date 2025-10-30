@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.R
+import com.example.thingsflow.databinding.LayoutItemBoxActionTypeBinding
 import com.example.thingsflow.databinding.LayoutItemBoxEventTypeBinding
 import com.example.thingsflow.databinding.LayoutItemBoxTypeBinding
 import com.example.thingsflow.ui.adapter.AdapterBoxActionType.BoxActionTypeViewHolder
@@ -30,7 +31,7 @@ class AdapterBoxActionType(
         parent: ViewGroup,
         viewType: Int
     ): BoxActionTypeViewHolder {
-        val inflater = LayoutItemBoxTypeBinding.inflate(
+        val inflater = LayoutItemBoxActionTypeBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -47,7 +48,7 @@ class AdapterBoxActionType(
         holder.bindData(getItem(position))
     }
 
-    inner class BoxActionTypeViewHolder(private val binding: LayoutItemBoxTypeBinding) :
+    inner class BoxActionTypeViewHolder(private val binding: LayoutItemBoxActionTypeBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(boxActionType: Int) {
             binding.apply {
