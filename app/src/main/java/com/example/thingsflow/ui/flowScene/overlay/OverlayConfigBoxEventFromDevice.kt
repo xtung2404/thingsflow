@@ -116,7 +116,6 @@ class OverlayConfigBoxEventFromDevice(
                     devId = ""
                     devType = spinnerDeviceType.selectedItem as Int
                     attrTypes = selectedAttrs.toIntArray()
-                    targetSegId = "1"
                 }
                 onBoxEventCreated.invoke(fBox)
             }

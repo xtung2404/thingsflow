@@ -13,7 +13,6 @@ import android.widget.FrameLayout
 import com.example.thingsflow.R
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxAction
-import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
 import rogo.iot.module.flowcommon.box.event.FBoxEvent
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import java.util.LinkedList
@@ -74,7 +73,7 @@ class LayoutZoomPan @JvmOverloads constructor(
     private val startXPadding = dpToPx(20f)
     private val topMargin = dpToPx(50f)
 
-    private lateinit var actionBoxesBySegId: Map<String, List<FBoxActionControlDevice>>
+    private lateinit var actionBoxesBySegId: Map<String, List<FBoxAction>>
     private val segmentHeightCache = mutableMapOf<String, Float>()
 
     init {
@@ -94,7 +93,7 @@ class LayoutZoomPan @JvmOverloads constructor(
         val nonNullBoxes = boxList.filterNotNull()
         val eventBox = nonNullBoxes.firstOrNull { it is FBoxEventDevice } as? FBoxEventDevice
         actionBoxesBySegId = nonNullBoxes
-            .filterIsInstance<FBoxActionControlDevice>()
+            .filterIsInstance<FBoxAction>()
             .groupBy { it.segId }
 
         // 1) Thêm EventBox (không có ô xám)
@@ -128,7 +127,7 @@ class LayoutZoomPan @JvmOverloads constructor(
 
             // Ưu tiên box có nhánh
             val boxesInSegment = group.sortedWith(
-                compareByDescending<FBoxActionControlDevice> { (!it.positiveSegId.isNullOrEmpty() || !it.negativeSegId.isNullOrEmpty()) }
+                compareByDescending<FBoxAction> { (!it.positiveSegId.isNullOrEmpty() || !it.negativeSegId.isNullOrEmpty()) }
             )
 
             // đo kích thước group
@@ -153,7 +152,7 @@ class LayoutZoomPan @JvmOverloads constructor(
             // ✅ Y -> căn top segment con = top ô xám của segment cha (nếu có)
             var boundingBoxTop = topMargin
             if (parentBox != null && parentBoxRect != null) {
-                if (parentBox is FBoxActionControlDevice) {
+                if (parentBox is FBoxAction) {
                     val parentSegTop = segmentPositions[parentBox.segId]?.top ?: parentBoxRect.top
 
                     val branches = mutableListOf<String>()
@@ -238,7 +237,7 @@ class LayoutZoomPan @JvmOverloads constructor(
 
     private fun calculateSegmentHeight(
         segId: String,
-        map: Map<String, List<FBoxActionControlDevice>>
+        map: Map<String, List<FBoxAction>>
     ): Float {
         if (segmentHeightCache.containsKey(segId)) {
             return segmentHeightCache[segId]!!
@@ -359,7 +358,7 @@ class LayoutZoomPan @JvmOverloads constructor(
         }
 
         // Vẽ kết nối giữa các ActionBoxes
-        boxList.filterIsInstance<FBoxActionControlDevice>().forEach { box ->
+        boxList.filterIsInstance<FBoxAction>().forEach { box ->
             val startBoxRect = boxPositions[box]
             if (startBoxRect != null) {
                 // Nhánh Positive
@@ -418,6 +417,50 @@ class LayoutZoomPan @JvmOverloads constructor(
     }
 
     private fun drawAddRemoveButtons(canvas: Canvas) {
+//        val buttonRadius = dpToPx(12f)
+//        val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+//            color = Color.BLACK
+//            style = Paint.Style.FILL
+//        }
+//        val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+//            color = Color.WHITE
+//            textSize = dpToPx(12f)
+//            textAlign = Paint.Align.CENTER
+//        }
+//
+//        boxList.filterIsInstance<FBox>().forEach { box ->
+//            // ✅ chỉ box lá (không có nhánh con)
+//            if (box is FBoxEvent) {
+////                if (!box.targetSegId.isNullOrEmpty()) {
+////                    val rect = boxPositions[box] ?: return@forEach
+////                    val centerY = rect.centerY()
+////
+////                    // Nút "+" ngay trung điểm cạnh phải
+////                    val rightCx = rect.right
+////                    val rightCy = centerY
+////                    canvas.drawCircle(rightCx, rightCy, buttonRadius, circlePaint)
+////                    canvas.drawText("+", rightCx, rightCy + (textPaint.textSize / 3), textPaint)
+////                }
+////            }
+//            if (box is FBoxAction) {
+//                if (!box.positiveSegId.isNullOrEmpty() && !box.negativeSegId.isNullOrEmpty()) {
+//                    val rect = boxPositions[box] ?: return@forEach
+//                    val centerY = rect.centerY()
+//
+//                    // Nút "-" ngay trung điểm cạnh trái
+//                    val leftCx = rect.left
+//                    val leftCy = centerY
+//                    canvas.drawCircle(leftCx, leftCy, buttonRadius, circlePaint)
+//                    canvas.drawText("-", leftCx, leftCy + (textPaint.textSize / 3), textPaint)
+//
+//                    // Nút "+" ngay trung điểm cạnh phải
+//                    val rightCx = rect.right
+//                    val rightCy = centerY
+//                    canvas.drawCircle(rightCx, rightCy, buttonRadius, circlePaint)
+//                    canvas.drawText("+", rightCx, rightCy + (textPaint.textSize / 3), textPaint)
+//                }
+//            }
+//        }
         val buttonRadius = dpToPx(12f)
         val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.BLACK
@@ -430,9 +473,11 @@ class LayoutZoomPan @JvmOverloads constructor(
         }
 
         boxList.filterIsInstance<FBox>().forEach { box ->
-            // ✅ chỉ box lá (không có nhánh con)
+            val rect = boxPositions[box] ?: return@forEach
+            val centerY = rect.centerY()
+
             if (box is FBoxEvent) {
-                if (!box.targetSegId.isNullOrEmpty()) {
+                if (box.targetSegId.isNullOrEmpty()) {
                     val rect = boxPositions[box] ?: return@forEach
                     val centerY = rect.centerY()
 
@@ -443,25 +488,23 @@ class LayoutZoomPan @JvmOverloads constructor(
                     canvas.drawText("+", rightCx, rightCy + (textPaint.textSize / 3), textPaint)
                 }
             }
+            // ✅ 1. Nút "+" cho box không có nhánh con
+            if (box is FBoxAction && box.positiveSegId.isNullOrEmpty() && box.negativeSegId.isNullOrEmpty()) {
+                val rightCx = rect.right
+                val rightCy = centerY
+                canvas.drawCircle(rightCx, rightCy, buttonRadius, circlePaint)
+                canvas.drawText("+", rightCx, rightCy + (textPaint.textSize / 3), textPaint)
+            }
+
+            // ✅ 2. (Tùy chọn) Nút "-" cho mọi action box có thể xóa
             if (box is FBoxAction) {
-                if (!box.positiveSegId.isNullOrEmpty() && !box.negativeSegId.isNullOrEmpty()) {
-                    val rect = boxPositions[box] ?: return@forEach
-                    val centerY = rect.centerY()
-
-                    // Nút "-" ngay trung điểm cạnh trái
-                    val leftCx = rect.left
-                    val leftCy = centerY
-                    canvas.drawCircle(leftCx, leftCy, buttonRadius, circlePaint)
-                    canvas.drawText("-", leftCx, leftCy + (textPaint.textSize / 3), textPaint)
-
-                    // Nút "+" ngay trung điểm cạnh phải
-                    val rightCx = rect.right
-                    val rightCy = centerY
-                    canvas.drawCircle(rightCx, rightCy, buttonRadius, circlePaint)
-                    canvas.drawText("+", rightCx, rightCy + (textPaint.textSize / 3), textPaint)
-                }
+                val leftCx = rect.left
+                val leftCy = centerY
+                canvas.drawCircle(leftCx, leftCy, buttonRadius, circlePaint)
+                canvas.drawText("-", leftCx, leftCy + (textPaint.textSize / 3), textPaint)
             }
         }
+
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -472,7 +515,7 @@ class LayoutZoomPan @JvmOverloads constructor(
 
             boxList.filterIsInstance<FBox>().forEach { box ->
                 if (box is FBoxEvent) {
-                    if (!box.targetSegId.isNullOrEmpty()) {
+                    if (box.targetSegId.isNullOrEmpty()) {
                         val rect = boxPositions[box] ?: return@forEach
                         val centerY = rect.centerY()
 
@@ -489,7 +532,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                     }
                 }
                 if (box is FBoxAction) {
-                    if (!box.positiveSegId.isNullOrEmpty() && !box.negativeSegId.isNullOrEmpty()) {
+                    if (box.positiveSegId.isNullOrEmpty() && box.negativeSegId.isNullOrEmpty()) {
                         val rect = boxPositions[box] ?: return@forEach
                         val centerY = rect.centerY()
 

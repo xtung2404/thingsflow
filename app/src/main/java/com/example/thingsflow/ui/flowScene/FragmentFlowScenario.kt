@@ -214,7 +214,19 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 requireActivity(),
                 binding.overlayContainer,
                 onBoxActionCondtionGeneralCreated = {
-
+                    overlayConfigBoxActionConditionGeneral.hide()
+                    if (boxes.size == 1) {
+                        when(boxes[0]) {
+                            is FBoxEvent -> {
+                                boxes.get(0).apply {
+                                    (this as FBoxEvent).targetSegId = it.segId
+                                }
+                            }
+                        }
+                    }
+                    boxes.add(it)
+                    ILogR.D(TAG, "boxesSize: ", boxes.size)
+                    boxLayout.boxList = ArrayList(boxes)
                 },
                 onClose = {
                     overlayConfigBoxActionConditionGeneral.hide()

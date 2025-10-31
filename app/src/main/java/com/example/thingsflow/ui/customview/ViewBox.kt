@@ -151,9 +151,15 @@ class ViewBox @JvmOverloads constructor(
                 is FBoxActionConditionTime,
                 is FBoxActionConditionDeviceState
                 -> {
+                    ILogR.D(TAG, "updateBlockContent: BoxActionCondition ")
                     txtBoxCdtLabel = findViewById<TextView>(R.id.txt_box_cdt_label)
                     txtBoxCdtInput = findViewById<TextView>(R.id.txt_box_cdt_input)
                     txtBoxCdtCondition = findViewById<TextView>(R.id.txt_box_cdt_condition)
+                    when(boxVal) {
+                        is FBoxActionConditionGeneral -> {
+                            txtBoxCdtLabel.text = context.getString(R.string.condition_general)
+                        }
+                    }
                 }
 
                 is FBoxActionAIGPT,

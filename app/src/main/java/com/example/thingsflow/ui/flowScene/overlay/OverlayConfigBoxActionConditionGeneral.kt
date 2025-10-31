@@ -70,7 +70,10 @@ class OverlayConfigBoxActionConditionGeneral(
             )
 
             btnCreateBox.setOnClickListener {
-
+                val fBox = FBoxActionConditionGeneral().apply {
+                    segId = "1"
+                }
+                onBoxActionCondtionGeneralCreated.invoke(fBox)
             }
 
             btnOutputClose.setOnClickListener {
