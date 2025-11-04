@@ -16,6 +16,7 @@ import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.example.thingsflow.ui.customview.ViewBox
 import com.example.thingsflow.ui.dialog.DialogDeviceList
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
+import com.example.thingsflow.ui.flowbinding.overlayBinding.OverlayBindingBoxEventFromDevice
 import com.example.thingsflow.utils.getAttrLabel
 import com.example.thingsflow.utils.getSupportedAttribue
 import com.example.thingsflow.utils.getSupportedBoxEvent
@@ -62,9 +63,8 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
     override val layoutId: Int
         get() = R.layout.fragment_flow_binding
 
-    private val TAG = "FragmentFlowScenario"
+    private val TAG = "FragmentFlowBinding"
     var boxes = mutableListOf<FBox>()
-    private var attrMap: MutableMap<Pair<Int, String>, Boolean>  = mutableMapOf()
 
     private val dialogLabelFlowScenario: DialogLabelFlowScenario by lazy {
         DialogLabelFlowScenario(
@@ -72,28 +72,14 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
         )
     }
 
-    private val adapterAttributes: AdapterAttributes by lazy {
-        AdapterAttributes(
-            onItemClicked = {
-                attrMap[it] = !attrMap[it]!!
-                adapterAttributes.notifyDataSetChanged()
-            }
-        )
-    }
+    private lateinit var overlayBindingBoxEventFromDevice: OverlayBindingBoxEventFromDevice
 
-    private val dialogDeviceList: DialogDeviceList by lazy {
-        DialogDeviceList(
-            requireContext(),
-            onDeviceSelected = {
 
-            }
-        )
-    }
 
     override fun initVariable() {
         super.initVariable()
         binding.apply {
-            overlayBoxEvent.visibility = View.GONE
+
         }
     }
 
@@ -162,7 +148,6 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
             fActionBox7.segId = "7"
             boxes.add(fActionBox7)
             boxLayout.boxList = ArrayList(boxes)
-            handleOverlayAnimation(false)
             binding.boxLayout.onBoxClickListener = this@FragmentFlowBinding
         }
     }
@@ -170,7 +155,6 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
     override fun initAction() {
         super.initAction()
         binding.apply {
-            handleOverlayEventAction()
 
             btnUpdateLabel.setOnClickListener {
                 dialogLabelFlowScenario.show()
@@ -229,56 +213,26 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
                     }
                 )
             }
-
-
-
-//            btnEvtConfig.setOnClickListener {
-//                FlowSdk.flowHandler().createFlowBinding(
-//                    "68da06666cc540db9dbb9732",
-//                    "5555",
-//                    "6666",
-//                    "labellll",
-//                    object : SuccessStatusCallback {
-//                        override fun onSuccess() {
-//                            ILogR.D(TAG, "onCreateFlowBinding:onSuccess")
-//                        }
-//
-//                        override fun onFailure(p0: Int, p1: String?) {
-//                            ILogR.D(TAG, "onCreateFlowBinding:onFailure", p0, p1)
-//
-//                        }
-//                    }
-//                )
-//            }
         }
-    }
 
-    private fun handleOverlayEventAction() {
-        binding.apply {
+        overlayBindingBoxEventFromDevice = OverlayBindingBoxEventFromDevice(
+            requireActivity(),
+            binding.overlayBindingContainer,
+            onSave = {
 
-            btnBackOverlayEvent.setOnClickListener {
-                handleOverlayAnimation(false)
-
+            },
+            onClose = {
+                overlayBindingBoxEventFromDevice.hide()
             }
-
-            boxLayout.onBoxActionListener = object : LayoutZoomPan.OnBoxActionListener {
-                override fun onAddBoxClicked(box: FBox) {
-                    Toast.makeText(context, "Add vào box ${box.id}", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onRemoveBoxClicked(box: FBox) {
-                    Toast.makeText(context, "Remove box ${box.id}", Toast.LENGTH_SHORT).show()
-                    boxes.remove(box)
-                    boxLayout.boxList = ArrayList(boxes)
-                }
-            }
-        }
+        )
     }
 
     override fun onBoxClick(box: FBox?) {
         ILogR.D(TAG, "onBoxClick")
         when (box) {
-            is FBoxEventDevice,
+            is FBoxEventDevice -> {
+                overlayBindingBoxEventFromDevice.show()
+            }
             is FBoxEventMqtt,
             is FBoxEventWeather,
             is FBoxEventSchedule,
@@ -292,9 +246,7 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
             is FBoxEventTimerInterval,
             is FBoxEventStatistic
             -> {
-                binding.overlayBoxEvent
-//                binding.overlayBoxEvent.visibility = View.VISIBLE
-//                handleOverlayAnimation(true)
+
             }
 
             is FBoxActionConditionGeneral,
@@ -322,33 +274,6 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
             else -> {
 
             }
-        }
-    }
-
-    /**
-     * @param isOpen: Boolean indicates if to show the overlay event or hide
-     */
-    fun handleOverlayAnimation(isOpen: Boolean) {
-        val displayMetrics = resources.displayMetrics
-        val screenWidth = displayMetrics.widthPixels.toFloat()
-        if (isOpen) {
-            binding.overlayBoxEvent.visibility = View.VISIBLE
-            binding.overlayBoxEvent.translationX = screenWidth
-
-            binding.overlayBoxEvent.animate()
-                .translationX(0f)
-                .setDuration(300)
-                .start()
-
-        } else {
-            binding.overlayBoxEvent.animate()
-                .translationX(screenWidth)
-                .setDuration(300)
-                .withEndAction {
-                    binding.overlayBoxEvent.visibility = View.GONE
-                    binding.overlayBoxEvent.translationX = 0f
-                }
-                .start()
         }
     }
 }

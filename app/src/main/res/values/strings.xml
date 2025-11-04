@@ -89,11 +89,13 @@
     <string name="connect_box_to_create_a_flow_scenario">Hãy nối các box để tạo thành Flow Scenario</string>
     <string name="input_event">Sự kiện đầu vào</string>
     <string name="box_condition">Box điều kiện</string>
+    <string name="box_action">Box hành động</string>
     <string name="general_condition">Điều kiện chung</string>
     <string name="device_type">Loại thiết bị</string>
     <string name="attribute_of_device">Thuộc tính thiết bị</string>
     <string name="compared_value">Giá trị cần so sánh</string>
     <string name="comparision_type">Loại so sánh</string>
+    <string name="config_action_call_api">Thiết lập hành động kết nối với API</string>
     <string name="attribute">Thuộc tính</string>
     <string name="choose_every_attributes">Chọn tất cả các thuộc tính</string>
     <string name="choose_device">Chọn thiết bị</string>

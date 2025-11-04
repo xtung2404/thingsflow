@@ -66,12 +66,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/boxLayout">
-
-<!--                        <View-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:background="#80000000"-->
-<!--                            android:visibility="visible" />-->
                     </com.example.thingsflow.ui.customview.LayoutZoomPan>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
@@ -96,133 +90,9 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/overlay_box_event"
-            android:visibility="gone">
+            android:id="@+id/overlay_binding_container"
+            android:visibility="visible">
 
-            <LinearLayout
-                android:layout_width="350dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:background="@android:color/white"
-                android:elevation="8dp"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/_space16dp"
-                android:paddingTop="@dimen/_space30dp"
-                android:visibility="visible">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/btn_back_overlay_event"
-                    android:layout_width="@dimen/_space32dp"
-                    android:layout_height="@dimen/_space32dp"
-                    android:src="@drawable/ic_back_white"
-                    android:background="@color/light_gray"
-                    android:padding="@dimen/_space4dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/input_event"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_body1"
-                    android:textStyle="bold"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@color/light_gray"
-                    android:paddingVertical="15dp"
-                    android:paddingHorizontal="12dp"
-                    android:layout_marginTop="15dp">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginEnd="15dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/device_type"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_body2"
-                            android:textStyle="bold"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:text="@string/attribute"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_body2"
-                            android:textStyle="bold"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/device_type"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_body2"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:text="@string/attribute"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_body2"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_screen_super_small"
-                    android:text="@string/list_of_device"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_caption" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/gray" />
-                <androidx.core.widget.NestedScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rv_device"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:layout_marginTop="@dimen/space_screen_super_small"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-                    </LinearLayout>
-                </androidx.core.widget.NestedScrollView>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/space_screen_super_small"
-                    android:background="@color/gray" />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_evt_config"
-                    android:text="@string/config"
-                    android:textAllCaps="false"
-                    android:textSize="@dimen/text_button"
-                    android:textColor="@color/white"
-                    android:background="@color/emerald"
-                    android:paddingVertical="4dp"
-                    android:layout_marginTop="@dimen/_space48dp"
-                    android:layout_marginBottom="20dp"/>
-            </LinearLayout>
         </FrameLayout>
 
     </FrameLayout>

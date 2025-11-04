@@ -8,6 +8,7 @@ import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.example.thingsflow.ui.customview.ViewBox
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
+import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionCallHttp
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionConditionGeneral
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxEventFromDevice
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxActionType
@@ -15,8 +16,10 @@ import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxConditionType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxEventType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxType
 import com.example.thingsflow.utils.FTypeBox
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import rogo.iot.module.flowcommon.box.FBox
+import rogo.iot.module.flowcommon.box.action.FBoxAction
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGemini
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
@@ -56,26 +59,23 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
         get() = R.layout.fragment_flow_scenario
 
     private val TAG = "FragmentFlowScenario"
+
+    //Màn hình lựa chọn loại sự kiện
     private lateinit var overlaySelectBoxEventType: OverlaySelectBoxEventType
     private lateinit var overlayConfigBoxEventFromDevice: OverlayConfigBoxEventFromDevice
     private lateinit var overlaySelectBoxType: OverlaySelectBoxType
     private lateinit var overlaySelectBoxActionType: OverlaySelectBoxActionType
     private lateinit var overlaySelectBoxConditionType: OverlaySelectBoxConditionType
     private lateinit var overlayConfigBoxActionConditionGeneral: OverlayConfigBoxActionConditionGeneral
-
+    private lateinit var overlayConfigBoxActionCallHttp: OverlayConfigBoxActionCallHttp
+    private var rootBoxId: String? = null
+    private var addBoxType: LayoutZoomPan.OnBoxActionListener.AddType? = null
 
     val boxes = mutableListOf<FBox>()
     private val dialogLabelFlowScenario: DialogLabelFlowScenario by lazy {
         DialogLabelFlowScenario(
             requireContext()
         )
-    }
-
-    override fun initVariable() {
-        super.initVariable()
-        binding.apply {
-
-        }
     }
 
     override fun initView() {
@@ -90,14 +90,13 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             if (boxes.isEmpty()) {
                 btnEditScene.visibility = View.GONE
                 boxLayout.isEditMode = true
+                btnEditScene.setImageDrawable(context?.getDrawable(R.drawable.ic_check))
             } else {
                 btnEditScene.visibility = View.VISIBLE
                 boxLayout.isEditMode = false
+                btnEditScene.setImageDrawable(context?.getDrawable(R.drawable.ic_edit))
             }
             val fBoxEvent = FBoxEventDevice()
-//            fBoxEvent.devId = "123"
-//            fBoxEvent.devType = IoTDeviceType.SWITCH
-//            fBoxEvent.targetSegId = 1
             boxes.add(fBoxEvent)
 //             Gán danh sách cho boxList của LayoutZoomPan
             boxLayout.boxList = ArrayList(boxes)
@@ -114,19 +113,34 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
 
             btnEditScene.setOnClickListener {
                 boxLayout.isEditMode = !boxLayout.isEditMode
+                if (boxLayout.isEditMode) {
+                    btnEditScene.setImageDrawable(context?.getDrawable(R.drawable.ic_check))
+                } else {
+                    btnEditScene.setImageDrawable(context?.getDrawable(R.drawable.ic_edit))
+                }
             }
 
             boxLayout.onBoxActionListener = object : LayoutZoomPan.OnBoxActionListener {
-                override fun onAddBoxClicked(box: FBox) {
-                    when(box) {
+                override fun onAddBoxPositiveClicked(
+                    box: FBox,
+                    addType: LayoutZoomPan.OnBoxActionListener.AddType
+                ) {
+                    ILogR.D(TAG, "onAddBoxClicked")
+                    addBoxType = addType
+                    when (box) {
                         is FBoxEvent -> {
+                            overlaySelectBoxType.show()
+                        }
+
+                        is FBoxAction -> {
+                            rootBoxId = box.id
                             overlaySelectBoxType.show()
                         }
                     }
                 }
 
                 override fun onRemoveBoxClicked(box: FBox) {
-
+                    ILogR.D(TAG, "onRemoveBoxClicked")
                 }
             }
 
@@ -137,10 +151,11 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 onBoxEventTypeSelected = {
                     overlaySelectBoxEventType.hide()
                     btnEditScene.visibility = View.VISIBLE
-                    when(it) {
+                    when (it) {
                         FTypeEvent.EVT_FROM_DEVICE -> {
                             overlayConfigBoxEventFromDevice.show()
                         }
+
                         else -> {
                             overlayConfigBoxEventFromDevice.hide()
                         }
@@ -157,8 +172,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 onBoxEventCreated = {
                     overlayConfigBoxEventFromDevice.hide()
                     boxes.clear()
-                    boxes.add(it)
-                    boxLayout.boxList = ArrayList(boxes)
+                    configBox(it)
                 },
                 onClose = {
                     overlayConfigBoxEventFromDevice.hide()
@@ -169,7 +183,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 requireActivity(),
                 binding.overlayContainer,
                 onBoxTypeSelected = {
-                    when(it) {
+                    when (it) {
                         FTypeBox.TYPE_BOX_ACTION -> {
                             overlaySelectBoxActionType.show()
                         }
@@ -188,7 +202,11 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 requireActivity(),
                 binding.overlayContainer,
                 onBoxActionTypeSelected = {
-
+                    when (it) {
+                        FTypeAction.ACT_CALL_HTTP -> {
+                            overlayConfigBoxActionCallHttp.show()
+                        }
+                    }
                 },
                 onClose = {
                     overlaySelectBoxActionType.hide()
@@ -199,7 +217,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 requireActivity(),
                 binding.overlayContainer,
                 onBoxConditionTypeSelected = {
-                    when(it) {
+                    when (it) {
                         FTypeAction.ACT_CONDITION_GENERAL -> {
                             overlayConfigBoxActionConditionGeneral.show()
                         }
@@ -215,24 +233,82 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 binding.overlayContainer,
                 onBoxActionCondtionGeneralCreated = {
                     overlayConfigBoxActionConditionGeneral.hide()
-                    if (boxes.size == 1) {
-                        when(boxes[0]) {
-                            is FBoxEvent -> {
-                                boxes.get(0).apply {
-                                    (this as FBoxEvent).targetSegId = it.segId
-                                }
-                            }
-                        }
-                    }
-                    boxes.add(it)
-                    ILogR.D(TAG, "boxesSize: ", boxes.size)
-                    boxLayout.boxList = ArrayList(boxes)
+                    configBox(it)
                 },
                 onClose = {
                     overlayConfigBoxActionConditionGeneral.hide()
                 }
             )
+
+            overlayConfigBoxActionCallHttp = OverlayConfigBoxActionCallHttp(
+                requireActivity(),
+                binding.overlayContainer,
+                onBoxActionCallHttpCreated = {
+                    overlayConfigBoxActionCallHttp.hide()
+                    configBox(it)
+                },
+                onClose = {
+                    overlayConfigBoxActionCallHttp.hide()
+                }
+            )
         }
+    }
+
+    private fun configBox(fBox: FBox) {
+        var highestBoxId: Int = 0
+        var highestSegId: Int = 0
+        boxes.forEach { currentBox ->
+            val id = currentBox.id.toInt()
+            if (id > highestBoxId) {
+                highestBoxId = id
+            }
+            if (currentBox is FBoxAction) {
+                val segId: Int = currentBox.segId.toInt()
+                if (segId > highestSegId) {
+                    highestSegId = segId
+                }
+            }
+        }
+        when (fBox) {
+            is FBoxEvent -> {
+                fBox.id = (highestBoxId + 1).toString()
+            }
+
+            is FBoxAction -> {
+                if (boxes.size == 1) {
+                    if (boxes[0] is FBoxEvent) {
+                        (boxes[0] as FBoxEvent).targetSegId = (highestSegId + 1).toString()
+                    }
+                }
+                fBox.id = (highestBoxId + 1).toString()
+                fBox.segId = (highestSegId + 1).toString()
+                fBox.rootId = rootBoxId
+                fBox.positiveSegId = ""
+                fBox.negativeSegId = ""
+                val rootBox = boxes.find { it.id == rootBoxId }
+                if (rootBox != null && rootBox is FBoxAction) {
+                    when (addBoxType) {
+                        LayoutZoomPan.OnBoxActionListener.AddType.DEFAULT,
+                        LayoutZoomPan.OnBoxActionListener.AddType.POSITIVE -> {
+                            rootBox.positiveSegId = fBox.segId
+                        }
+
+                        LayoutZoomPan.OnBoxActionListener.AddType.NEGATIVE -> {
+                            rootBox.negativeSegId = fBox.segId
+                        }
+
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+        boxes.add(fBox)
+        boxes.forEach {
+            ILogR.D(TAG, "configBox:boxInfo", Gson().toJson(it))
+        }
+        binding.boxLayout.boxList = ArrayList(boxes)
     }
 
     override fun onBoxClick(box: FBox?) {
@@ -251,14 +327,14 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             is FBoxEventVoiceRecognize,
             is FBoxEventTimerInterval,
             is FBoxEventStatistic
-            -> {
+                -> {
                 overlaySelectBoxEventType.show()
             }
 
             is FBoxActionConditionGeneral,
             is FBoxActionConditionTime,
             is FBoxActionConditionDeviceState
-            -> {
+                -> {
 
             }
 
@@ -273,7 +349,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             is FBoxActionHandlerAnotherBox,
             is FBoxActionPublishMqtt,
             is FBoxActionSendWebSocket
-            -> {
+                -> {
 
             }
 

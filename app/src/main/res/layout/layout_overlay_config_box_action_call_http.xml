@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/overlay_box_event"
+        android:visibility="visible"
+        android:clickable="true"
+        android:focusable="true">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:visibility="visible"   />
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@android:color/white"
+            android:elevation="8dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/background_color">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/_space16dp"
+                    android:paddingTop="@dimen/_space30dp">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/btn_back"
+                        android:layout_width="@dimen/_space32dp"
+                        android:layout_height="@dimen/_space32dp"
+                        android:src="@drawable/ic_back"
+                        android:background="@drawable/btn_gray"
+                        android:padding="@dimen/_space4dp"
+                        android:layout_marginEnd="8dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/box_condition"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_body2"
+                            android:fontFamily="@font/roboto_medium"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/call_http"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_headline6"
+                            android:fontFamily="@font/roboto_bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/config_action_call_api"
+                            android:textColor="@color/text_hint_color"
+                            android:textSize="@dimen/text_caption"
+                            android:fontFamily="@font/roboto_regular"
+                            android:layout_marginTop="12dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <com.google.android.material.tabs.TabLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tab_layout_evt_device"
+                    android:background="@color/background_color"
+                    app:tabTextColor="@color/emerald"
+                    android:textSize="@dimen/text_body2">
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/input"/>
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/config"/>
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/output"/>
+                </com.google.android.material.tabs.TabLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/ln_config"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_space16dp"
+                android:visibility="visible">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_screen_super_small"
+                        android:text="@string/value_type"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_caption" />
+
+                    <Spinner
+                        android:id="@+id/spinner_value_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_space10dp"
+                        android:background="@drawable/bg_text_input_gray"
+                        android:paddingHorizontal="13dp"
+                        android:paddingVertical="14dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_screen_small"
+                        android:text="@string/compared_value"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_caption" />
+
+                    <Spinner
+                        android:id="@+id/spinner_compared_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_space10dp"
+                        android:background="@drawable/bg_text_input_gray"
+                        android:paddingHorizontal="13dp"
+                        android:paddingVertical="14dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_screen_small"
+                        android:text="@string/comparision_type"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_caption" />
+
+                    <Spinner
+                        android:id="@+id/spinner_comparision_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_space10dp"
+                        android:background="@drawable/bg_text_input_gray"
+                        android:paddingHorizontal="13dp"
+                        android:paddingVertical="14dp" />
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_create_box"
+                    android:text="@string/create_box_and_config"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/text_button"
+                    android:textColor="@color/white"
+                    android:background="@color/emerald"
+                    android:paddingVertical="4dp"
+                    android:layout_marginTop="@dimen/_space48dp" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_close"
+                    android:text="@string/close"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/text_button"
+                    android:textColor="@color/white"
+                    android:background="@drawable/btn_gray"
+                    android:paddingVertical="4dp"
+                    android:layout_marginTop="16dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ln_output"
+                android:paddingHorizontal="16dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_of_output_can_be_used_in_the_next_box"
+                    android:textColor="@color/text_hint_color"
+                    android:textSize="@dimen/text_caption"
+                    android:fontFamily="@font/roboto_regular"
+                    android:layout_marginTop="12dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/space_screen_small"
+                    android:background="@color/gray" />
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/output_will_be_available_after_being_configed"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_body2"
+                    android:fontFamily="@font/roboto_medium"
+                    android:layout_marginTop="18dp"
+                    android:layout_gravity="center_horizontal"/>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_output_config"
+                    android:text="@string/config_device"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/text_button"
+                    android:textColor="@color/white"
+                    android:background="@color/emerald"
+                    android:paddingVertical="4dp"
+                    android:layout_marginTop="@dimen/_space48dp" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_output_close"
+                    android:text="@string/close"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/text_button"
+                    android:textColor="@color/white"
+                    android:background="@drawable/btn_gray"
+                    android:paddingVertical="4dp"
+                    android:layout_marginTop="16dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</layout>
