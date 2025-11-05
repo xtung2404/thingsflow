@@ -75,24 +75,68 @@ public class FlowHandlerImpl implements FlowHandler {
     }
 
     @Override
+    public void bindBoxes(String devId, String bindingId, ArrayList<FBox> boxes, SuccessStatusCallback callback) {
+        ArrayList<FBox> eventBoxes = new ArrayList<>();
+        ArrayList<FBox> actionBoxes = new ArrayList<>();
+        for (int i = 0; i < boxes.size(); i++) {
+            if (boxes.get(i) instanceof FBoxEvent) {
+                eventBoxes.add(boxes.get(i));
+            } else {
+                actionBoxes.add(boxes.get(i));
+            }
+        }
+        bindBoxEvent(
+                devId,
+                bindingId,
+                eventBoxes,
+                new SuccessStatusCallback() {
+                    @Override
+                    public void onSuccess() {
+                        bindOtherBoxes(
+                                devId,
+                                bindingId,
+                                actionBoxes,
+                                new SuccessStatusCallback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(int i, String s) {
+
+                                    }
+                                }
+                        );
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+
+                    }
+                });
+
+    }
+
+
     public void bindBoxEvent(
             String devId,
             String bindingId,
-            ArrayList<FBox> boxEvents,
+            ArrayList<FBox> eventBoxes,
             SuccessStatusCallback callback
     ) {
         ArrayList<Integer> evtTypes = new ArrayList<>();
         ArrayList<String> boxIds = new ArrayList<>();
         ArrayList<String> targetId = new ArrayList<>();
         ArrayList<String> eventDatas = new ArrayList<>();
-        for (int i = 0; i < boxEvents.size(); i++) {
-            boxIds.add(i, boxEvents.get(i).getId());
+        for (int i = 0; i < eventBoxes.size(); i++) {
+            boxIds.add(i, eventBoxes.get(i).getId());
             eventDatas.add(i, null);
-            if (boxEvents.get(i) instanceof FBoxEvent) {
-                String boxTargetId = ((FBoxEventDevice) boxEvents.get(i)).getTargetSegId();
+            if (eventBoxes.get(i) instanceof FBoxEvent) {
+                String boxTargetId = ((FBoxEventDevice) eventBoxes.get(i)).getTargetSegId();
                 targetId.add(i, boxTargetId);
             }
-            if (boxEvents.get(i) instanceof FBoxEventDevice) {
+            if (eventBoxes.get(i) instanceof FBoxEventDevice) {
                 evtTypes.add(i, FTypeEvent.EVT_FROM_DEVICE);
             }
         }
@@ -105,13 +149,13 @@ public class FlowHandlerImpl implements FlowHandler {
                     @IoTInvokingProperty("flowBindingId")
                     private String flowBindingId = bindingId;
                     @IoTInvokingProperty("eventBoxIds")
-                    private String[] eventBoxIds = boxIds.toArray(new String[boxEvents.size()]);
+                    private String[] eventBoxIds = boxIds.toArray(new String[eventBoxes.size()]);
                     @IoTInvokingProperty("eventType")
-                    private Integer[] eventType = evtTypes.toArray(new Integer[boxEvents.size()]);
+                    private Integer[] eventType = evtTypes.toArray(new Integer[eventBoxes.size()]);
                     @IoTInvokingProperty("targetSegId")
-                    private String[] targetSegId = targetId.toArray(new String[boxEvents.size()]);
+                    private String[] targetSegId = targetId.toArray(new String[eventBoxes.size()]);
                     @IoTInvokingProperty("eventData")
-                    private String[] eventData = eventDatas.toArray(new String[boxEvents.size()]);
+                    private String[] eventData = eventDatas.toArray(new String[eventBoxes.size()]);
 
 
                 },
@@ -125,18 +169,16 @@ public class FlowHandlerImpl implements FlowHandler {
 
                     @Override
                     public void onRequestRepliedSuccess(int i, String s) {
-
+                        callback.onSuccess();
                     }
 
                     @Override
                     public void onRequestFailure(int i, String s) {
-
+                        callback.onFailure(i, s);
                     }
                 }
         );
     }
-
-    @Override
     public void bindOtherBoxes(
             String devId,
             String bindingId,

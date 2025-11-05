@@ -31,4 +31,6 @@ class VMDevice
 
     fun getAll(): List<IoTDevice?> = repo.getAll()
 
+    fun getUserDevices(): List<IoTDevice> = repo.getUserDevices()
+
 }

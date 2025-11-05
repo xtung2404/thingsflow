@@ -22,13 +22,11 @@ import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import rogo.iot.module.rogocore.sdk.entity.IoTPairedZigbeeDevice
 import javax.inject.Inject
 
-class RepoDevice @Inject constructor() {
-    private val TAG = "RepoDevice"
-    val handler = FlowSdk.deviceHandler()
+class RepoFlowScenario @Inject constructor() {
+    private val TAG = "RepoFlowScenario"
+    val handler = FlowSdk.flowHandler()
 
-    fun getAll(): List<IoTDevice?> = handler.all.toList()
-
-    fun getUserDevices(): List<IoTDevice> = handler.userDevices.toList()
-
-
+    fun createFlowScenario() {
+        handler.createFlowScenario()
+    }
 }

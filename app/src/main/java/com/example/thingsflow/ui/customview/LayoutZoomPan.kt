@@ -42,7 +42,7 @@ class LayoutZoomPan @JvmOverloads constructor(
             field = value
             invalidate() // redraw khi đổi mode
         }
-    var boxList: ArrayList<FBox> = arrayListOf()
+    var boxList: ArrayList<FBox?> = arrayListOf()
         set(value) {
             field = value
             setupFlowLayout()

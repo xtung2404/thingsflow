@@ -17,14 +17,7 @@ public interface FlowHandler {
         SuccessStatusCallback callback
     );
 
-    void bindBoxEvent(
-        String devId,
-        String bindingId,
-        ArrayList<FBox> boxEvents,
-        SuccessStatusCallback callback
-    );
-
-    void bindOtherBoxes(
+    void bindBoxes(
         String devId,
         String bindingId,
         ArrayList<FBox> boxes,

@@ -4,10 +4,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowBindingBinding
 import com.example.thingsflow.databinding.FragmentFlowScenarioBinding
+import com.example.thingsflow.module.viewmodel.VMFlowBinding
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterAttributes
 import com.example.thingsflow.ui.adapter.AdapterSpinnerBoxEventType
@@ -64,7 +67,8 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
         get() = R.layout.fragment_flow_binding
 
     private val TAG = "FragmentFlowBinding"
-    var boxes = mutableListOf<FBox>()
+    private val vmFlowBinding: VMFlowBinding by activityViewModels<VMFlowBinding>()
+    var boxes = arrayListOf<FBox?>()
 
     private val dialogLabelFlowScenario: DialogLabelFlowScenario by lazy {
         DialogLabelFlowScenario(
@@ -88,14 +92,7 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
         binding.apply {
             // Khởi tạo một danh sách FBox mới
             boxes.clear()
-//            if (boxes.isEmpty()) {
-//                btnEditScene.visibility = View.GONE
-//                boxLayout.isEditMode = true
-//            } else {
-//                btnEditScene.visibility = View.VISIBLE
-//                boxLayout.isEditMode = false
-//            }
-                btnEditScene.visibility = View.VISIBLE
+            btnEditScene.visibility = View.VISIBLE
             val boxEvt = FBoxEventDevice()
             boxEvt.apply {
                 targetSegId = "1"
@@ -147,7 +144,7 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
             fActionBox7.devId = "7"
             fActionBox7.segId = "7"
             boxes.add(fActionBox7)
-            boxLayout.boxList = ArrayList(boxes)
+            boxLayout.boxList = boxes
             binding.boxLayout.onBoxClickListener = this@FragmentFlowBinding
         }
     }
@@ -155,63 +152,50 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
     override fun initAction() {
         super.initAction()
         binding.apply {
-
+            toolbar.btnBack.setOnClickListener {
+                findNavController().navigate(R.id.fragmentFlowScenarioInfo)
+            }
             btnUpdateLabel.setOnClickListener {
                 dialogLabelFlowScenario.show()
             }
 
             btnEditScene.setOnClickListener {
                 boxLayout.isEditMode = !boxLayout.isEditMode
-                FlowSdk.flowHandler().createFlowBinding(
-                    "68da06666cc540db9dbb9732",
-                    "5555",
-                    "6666",
-                    "labellll",
-                    object : SuccessStatusCallback {
-                        override fun onSuccess() {
-                            ILogR.D(TAG, "onCreateFlowBinding:onSuccess")
-                        }
+                val devices = vmFlowBinding.getSelectedDevices()
+                val sceneId = vmFlowBinding.getSelectedFlowSceneId()
+                val label = txtSceneLabel.text.toString()
+                if (!sceneId.isNullOrEmpty() && devices.isNotEmpty()) {
+                    vmFlowBinding.createFlowBinding(
+                        devices[0].uuid,
+                        sceneId,
+                        label,
+                        object : SuccessStatusCallback {
+                            override fun onSuccess() {
+                                ILogR.D(TAG, "onCreateFlowBinding:onSuccess")
+                            }
 
-                        override fun onFailure(p0: Int, p1: String?) {
-                            ILogR.D(TAG, "onCreateFlowBinding:onFailure", p0, p1)
+                            override fun onFailure(p0: Int, p1: String?) {
+                                ILogR.D(TAG, "onCreateFlowBinding:onFailure", p0, p1)
+                            }
 
                         }
-                    }
-                )
-                val evtboxes = arrayListOf<FBox>()
-                evtboxes.add(boxes.get(0))
-                FlowSdk.flowHandler().bindBoxEvent(
-                    "68da06666cc540db9dbb9732",
-                    "5555",
-                    evtboxes,
-                    object : SuccessStatusCallback {
-                        override fun onSuccess() {
-                            ILogR.D(TAG, "onCreateFlowBinding:onSuccess")
-                        }
+                    )
 
-                        override fun onFailure(p0: Int, p1: String?) {
-                            ILogR.D(TAG, "onCreateFlowBinding:onFailure", p0, p1)
-                        }
-                    }
-                )
-                val otherBoxes = arrayListOf<FBox>()
-                otherBoxes.addAll(boxes.filter {
-                    it is FBoxAction
-                })
-                FlowSdk.flowHandler().bindOtherBoxes(
-                    "68da06666cc540db9dbb9732",
-                    "5555",
-                    otherBoxes,
-                    object : SuccessStatusCallback {
-                        override fun onSuccess() {
-                            ILogR.D(TAG, "onCreateFlowBinding:onSuccess")
-                        }
+                    vmFlowBinding.bindBoxes(
+                        devices[0].uuid,
+                        sceneId,
+                        boxes,
+                        object : SuccessStatusCallback {
+                            override fun onSuccess() {
 
-                        override fun onFailure(p0: Int, p1: String?) {
-                            ILogR.D(TAG, "onCreateFlowBinding:onFailure", p0, p1)
+                            }
+
+                            override fun onFailure(p0: Int, p1: String?) {
+
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
 

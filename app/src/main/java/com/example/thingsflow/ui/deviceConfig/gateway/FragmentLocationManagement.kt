@@ -16,15 +16,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
+import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.define.IoTDeviceType
 
 @AndroidEntryPoint
 class FragmentLocationManagement : FragmentBase<FragmentLocationManagementBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_location_management
+    private val TAG = "FragmentLocationManagement"
 
     private val vmLocation by activityViewModels<VMLocation>()
-    private val vmAuthentication by viewModels<VMAuthentication>()
     private val dialogEditLocation: DialogEditLocation by lazy {
         DialogEditLocation(
             requireContext(),
@@ -89,6 +90,7 @@ class FragmentLocationManagement : FragmentBase<FragmentLocationManagementBindin
                 val selectedLocation = locationAdapter.getSelectedLocation()
                 selectedLocation?.let {
                     vmLocation.setDefaultLocation(it.uuid)
+                    ILogR.D(TAG, "initAction:getDefaultLocation", vmLocation.getDefaultLocation())
                     findNavController().navigate(R.id.identifyDeviceFragment)
                 }
             }

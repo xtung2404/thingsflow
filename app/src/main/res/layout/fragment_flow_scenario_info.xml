@@ -70,7 +70,7 @@
             android:background="@color/bg_flow_scenario"
             android:text="@string/show_flow"
             android:textAllCaps="false"
-            android:textColor="@color/gray"
+            android:textColor="@color/emerald"
             android:textSize="@dimen/text_button"
             android:textStyle="bold" />
 

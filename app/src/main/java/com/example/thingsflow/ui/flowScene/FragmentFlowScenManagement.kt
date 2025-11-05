@@ -1,6 +1,7 @@
 package com.example.thingsflow.ui.flowScene
 
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowManagementBinding
@@ -17,7 +18,8 @@ class FragmentFlowScenManagement : FragmentBase<FragmentFlowManagementBinding>()
     private val adapterFlowScenario: AdapterFlowScenario by lazy {
         AdapterFlowScenario(
             onItemClick = {
-                findNavController().navigate(R.id.fragmentFlowScenarioInfo)
+                val bundle = bundleOf("flowSceneId" to it.id)
+                findNavController().navigate(R.id.fragmentFlowScenarioInfo, bundle)
             }
         )
     }
