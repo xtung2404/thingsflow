@@ -41,7 +41,8 @@ class OverlaySelectBoxConditionType(
             rvBoxType.adapter = adapterBoxActionType
             adapterBoxActionType.submitList(
                 listOf<Int>(
-                    FTypeAction.ACT_CONDITION_GENERAL
+                    FTypeAction.ACT_CONDITION_GENERAL,
+                    FTypeAction.ACT_CONDITION_DEVICE
                 )
             )
 

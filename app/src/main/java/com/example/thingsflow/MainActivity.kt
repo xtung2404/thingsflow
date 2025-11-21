@@ -14,10 +14,14 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.thingsflow.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import rogo.iot.module.platform.ILogR
 import rogo.iot.module.rogocore.sdk.SmartSdk
+import rogo.iot.module.rogocore.sdk.callback.SmartSdkEventCallback
+import rogo.iot.module.rogocore.sdk.define.IoTEventNotify
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val TAG = "MainActivity"
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,5 +52,32 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        SmartSdk.registerEventCallback(object : SmartSdkEventCallback() {
+            override fun onCloudConnectionReady(p0: Boolean) {
+                ILogR.D(TAG, "onCloudConnectionReady", p0)
+            }
+
+            override fun onEntityDataSynced(p0: Int) {
+                ILogR.D(TAG, "onEntityDataSynced", p0)
+            }
+
+            override fun onAllDataResyned() {
+                ILogR.D(TAG, "onAllDataResyned")
+            }
+
+            override fun onEvent(
+                p0: IoTEventNotify?,
+                p1: String?
+            ) {
+                ILogR.D(TAG, "onEvent")
+            }
+
+            override fun onEventAppAction(
+                p0: IoTEventNotify?,
+                p1: String?
+            ) {
+                ILogR.D(TAG, "onEventAppAction")
+            }
+        })
     }
 }

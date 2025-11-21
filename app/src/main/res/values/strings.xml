@@ -35,6 +35,9 @@
     <string name="sign_in_by_another_account">Đăng nhập tài khoản khác </string>
     <string name="delete_location">Xóa địa điểm</string>
     <string name="location">Địa điểm</string>
+    <string name="get">Get</string>
+    <string name="post">Post</string>
+    <string name="delete">Delete</string>
     <string name="get_otp_code">Nhận mã xác thực</string>
     <string name="otp_code_will_be_sent_to_your_email">Mã xác thực sẽ được gửi tới email của bạn</string>
     <string name="reset_password_for">Thay đổi mật khẩu cho </string>
@@ -88,12 +91,15 @@
     <string name="create_blank_flow_scenario">Tạo Flow Scenario trống</string>
     <string name="connect_box_to_create_a_flow_scenario">Hãy nối các box để tạo thành Flow Scenario</string>
     <string name="input_event">Sự kiện đầu vào</string>
+    <string name="select_device_from_list">Chọn thiết bị từ danh sách</string>
     <string name="box_condition">Box điều kiện</string>
     <string name="box_action">Box hành động</string>
     <string name="general_condition">Điều kiện chung</string>
+    <string name="state_from_device">Trạng thái từ thiết bị</string>
     <string name="device_type">Loại thiết bị</string>
     <string name="attribute_of_device">Thuộc tính thiết bị</string>
     <string name="compared_value">Giá trị cần so sánh</string>
+    <string name="compared_input">Đầu vào cần so sánh</string>
     <string name="comparision_type">Loại so sánh</string>
     <string name="config_action_call_api">Thiết lập hành động kết nối với API</string>
     <string name="attribute">Thuộc tính</string>
@@ -109,6 +115,10 @@
     <string name="config">Thiết lập</string>
     <string name="condition">Điều kiện</string>
     <string name="input">Đầu vào</string>
+    <string name="input_type">Loại đầu vào</string>
+    <string name="input_from_previous_box">Đầu vào từ box trước</string>
+    <string name="input_from_new_device">Đầu vào từ thiết bị mới</string>
+    <string name="add_input">Thêm đầu vào</string>
     <string name="condition_general">Điều kiện chung</string>
     <string name="configing_helps_flow_create_condition">Thiết lập giúp Flow tạo ra điều kiện</string>
     <string name="configing_helps_flow_create_action">Thiết lập giúp Flow tạo ra hành động</string>
@@ -116,6 +126,9 @@
     <string name="select_next_action">Chọn hành động tiếp theo</string>
     <string name="configing_helps_flow_create_more_actions">Thiết lập giúp Flow tạo ra được nhiều hành động</string>
     <string name="create_box_and_config">Tạo box và lưu thiết lập</string>
+    <string name="config_header">Chỉnh sửa header</string>
+    <string name="body">Body</string>
+    <string name="timeout_time">Thời gian timeout mỗi lượt (ms)</string>
     <string name="event_from_device">Sự kiện từ thiết bị</string>
     <string name="receive_event_from_selected_device">Nhận sự kiện từ thiết bị được chọn</string>
     <string name="all_of_output_can_be_used_in_the_next_box">Toàn bộ giá trị đầu ra sẽ được chuyển cho box sau</string>

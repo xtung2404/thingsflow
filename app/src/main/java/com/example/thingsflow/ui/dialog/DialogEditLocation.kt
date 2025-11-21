@@ -1,14 +1,17 @@
 package com.example.thingsflow.ui.dialog
 
 import android.content.Context
+import android.nfc.Tag
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.DialogEditLocationBinding
 import com.example.thingsflow.module.viewmodel.VMLocation
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
@@ -20,6 +23,7 @@ class DialogEditLocation(
     R.layout.dialog_edit_location
 ) {
     private var ioTLocation: IoTLocation?= null
+    private val TAG = "DialogEditLocation"
     private val vmLocation: VMLocation? by lazy {
         viewModelOwner?.let {
             ViewModelProvider(it)[VMLocation::class.java]
@@ -38,6 +42,8 @@ class DialogEditLocation(
 
             btnSave.setOnClickListener {
                 ioTLocation?.let {
+                    ILogR.D(TAG, "locationInfo:", Gson().toJson(it))
+                    ILogR.D(TAG, "locationViewModel:", vmLocation == null)
                     vmLocation?.update(
                         it,
                         edtLabel.text.toString(),

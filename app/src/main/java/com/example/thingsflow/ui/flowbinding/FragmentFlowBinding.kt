@@ -32,9 +32,9 @@ import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGemini
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 import rogo.iot.module.flowcommon.box.action.FBoxActionCodeFunction
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionDeviceState
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionGeneral
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionTime
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionTime
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
 import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDLearn
 import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRecognize

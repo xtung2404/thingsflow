@@ -67,6 +67,10 @@ class AdapterBoxActionType(
                         txtLabel.text = root.context.getString(R.string.condition_general)
 
                     }
+                    FTypeAction.ACT_CONDITION_DEVICE -> {
+                        txtLabel.text = root.context.getString(R.string.state_from_device)
+
+                    }
                 }
 
                 root.setOnClickListener {

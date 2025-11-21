@@ -15,6 +15,7 @@ import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.callback.DiscoverySmartDeviceCallback
 import rogo.iot.module.rogocore.sdk.callback.SetupWileDirectDeviceCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
+import rogo.iot.module.rogocore.sdk.entity.IoTObjState
 import javax.inject.Inject
 
 class RepoConfigWileDirect @Inject constructor() {

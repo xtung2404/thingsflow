@@ -15,9 +15,9 @@ import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGemini
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 import rogo.iot.module.flowcommon.box.action.FBoxActionCodeFunction
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionDeviceState
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionGeneral
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionTime
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionTime
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
 import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDLearn
 import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRecognize
@@ -155,9 +155,10 @@ class ViewBox @JvmOverloads constructor(
                     txtBoxCdtLabel = findViewById<TextView>(R.id.txt_box_cdt_label)
                     txtBoxCdtInput = findViewById<TextView>(R.id.txt_box_cdt_input)
                     txtBoxCdtCondition = findViewById<TextView>(R.id.txt_box_cdt_condition)
+                    txtBoxCdtLabel.text = context.getString(R.string.condition)
                     when(boxVal) {
                         is FBoxActionConditionGeneral -> {
-                            txtBoxCdtLabel.text = context.getString(R.string.condition_general)
+                            txtBoxCdtInput.text = context.getString(R.string.condition_general)
                         }
                     }
                 }
@@ -177,9 +178,13 @@ class ViewBox @JvmOverloads constructor(
                     txtBoxActLabel = findViewById<TextView>(R.id.txt_box_act_label)
                     txtBoxActType = findViewById<TextView>(R.id.txt_box_act_type)
                     txtBoxActAction = findViewById<TextView>(R.id.txt_box_act_action)
+                    txtBoxActLabel.text = context.getString(R.string.action)
                     when(boxVal) {
                         is FBoxActionControlDevice -> {
                             txtBoxActType.text = context.getString(R.string.control_device)
+                        }
+                        is FBoxActionCallHttp -> {
+                            txtBoxActType.text = context.getString(R.string.call_http)
                         }
                     }
                 }
@@ -191,7 +196,6 @@ class ViewBox @JvmOverloads constructor(
                 }
             }
         }
-
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {

@@ -18,7 +18,7 @@ import com.example.thingsflow.utils.getSupportedDeviceType
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionGeneral
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import kotlin.collections.get

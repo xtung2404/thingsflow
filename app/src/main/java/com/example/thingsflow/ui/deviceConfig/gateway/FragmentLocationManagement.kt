@@ -28,7 +28,7 @@ class FragmentLocationManagement : FragmentBase<FragmentLocationManagementBindin
     private val vmLocation by activityViewModels<VMLocation>()
     private val dialogEditLocation: DialogEditLocation by lazy {
         DialogEditLocation(
-            requireContext(),
+            requireActivity(),
             onDeleteLoc = {
                 dialogEditLocation.dismiss()
                 dialogDeleteLocation.show(it)

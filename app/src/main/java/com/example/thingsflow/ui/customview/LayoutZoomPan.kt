@@ -13,7 +13,7 @@ import android.widget.FrameLayout
 import com.example.thingsflow.R
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxAction
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionGeneral
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
 import rogo.iot.module.flowcommon.box.event.FBoxEvent
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import java.util.LinkedList

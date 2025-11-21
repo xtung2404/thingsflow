@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewbinding.ViewBinding
 import com.example.thingsflow.R
 
@@ -17,6 +18,14 @@ abstract class OverlayBase<VB: ViewBinding>(
 ) {
     private var _binding: VB? = null
     protected val binding get() = _binding!!
+
+    protected val viewModelOwner: ViewModelStoreOwner? by lazy {
+        when (context) {
+            is ViewModelStoreOwner -> context
+            is androidx.fragment.app.FragmentActivity -> context
+            else -> null
+        }
+    }
 
     private var view: View?= null
 

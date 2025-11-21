@@ -59,7 +59,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/general_condition"
+                            android:text="@string/state_from_device"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_headline6"
                             android:fontFamily="@font/roboto_bold"/>
@@ -95,14 +95,82 @@
                 </com.google.android.material.tabs.TabLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/ln_input"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="20dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/input_from_previous_box"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_caption" />
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_forward"
+                        android:padding="8dp"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray"
+                    android:layout_marginTop="12dp"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/input_from_new_device"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_caption" />
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_forward"
+                        android:padding="8dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_config_input"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_add"
+                        android:padding="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_input"
+                        android:textAllCaps="true"
+                        android:textColor="@color/emerald"
+                        android:textSize="@dimen/text_caption" />
+                </LinearLayout>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/ln_config"
                 android:orientation="vertical"
                 android:paddingHorizontal="@dimen/_space16dp"
-                android:visibility="visible">
+                android:visibility="gone">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -112,7 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_screen_super_small"
-                        android:text="@string/compared_value"
+                        android:text="@string/input_type"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_caption" />
                     <Spinner
@@ -130,6 +198,22 @@
                         android:background="@color/gray"
                         android:layout_marginTop="24dp"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_screen_small"
+                        android:text="@string/compared_input"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_caption" />
+
+                    <Spinner
+                        android:id="@+id/spinner_compared_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_space10dp"
+                        android:background="@drawable/bg_text_input_gray"
+                        android:paddingHorizontal="13dp"
+                        android:paddingVertical="14dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -156,7 +240,6 @@
                         android:textSize="@dimen/text_caption" />
 
                     <Spinner
-                        android:id="@+id/spinner_compared_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_space10dp"

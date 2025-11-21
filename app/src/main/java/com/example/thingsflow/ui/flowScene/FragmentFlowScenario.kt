@@ -9,12 +9,15 @@ import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.example.thingsflow.ui.customview.ViewBox
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionCallHttp
+import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionConditionDeviceState
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionConditionGeneral
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxEventFromDevice
+import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigInputBoxActionConditionDeviceState
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxActionType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxConditionType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxEventType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxType
+import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectDevice
 import com.example.thingsflow.utils.FTypeBox
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,9 +27,9 @@ import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGemini
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 import rogo.iot.module.flowcommon.box.action.FBoxActionCodeFunction
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionDeviceState
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionGeneral
-import rogo.iot.module.flowcommon.box.action.FBoxActionConditionTime
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionTime
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
 import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDLearn
 import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRecognize
@@ -67,7 +70,10 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     private lateinit var overlaySelectBoxActionType: OverlaySelectBoxActionType
     private lateinit var overlaySelectBoxConditionType: OverlaySelectBoxConditionType
     private lateinit var overlayConfigBoxActionConditionGeneral: OverlayConfigBoxActionConditionGeneral
+    private lateinit var overlayConfigBoxActionConditionDeviceState: OverlayConfigBoxActionConditionDeviceState
     private lateinit var overlayConfigBoxActionCallHttp: OverlayConfigBoxActionCallHttp
+    private lateinit var overlayConfigInputBoxActionConditionDeviceState: OverlayConfigInputBoxActionConditionDeviceState
+    private lateinit var overlaySelectDevice: OverlaySelectDevice
     private var rootBoxId: String? = null
     private var addBoxType: LayoutZoomPan.OnBoxActionListener.AddType? = null
 
@@ -174,8 +180,11 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     boxes.clear()
                     configBox(it)
                 },
-                onClose = {
+                onClose = { isBackable ->
                     overlayConfigBoxEventFromDevice.hide()
+                    if (isBackable) {
+                        overlaySelectBoxEventType.show()
+                    }
                 }
             )
 
@@ -183,6 +192,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 requireActivity(),
                 binding.overlayContainer,
                 onBoxTypeSelected = {
+                    overlaySelectBoxType.hide()
                     when (it) {
                         FTypeBox.TYPE_BOX_ACTION -> {
                             overlaySelectBoxActionType.show()
@@ -202,6 +212,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 requireActivity(),
                 binding.overlayContainer,
                 onBoxActionTypeSelected = {
+                    overlaySelectBoxActionType.hide()
                     when (it) {
                         FTypeAction.ACT_CALL_HTTP -> {
                             overlayConfigBoxActionCallHttp.show()
@@ -210,6 +221,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 },
                 onClose = {
                     overlaySelectBoxActionType.hide()
+                    overlaySelectBoxType.show()
                 }
             )
 
@@ -217,9 +229,13 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 requireActivity(),
                 binding.overlayContainer,
                 onBoxConditionTypeSelected = {
+                    overlaySelectBoxConditionType.hide()
                     when (it) {
                         FTypeAction.ACT_CONDITION_GENERAL -> {
                             overlayConfigBoxActionConditionGeneral.show()
+                        }
+                        FTypeAction.ACT_CONDITION_DEVICE -> {
+                            overlayConfigBoxActionConditionDeviceState.show()
                         }
                     }
                 },
@@ -228,6 +244,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 }
             )
 
+
             overlayConfigBoxActionConditionGeneral = OverlayConfigBoxActionConditionGeneral(
                 requireActivity(),
                 binding.overlayContainer,
@@ -235,8 +252,25 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     overlayConfigBoxActionConditionGeneral.hide()
                     configBox(it)
                 },
-                onClose = {
+                onClose = { isBackable ->
                     overlayConfigBoxActionConditionGeneral.hide()
+                    if (isBackable) {
+                        overlaySelectBoxConditionType.show()
+                    }
+                }
+            )
+
+            overlayConfigBoxActionConditionDeviceState = OverlayConfigBoxActionConditionDeviceState(
+                requireActivity(),
+                binding.overlayContainer,
+                onConfigInput = {
+                    overlayConfigInputBoxActionConditionDeviceState.show()
+                },
+                onBoxActionCondtionDeviceStateCreated = {
+
+                },
+                onClose = {
+
                 }
             )
 
@@ -249,6 +283,32 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 },
                 onClose = {
                     overlayConfigBoxActionCallHttp.hide()
+                }
+            )
+
+            overlayConfigInputBoxActionConditionDeviceState =
+                OverlayConfigInputBoxActionConditionDeviceState(
+                    requireActivity(),
+                    binding.overlayContainer,
+                    onSelectDevice = {
+                        overlaySelectDevice.show()
+                    },
+                    onBoxActionCondtionDeviceStateCreated = {
+
+                    },
+                    onClose = {
+
+                    }
+                )
+
+            overlaySelectDevice = OverlaySelectDevice(
+                requireActivity(),
+                binding.overlayContainer,
+                onDevicesSelected = {
+
+                },
+                onClose = {
+                    overlaySelectDevice.hide()
                 }
             )
         }
