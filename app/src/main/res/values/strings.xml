@@ -96,6 +96,7 @@
     <string name="box_action">Box hành động</string>
     <string name="general_condition">Điều kiện chung</string>
     <string name="state_from_device">Trạng thái từ thiết bị</string>
+    <string name="config_new_input">Thiết lập đầu vào mới</string>
     <string name="device_type">Loại thiết bị</string>
     <string name="attribute_of_device">Thuộc tính thiết bị</string>
     <string name="compared_value">Giá trị cần so sánh</string>
@@ -109,6 +110,8 @@
     <string name="device_type_can_be_added">Các loại thiết bị có thể thêm vào </string>
     <string name="later">Để sau</string>
     <string name="device_list">Danh sách thiết bị</string>
+    <string name="header_list">Danh sách header</string>
+    <string name="you_can_add_and_delete_header">Bạn có thể thêm và xóa các header tại đây</string>
     <string name="no_device_found">Không tìm thấy thiết bị</string>
     <string name="finishing_adding_devices">Hoàn thành thêm thiết bị</string>
     <string name="you_can_continue_or_add_another_device">Bạn có thể tiếp tục hoặc thêm thiết bị khác</string>
@@ -127,6 +130,8 @@
     <string name="configing_helps_flow_create_more_actions">Thiết lập giúp Flow tạo ra được nhiều hành động</string>
     <string name="create_box_and_config">Tạo box và lưu thiết lập</string>
     <string name="config_header">Chỉnh sửa header</string>
+    <string name="insert_key">Nhập Key</string>
+    <string name="insert_value">Nhập Value</string>
     <string name="body">Body</string>
     <string name="timeout_time">Thời gian timeout mỗi lượt (ms)</string>
     <string name="event_from_device">Sự kiện từ thiết bị</string>
@@ -155,6 +160,7 @@
     <string name="other_device">Thiết bị khác</string>
     <string name="presence_sensor">Cảm biến hiện diện</string>
     <string name="insert_attribute_value">Nhập tên thuộc tính</string>
+    <string name="insert_label_or_device_type">Nhập tên hoặc loại thiết bị</string>
     <string name="value_type">Kiểu giá trị</string>
     <string name="on_splash_off">Bật/Tắt</string>
     <string name="open_splash_close">Mở/Đóng</string>

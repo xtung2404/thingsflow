@@ -20,7 +20,7 @@ import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class DialogDeviceList(
     context: Context,
-    private val onDeviceSelected: (Pair<String?, IntArray>) -> Unit
+    private val onDeviceSelected: (String?, IntArray) -> Unit
 ): DialogBase<DialogDeviceListBinding>(
     context,
     R.layout.dialog_device_list
@@ -50,7 +50,7 @@ class DialogDeviceList(
 
             btnConfig.setOnClickListener {
                 dismiss()
-                onDeviceSelected.invoke(Pair(selectedDeviceId, selectedElms))
+                onDeviceSelected.invoke(selectedDeviceId, selectedElms)
             }
         }
     }
@@ -68,7 +68,7 @@ class DialogDeviceList(
                 ILogR.D(TAG, "deviceInfo", it?.uuid, it?.label, vmDevice?.getAll()?.size)
             }
             adapterDevices.submitList(
-                vmDevice?.getAll()
+                vmDevice?.getUserDevices()
             )
         }
     }

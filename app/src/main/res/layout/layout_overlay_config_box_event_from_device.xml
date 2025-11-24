@@ -202,7 +202,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_screen_super_small"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <CheckBox
@@ -210,45 +209,48 @@
                         android:layout_height="@dimen/_space32dp"
                         android:id="@+id/cb_select_device"
                         android:button="@drawable/custom_checkbox_emerald"/>
-
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/btn_select_device"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:background="@color/light_gray">
-
+                        android:layout_height="wrap_content">
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:id="@+id/ln_empty_devices"
+                            android:visibility="gone"
                             android:gravity="center_vertical"
-                            android:orientation="vertical">
-
+                            android:orientation="horizontal"
+                            android:background="@color/background_color">
                             <TextView
-                                android:id="@+id/txt_device_label"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:text="@string/choose_device_from_list"
                                 android:textStyle="bold"
-                                android:textColor="@color/bg_segment"
-                                android:paddingStart="@dimen/space_screen_super_small"/>
-
-                            <TextView
-                                android:id="@+id/txt_elm"
+                                android:textColor="@color/gray"
+                                android:paddingStart="@dimen/space_screen_super_small"
+                                android:paddingVertical="16dp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ln_devices"
+                            android:background="@color/background_color"
+                            android:visibility="gone">
+                            <androidx.recyclerview.widget.RecyclerView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:visibility="gone" />
+                                android:id="@+id/rv_devices"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
                         </LinearLayout>
-
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="@dimen/_space32dp"
                             android:layout_height="@dimen/_space32dp"
+                            android:id="@+id/btn_select_device"
                             android:src="@drawable/ic_note"
                             android:padding="@dimen/_space4dp"
-                            android:layout_marginVertical="@dimen/_space4dp"/>
-                    </LinearLayout>
+                            android:layout_gravity="end" />
+                    </FrameLayout>
+
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"

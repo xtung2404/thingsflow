@@ -127,6 +127,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="@dimen/text_caption"
+                            android:paddingStart="8dp"
                             android:textColor="@color/black"
                             android:background="@drawable/bg_white_stroke_gray"
                             android:paddingVertical="16dp"/>
@@ -183,13 +184,6 @@
                         android:textColor="@color/black"
                         android:background="@drawable/bg_white_stroke_gray"
                         android:paddingVertical="16dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/output"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_caption"
-                        android:layout_marginTop="20dp"/>
                 </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatButton

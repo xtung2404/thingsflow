@@ -160,6 +160,9 @@ class ViewBox @JvmOverloads constructor(
                         is FBoxActionConditionGeneral -> {
                             txtBoxCdtInput.text = context.getString(R.string.condition_general)
                         }
+                        is FBoxActionConditionDeviceState -> {
+                            txtBoxCdtInput.text = context.getString(R.string.state_from_device)
+                        }
                     }
                 }
 

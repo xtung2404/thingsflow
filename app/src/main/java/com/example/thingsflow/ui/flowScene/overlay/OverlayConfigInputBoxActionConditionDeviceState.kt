@@ -9,6 +9,7 @@ import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionD
 import com.example.thingsflow.databinding.LayoutOverlayConfigInputBoxActionConditionDeviceStateBinding
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterAttributes
+import com.example.thingsflow.ui.adapter.AdapterSelectedDevice
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.ui.dialog.DialogDeviceList
 import com.example.thingsflow.utils.getAttrLabel
@@ -17,20 +18,22 @@ import com.example.thingsflow.utils.getSupportedDeviceType
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
 import rogo.iot.module.rogocore.sdk.SmartSdk
+import kotlin.math.ln
 
-class OverlayConfigInputBoxActionConditionDeviceState(
+class  OverlayConfigInputBoxActionConditionDeviceState(
     context: Context,
     container: ViewGroup,
-    private val onSelectDevice: () -> Unit,
-    private val onBoxActionCondtionDeviceStateCreated: (FBoxActionConditionDeviceState) -> Unit,
+    private val onSelectDevice: (devType: Int?, attrs: IntArray?) -> Unit,
+    private val onInputSetted: () -> Unit,
     private val onClose: (Boolean) -> Unit
-): OverlayBase<LayoutOverlayConfigInputBoxActionConditionDeviceStateBinding>(
+) : OverlayBase<LayoutOverlayConfigInputBoxActionConditionDeviceStateBinding>(
     context,
     container,
     LayoutOverlayConfigInputBoxActionConditionDeviceStateBinding::inflate
 ) {
 
-    private var attrMap: MutableMap<Pair<Int, String>, Boolean>  = mutableMapOf()
+    private var attrMap: MutableMap<Pair<Int, String>, Boolean> = mutableMapOf()
+    private var selectedDeviceMap: HashMap<String?, IntArray> = hashMapOf()
 
     private val adapterSpinnerDeviceType: AdapterSpinnerDeviceType by lazy {
         AdapterSpinnerDeviceType(context, getSupportedDeviceType())
@@ -44,12 +47,18 @@ class OverlayConfigInputBoxActionConditionDeviceState(
             }
         )
     }
+
+    private val adapterSelectedDevices: AdapterSelectedDevice by lazy {
+        AdapterSelectedDevice()
+    }
+
     override fun onViewCreated(binding: LayoutOverlayConfigInputBoxActionConditionDeviceStateBinding) {
         binding.apply {
             cbLater.isChecked = true
             btnSelectDevice.isEnabled = false
-            btnSelectDevice.visibility = View.VISIBLE
+            lnEmptyDevices.visibility = View.VISIBLE
             lnDevices.visibility = View.GONE
+            selectedDeviceMap.clear()
             rvAttr.adapter = adapterAttributes
             spinnerDeviceType.adapter = adapterSpinnerDeviceType
             // map every attribute to its label and set it to false(or unselected)
@@ -64,7 +73,20 @@ class OverlayConfigInputBoxActionConditionDeviceState(
             }
 
             btnSelectDevice.setOnClickListener {
-                onSelectDevice.invoke()
+                val selectedAttrs = intArrayOf()
+                attrMap.filter {
+                    it.value
+                }.keys.forEach {
+                    selectedAttrs.plus(it.first)
+                }
+                onSelectDevice.invoke(
+                    spinnerDeviceType.selectedItem as Int,
+                    selectedAttrs
+                )
+            }
+
+            btnConfig.setOnClickListener {
+                onInputSetted.invoke()
             }
 
             edtAttr.addTextChangedListener(
@@ -84,7 +106,7 @@ class OverlayConfigInputBoxActionConditionDeviceState(
                         before: Int,
                         count: Int
                     ) {
-                        s?.let {searchInput ->
+                        s?.let { searchInput ->
                             //filter attributes according to user
                             val searchedList = attrMap.entries
                                 .filter { it.key.second.contains(searchInput, true) }
@@ -113,21 +135,40 @@ class OverlayConfigInputBoxActionConditionDeviceState(
                 if (isChecked) {
                     cbLater.isChecked = false
                     btnSelectDevice.isEnabled = true
+                    if (selectedDeviceMap.isEmpty) {
+                        val selectedAttrs = intArrayOf()
+                        attrMap.filter {
+                            it.value
+                        }.keys.forEach {
+                            selectedAttrs.plus(it.first)
+                        }
+                        onSelectDevice.invoke(
+                            spinnerDeviceType.selectedItem as Int,
+                            selectedAttrs
+                        )
+                    }
                 } else {
                     btnSelectDevice.isEnabled = false
                 }
             }
+        }
+    }
 
-
-            btnCreateBox.setOnClickListener {
-                val fBox = FBoxActionConditionDeviceState().apply {
-                    segId = "1"
+    fun show(devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) {
+        super.show()
+        binding.apply {
+            selectedDeviceMap = selectedDevices
+            devType?.let {
+                val devTypePos = adapterSpinnerDeviceType.getPosition(it)
+                if (devTypePos != -1) {
+                    spinnerDeviceType.setSelection(devTypePos)
                 }
-                onBoxActionCondtionDeviceStateCreated.invoke(fBox)
             }
-
-            btnClose.setOnClickListener {
-                onClose.invoke(false)
+            if (selectedDevices.isNotEmpty()) {
+                lnEmptyDevices.visibility = View.GONE
+                lnDevices.visibility = View.VISIBLE
+                rvDevices.adapter = adapterSelectedDevices
+                adapterSelectedDevices.submitList(selectedDevices.entries.toList())
             }
         }
     }

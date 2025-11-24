@@ -16,7 +16,7 @@ import rogo.iot.module.platform.entity.IoTElementInfo
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import java.util.concurrent.Flow
 
-class AdapterGateway(
+class  AdapterGateway(
     private val onDeviceSelected: (String, IntArray) -> Unit
 ):
 ListAdapter<IoTDevice, AdapterGateway.GatewayViewHolder>(

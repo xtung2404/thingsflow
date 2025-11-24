@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edtKey"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_white_stroke_black"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="8dp"
+            android:ellipsize="end"
+            android:textSize="@dimen/text_body2"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:hint="" />
+
+        <EditText
+            android:id="@+id/edtValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_white_stroke_black"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="8dp"
+            android:ellipsize="end"
+            android:textSize="@dimen/text_body2"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:hint="Value"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+</layout>

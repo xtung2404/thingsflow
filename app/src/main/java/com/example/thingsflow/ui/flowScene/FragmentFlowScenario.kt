@@ -7,6 +7,7 @@ import com.example.thingsflow.databinding.FragmentFlowScenarioBinding
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.example.thingsflow.ui.customview.ViewBox
+import com.example.thingsflow.ui.dialog.DialogConfigHeaderHttp
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionCallHttp
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionConditionDeviceState
@@ -74,6 +75,14 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     private lateinit var overlayConfigBoxActionCallHttp: OverlayConfigBoxActionCallHttp
     private lateinit var overlayConfigInputBoxActionConditionDeviceState: OverlayConfigInputBoxActionConditionDeviceState
     private lateinit var overlaySelectDevice: OverlaySelectDevice
+    private val dialogConfigHeaderHttp: DialogConfigHeaderHttp by lazy {
+        DialogConfigHeaderHttp(
+            requireActivity(),
+            onDeviceSelected = { _, _ ->
+
+            }
+        )
+    }
     private var rootBoxId: String? = null
     private var addBoxType: LayoutZoomPan.OnBoxActionListener.AddType? = null
 
@@ -267,7 +276,8 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     overlayConfigInputBoxActionConditionDeviceState.show()
                 },
                 onBoxActionCondtionDeviceStateCreated = {
-
+                    overlayConfigBoxActionConditionDeviceState.hide()
+                    configBox(it)
                 },
                 onClose = {
 
@@ -277,6 +287,10 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             overlayConfigBoxActionCallHttp = OverlayConfigBoxActionCallHttp(
                 requireActivity(),
                 binding.overlayContainer,
+                onConfigHeader = {
+                    overlayConfigBoxActionCallHttp.hide()
+                    dialogConfigHeaderHttp.show()
+                },
                 onBoxActionCallHttpCreated = {
                     overlayConfigBoxActionCallHttp.hide()
                     configBox(it)
@@ -290,22 +304,30 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 OverlayConfigInputBoxActionConditionDeviceState(
                     requireActivity(),
                     binding.overlayContainer,
-                    onSelectDevice = {
-                        overlaySelectDevice.show()
+                    onSelectDevice = { devType, attrs ->
+                        overlaySelectDevice.show(devType, attrs)
                     },
-                    onBoxActionCondtionDeviceStateCreated = {
-
+                    onInputSetted = {
+                        overlayConfigInputBoxActionConditionDeviceState.hide()
+                        overlayConfigBoxActionConditionDeviceState.show()
                     },
                     onClose = {
-
+                        overlayConfigInputBoxActionConditionDeviceState.hide()
                     }
                 )
 
             overlaySelectDevice = OverlaySelectDevice(
                 requireActivity(),
                 binding.overlayContainer,
-                onDevicesSelected = {
-
+                onDevicesSelected = { devType, attrs, devMap ->
+                    if (devMap.isNotEmpty()) {
+                        overlaySelectDevice.hide()
+                        overlayConfigInputBoxActionConditionDeviceState.show(
+                            devType,
+                            attrs,
+                            devMap
+                        )
+                    }
                 },
                 onClose = {
                     overlaySelectDevice.hide()

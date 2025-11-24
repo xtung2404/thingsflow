@@ -14,6 +14,7 @@ import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterAttributes
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.ui.adapter.AdapterSpinnerMethodCallHttpType
+import com.example.thingsflow.ui.dialog.DialogConfigHeaderHttp
 import com.example.thingsflow.ui.dialog.DialogDeviceList
 import com.example.thingsflow.utils.getAttrLabel
 import com.example.thingsflow.utils.getSupportedAttribue
@@ -30,6 +31,7 @@ import kotlin.text.set
 class OverlayConfigBoxActionCallHttp(
     context: Context,
     container: ViewGroup,
+    private val onConfigHeader: () -> Unit,
     private val onBoxActionCallHttpCreated: (FBoxActionCallHttp) -> Unit,
     private val onClose: () -> Unit
 ): OverlayBase<LayoutOverlayConfigBoxActionCallHttpBinding>(
@@ -53,6 +55,10 @@ class OverlayConfigBoxActionCallHttp(
             spinnerMethodType.adapter = adapterSpinnerMethodCallHttpType
             btnBack.setOnClickListener {
                 onClose.invoke()
+            }
+
+            btnConfigHeader.setOnClickListener {
+                onConfigHeader.invoke()
             }
 
 

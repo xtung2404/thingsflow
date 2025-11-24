@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxEventFromDeviceBinding
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterAttributes
+import com.example.thingsflow.ui.adapter.AdapterSelectedDevice
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.ui.dialog.DialogDeviceList
 import com.example.thingsflow.utils.getAttrLabel
@@ -31,18 +32,25 @@ class OverlayConfigBoxEventFromDevice(
     LayoutOverlayConfigBoxEventFromDeviceBinding::inflate
 ) {
     private var attrMap: MutableMap<Pair<Int, String>, Boolean>  = mutableMapOf()
-
+    private val selectedDeviceMap: HashMap<String?, IntArray> = hashMapOf()
     private val dialogDeviceList: DialogDeviceList by lazy {
         DialogDeviceList(
             context,
-            onDeviceSelected = {
+            onDeviceSelected = { uuid, elms ->
                 binding.apply {
-                    txtDeviceLabel.text = SmartSdk.deviceHandler().get(it.first)?.label
+                    selectedDeviceMap.clear()
+                    lnEmptyDevices.visibility = View.GONE
+                    lnDevices.visibility = View.VISIBLE
+                    selectedDeviceMap[uuid] = elms
+                    adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
                 }
             }
         )
     }
 
+    private val adapterSelectedDevices: AdapterSelectedDevice by lazy {
+        AdapterSelectedDevice()
+    }
     private val adapterAttributes: AdapterAttributes by lazy {
         AdapterAttributes(
             onItemClicked = {
@@ -64,7 +72,12 @@ class OverlayConfigBoxEventFromDevice(
         binding.apply {
             cbLater.isChecked = true
             btnSelectDevice.isEnabled = false
+            lnEmptyDevices.visibility = View.VISIBLE
+            lnDevices.visibility = View.GONE
+            selectedDeviceMap.clear()
             rvAttr.adapter = adapterAttributes
+            rvDevices.adapter = adapterSelectedDevices
+            adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
             spinnerDeviceType.adapter = adapterSpinnerDeviceType
             tabLayoutEvtDevice.getTabAt(0)?.select()
             // map every attribute to its label and set it to false(or unselected)
@@ -180,6 +193,9 @@ class OverlayConfigBoxEventFromDevice(
                 if (isChecked) {
                     cbLater.isChecked = false
                     btnSelectDevice.isEnabled = true
+                    if (selectedDeviceMap.isEmpty()) {
+                        dialogDeviceList.show()
+                    }
                 } else {
                     btnSelectDevice.isEnabled = false
                 }

@@ -29,8 +29,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/background_color">
+                android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,7 +47,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/state_from_device"
+                        android:text="@string/config_new_input"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_headline6"
                         android:fontFamily="@font/roboto_bold"/>
@@ -164,7 +163,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_screen_super_small"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <CheckBox
@@ -172,42 +170,47 @@
                         android:layout_height="@dimen/_space32dp"
                         android:id="@+id/cb_select_device"
                         android:button="@drawable/custom_checkbox_emerald"/>
-
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/btn_select_device"
-                        android:visibility="gone"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:background="@color/background_color">
-                        <TextView
-                            android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/choose_device_from_list"
-                            android:textStyle="bold"
-                            android:textColor="@color/gray"
-                            android:paddingStart="@dimen/space_screen_super_small"/>
-
+                            android:id="@+id/ln_empty_devices"
+                            android:visibility="gone"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:background="@color/background_color">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/choose_device_from_list"
+                                android:textStyle="bold"
+                                android:textColor="@color/gray"
+                                android:paddingStart="@dimen/space_screen_super_small"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ln_devices"
+                            android:background="@color/background_color"
+                            android:visibility="gone">
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/rv_devices"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                        </LinearLayout>
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="@dimen/_space32dp"
                             android:layout_height="@dimen/_space32dp"
+                            android:id="@+id/btn_select_device"
                             android:src="@drawable/ic_note"
                             android:padding="@dimen/_space4dp"
-                            android:layout_marginVertical="@dimen/_space4dp"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/ln_devices"
-                        android:visibility="gone">
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/rv_devices"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-                    </LinearLayout>
+                            android:layout_gravity="end" />
+                    </FrameLayout>
+
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -217,25 +220,14 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btn_create_box"
-                    android:text="@string/create_box_and_config"
+                    android:id="@+id/btn_config"
+                    android:text="@string/config"
                     android:textAllCaps="false"
                     android:textSize="@dimen/text_button"
                     android:textColor="@color/white"
                     android:background="@color/emerald"
                     android:paddingVertical="4dp"
                     android:layout_marginTop="@dimen/_space48dp" />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_close"
-                    android:text="@string/close"
-                    android:textAllCaps="false"
-                    android:textSize="@dimen/text_button"
-                    android:textColor="@color/white"
-                    android:background="@drawable/btn_gray"
-                    android:paddingVertical="4dp"
-                    android:layout_marginTop="16dp"/>
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
