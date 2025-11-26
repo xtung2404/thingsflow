@@ -10,6 +10,16 @@ import com.example.thingsflow.ui.OverlayBase
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
 
+/**
+ * @file: This overlay is used to configure a box action condition device state(FBoxActionConditionDeviceState)
+ * It allows user to configure:
+ * - compare state of a device or a value from the previous box with a specific state
+ * @param context The application/Activity context.
+ * @param container The ViewGroup that hosts this overlay (usually the Root View).
+ * @param onConfigInput: triggered when user want to create input from other devices
+ * @param onBoxActionCondtionDeviceStateCreated: triggered when a box is setted up successfully
+ * @param onClose: triggered when hide the overlay
+ */
 class OverlayConfigBoxActionConditionDeviceState(
     context: Context,
     container: ViewGroup,
@@ -84,6 +94,13 @@ class OverlayConfigBoxActionConditionDeviceState(
             btnClose.setOnClickListener {
                 onClose.invoke(false)
             }
+        }
+    }
+
+    fun show(devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) {
+        super.show()
+        binding.apply {
+
         }
     }
 }

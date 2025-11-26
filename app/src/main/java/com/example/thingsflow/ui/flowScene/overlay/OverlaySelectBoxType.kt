@@ -16,6 +16,14 @@ import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.type.FTypeEvent
 import kotlin.getValue
 
+/**
+ * @file: This overlay is used to select type of box(action or condition)
+ *
+ * @param context The application/Activity context.
+ * @param container The ViewGroup that hosts this overlay (usually the Root View).
+ * @param onBoxTypeSelected: triggered when type of box is selected
+ * @param onClose: triggered when hide the overlay
+ */
 class OverlaySelectBoxType(
     context: Context,
     container: ViewGroup,
@@ -26,6 +34,8 @@ class OverlaySelectBoxType(
     container,
     LayoutOverlaySelectBoxTypeBinding::inflate
 ) {
+
+    // adapter for select type of box
     private val adapterBoxType: AdapterBoxType by lazy {
         AdapterBoxType(
             onItemClicked = {

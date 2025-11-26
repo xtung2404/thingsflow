@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ListAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingsflow.R
@@ -35,15 +36,7 @@ import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import kotlin.getValue
 
-/**
- * @file: This overlay is used to select devices
- *
- * @param context The application/Activity context.
- * @param container The ViewGroup that hosts this overlay (usually the Root View).
- * @param onDevicesSelected: triggered when devices are selected
- * @param onClose: triggered when hide the overlay
- */
-class OverlaySelectDevice(
+class OverlayConfigOutputJson(
     context: Context,
     container: ViewGroup,
     private val onDevicesSelected: (Int?, IntArray?, HashMap<String?, IntArray>) -> Unit,
@@ -58,25 +51,13 @@ class OverlaySelectDevice(
             ViewModelProvider(it)[VMDevice::class.java]
         }
     }
-
-    // selectedDeviceId is to store uuid of selected device
     private var selectedDeviceId: String? = null
-
-    // selectedElms is to store selected elements of selected devices
     private var selectedElms: IntArray = intArrayOf()
-
-    // selectedElms is to store selected type of device
     private var selectedDevType: Int = IoTDeviceType.ALL
-
-    // selectedElms is to store selected attributes
     private var selectedAttrs: IntArray = intArrayOf()
-
-    // adapter for select device type
     private val adapterSpinnerDeviceType: AdapterSpinnerDeviceType by lazy {
         AdapterSpinnerDeviceType(context, getSupportedDeviceType())
     }
-
-    // adapter for select attributes
     private val adapterDevices: AdapterDevices by lazy {
         AdapterDevices(
             onDeviceSelected = { devId, elms ->
@@ -89,15 +70,11 @@ class OverlaySelectDevice(
     override fun onViewCreated(binding: LayoutOverlaySelectDeviceBinding) {
         binding.apply {
             val devList = vmDevice?.getUserDevices()
+            rvDevice.adapter = adapterDevices
             selectedDeviceId = null
             selectedElms = intArrayOf()
-
-
-            rvDevice.adapter = adapterDevices
             adapterDevices.submitList(devList)
-
             spinnerDeviceType.adapter = adapterSpinnerDeviceType
-
             btnBack.setOnClickListener {
                 onClose.invoke()
             }
@@ -129,7 +106,7 @@ class OverlaySelectDevice(
                     val input = s?.toString().orEmpty()
 
                     val filteredDeviceList = devList?.filter { dev ->
-                        // compare label
+                        // so sánh theo label
                         dev.label.contains(input, ignoreCase = true) ||
 
                                 // so sánh theo devType (chỉ khi input là số)

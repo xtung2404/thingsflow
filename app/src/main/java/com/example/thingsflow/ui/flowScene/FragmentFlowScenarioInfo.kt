@@ -9,12 +9,19 @@ import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.dialog.DialogFlowNodeList
 import kotlinx.coroutines.flow.flow
 
+/**
+* @file is to show information of a flow scenario, that includes: flow scenario is launched on which devices
+*/
 class FragmentFlowScenarioInfo : FragmentBase<FragmentFlowScenarioInfoBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_flow_scenario_info
 
     private val vmFlowBinding: VMFlowBinding by activityViewModels<VMFlowBinding>()
+
+    //flowSceneId is to store uuid of the current flow scenario
     private var flowSceneId: String?= null
+
+    //dialogFlowNodeList is used to show list of gateway
     private val dialogFlowNodeList: DialogFlowNodeList by lazy {
         DialogFlowNodeList(
             requireContext(),

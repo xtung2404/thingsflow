@@ -22,6 +22,16 @@ import rogo.iot.module.rogocore.sdk.SmartSdk
 import kotlin.collections.get
 import kotlin.text.set
 
+/**
+ * @file: This overlay is used to configure a box action condition general(FBoxActionConditionGeneral)
+ * It allows user to configure:
+ * - compare value from the previous box with a inserted value
+ *
+ * @param context The application/Activity context.
+ * @param container The ViewGroup that hosts this overlay (usually the Root View).
+ * @param OverlayConfigBoxActionConditionGeneral: triggered when a box is setted up successfully
+ * @param onClose: triggered when hide the overlay
+ */
 class OverlayConfigBoxActionConditionGeneral(
     context: Context,
     container: ViewGroup,

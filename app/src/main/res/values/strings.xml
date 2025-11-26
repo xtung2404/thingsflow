@@ -46,6 +46,7 @@
     <string name="cancel">Hủy</string>
     <string name="save">Lưu</string>
     <string name="output">Đầu ra</string>
+    <string name="output_value">Giá trị đầu ra</string>
     <string name="scan_gateway">Quét thiết bị trung tâm</string>
     <string name="scan_sub_device">Quét thiết bị đầu cuối</string>
     <string name="gateway_info">Thông tin thiết bị trung tâm</string>
@@ -98,20 +99,28 @@
     <string name="state_from_device">Trạng thái từ thiết bị</string>
     <string name="config_new_input">Thiết lập đầu vào mới</string>
     <string name="device_type">Loại thiết bị</string>
+    <string name="control_action">Hành động điều khiển</string>
     <string name="attribute_of_device">Thuộc tính thiết bị</string>
     <string name="compared_value">Giá trị cần so sánh</string>
     <string name="compared_input">Đầu vào cần so sánh</string>
     <string name="comparision_type">Loại so sánh</string>
     <string name="config_action_call_api">Thiết lập hành động kết nối với API</string>
+    <string name="control_one_or_multiple_devices">Điều khiển đơn hoặc nhiều thiết bị</string>
     <string name="attribute">Thuộc tính</string>
     <string name="choose_every_attributes">Chọn tất cả các thuộc tính</string>
     <string name="choose_device">Chọn thiết bị</string>
     <string name="choose_device_type">Chọn loại thiết bị</string>
     <string name="device_type_can_be_added">Các loại thiết bị có thể thêm vào </string>
     <string name="later">Để sau</string>
+    <string name="forward_json">Forward JSON</string>
+    <string name="table">Bảng</string>
+    <string name="json">JSON</string>
+    <string name="export_value_form">Export Value form</string>
+    <string name="required_output">Thiết lập Giá trị cần lấy</string>
     <string name="device_list">Danh sách thiết bị</string>
     <string name="header_list">Danh sách header</string>
     <string name="you_can_add_and_delete_header">Bạn có thể thêm và xóa các header tại đây</string>
+    <string name="you_can_add_and_delete_value">Bạn có thể thêm và xóa các giá trị tại đây</string>
     <string name="no_device_found">Không tìm thấy thiết bị</string>
     <string name="finishing_adding_devices">Hoàn thành thêm thiết bị</string>
     <string name="you_can_continue_or_add_another_device">Bạn có thể tiếp tục hoặc thêm thiết bị khác</string>
@@ -188,7 +197,9 @@
     <string name="list_of_functioning_node">Danh sách các Node đang hoạt động</string>
     <string name="choose_all_node">Chọn tất cả các Node</string>
     <string name="add_new_node">Thêm Node mới</string>
+    <string name="add_header">Thêm header</string>
     <string name="list_of_device">Danh sách thiết bị</string>
+    <string name="list_of_value">Danh sách giá trị</string>
     <string name="to_break">Bỏ qua</string>
     <string name="select_a_gateway">Chọn thiết bị trung tâm</string>
     <string name="select_device">Chọn thiết bị</string>
@@ -219,6 +230,9 @@
     <string name="you_can_continue_when_one_of_two_option_is_enabled">Bạn có thể tiếp tục khi có 1 trong 2 kết nối</string>
     <string name="adding_zigbee_devices_warning">Lưu ý: Bạn chỉ có thể hủy các thiết bị chưa được thêm thành công</string>
     <string name="list_of_selected_devices">Danh sách thiết bị đã chọn</string>
+    <string name="on_off">Bật / Tắt</string>
+    <string name="open_close">Đóng / Mở</string>
+    <string name="lock_unlock">Khóa / Mở khóa</string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>

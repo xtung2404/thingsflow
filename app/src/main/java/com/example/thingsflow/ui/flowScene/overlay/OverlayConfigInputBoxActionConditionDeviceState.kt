@@ -20,11 +20,21 @@ import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDevice
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import kotlin.math.ln
 
+/**
+ * @file: This overlay is used to configure input for a box action condition device state(FBoxActionConditionDeviceState)
+ * It allows user to configure:
+ * - select device type, attributes or a specific device
+ * @param context The application/Activity context.
+ * @param container The ViewGroup that hosts this overlay (usually the Root View).
+ * @param onSelectDevice: triggered when user want to select a specific device
+ * @param onInputSetted: triggered when user configed input successfully
+ * @param onClose: triggered when hide the overlay
+ */
 class  OverlayConfigInputBoxActionConditionDeviceState(
     context: Context,
     container: ViewGroup,
     private val onSelectDevice: (devType: Int?, attrs: IntArray?) -> Unit,
-    private val onInputSetted: () -> Unit,
+    private val onInputSetted: (devType: Int, attrs: IntArray, selectedDevices: HashMap<String?, IntArray>) -> Unit,
     private val onClose: (Boolean) -> Unit
 ) : OverlayBase<LayoutOverlayConfigInputBoxActionConditionDeviceStateBinding>(
     context,
@@ -32,16 +42,23 @@ class  OverlayConfigInputBoxActionConditionDeviceState(
     LayoutOverlayConfigInputBoxActionConditionDeviceStateBinding::inflate
 ) {
 
+    // attrMap to store state of attributes: selected or unselected
     private var attrMap: MutableMap<Pair<Int, String>, Boolean> = mutableMapOf()
+
+    // selectedDeviceMap to store selected devices
+    // key: uuid of device, value: selected elements of device
     private var selectedDeviceMap: HashMap<String?, IntArray> = hashMapOf()
 
+    // adapter for select device type
     private val adapterSpinnerDeviceType: AdapterSpinnerDeviceType by lazy {
         AdapterSpinnerDeviceType(context, getSupportedDeviceType())
     }
 
+    // adapter for select attribute
     private val adapterAttributes: AdapterAttributes by lazy {
         AdapterAttributes(
             onItemClicked = {
+                // set state of attribute to selected or unselected
                 attrMap[it] = !attrMap[it]!!
                 adapterAttributes.notifyDataSetChanged()
             }
@@ -54,13 +71,17 @@ class  OverlayConfigInputBoxActionConditionDeviceState(
 
     override fun onViewCreated(binding: LayoutOverlayConfigInputBoxActionConditionDeviceStateBinding) {
         binding.apply {
+            // set to select device later
+            selectedDeviceMap.clear()
             cbLater.isChecked = true
             btnSelectDevice.isEnabled = false
             lnEmptyDevices.visibility = View.VISIBLE
             lnDevices.visibility = View.GONE
-            selectedDeviceMap.clear()
+
+            //bind adapter to recyclerview and spinner
             rvAttr.adapter = adapterAttributes
             spinnerDeviceType.adapter = adapterSpinnerDeviceType
+
             // map every attribute to its label and set it to false(or unselected)
             attrMap = getSupportedAttribue()
                 .map { (it to getAttrLabel(context, it)) to false }
@@ -86,7 +107,17 @@ class  OverlayConfigInputBoxActionConditionDeviceState(
             }
 
             btnConfig.setOnClickListener {
-                onInputSetted.invoke()
+                val selectedAttrs = intArrayOf()
+                attrMap.filter {
+                    it.value
+                }.keys.forEach {
+                    selectedAttrs.plus(it.first)
+                }
+                onInputSetted.invoke(
+                    spinnerDeviceType.selectedItem as Int,
+                    selectedAttrs,
+                    selectedDeviceMap
+                )
             }
 
             edtAttr.addTextChangedListener(

@@ -1,23 +1,16 @@
 package com.example.thingsflow.ui.deviceConfig.gateway
 
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentLocationManagementBinding
-import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.module.viewmodel.VMLocation
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterLocation
 import com.example.thingsflow.ui.dialog.DialogDeleteLocation
 import com.example.thingsflow.ui.dialog.DialogEditLocation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.define.IoTDeviceType
 
 @AndroidEntryPoint
 class FragmentLocationManagement : FragmentBase<FragmentLocationManagementBinding>() {

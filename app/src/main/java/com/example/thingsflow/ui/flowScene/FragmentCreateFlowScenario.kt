@@ -5,6 +5,11 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentCreateFlowScenarioBinding
 import com.example.thingsflow.ui.FragmentBase
 
+/*
+* @file is to create a flow scenario
+* It allows user to:
+* - create a new flow scenario or duplicate from an existed flow scenario
+* */
 class FragmentCreateFlowScenario : FragmentBase<FragmentCreateFlowScenarioBinding>() {
     override val layoutId: Int
         get() = R.layout.fragment_create_flow_scenario

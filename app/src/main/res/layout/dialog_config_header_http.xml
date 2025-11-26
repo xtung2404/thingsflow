@@ -63,9 +63,30 @@
                 </LinearLayout>
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="wrap_content"
                     android:id="@+id/rv_header"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_add_header"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="@dimen/_space24dp"
+                        android:layout_height="@dimen/_space24dp"
+                        android:src="@drawable/ic_add"
+                        android:tint="@color/emerald"
+                        android:padding="@dimen/_space4dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_header"
+                        android:textAllCaps="true"
+                        android:textSize="@dimen/text_body2"
+                        android:textColor="@color/emerald"
+                        android:textStyle="bold"/>
+                </LinearLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

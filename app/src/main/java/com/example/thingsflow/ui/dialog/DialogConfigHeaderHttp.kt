@@ -23,7 +23,8 @@ import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class DialogConfigHeaderHttp(
     context: Context,
-    private val onDeviceSelected: (String?, IntArray) -> Unit
+    private val onHeadersConfiged: (ArrayList<ItemHeader>) -> Unit,
+    private val onClose: () -> Unit
 ): DialogBase<DialogConfigHeaderHttpBinding>(
     context,
     R.layout.dialog_config_header_http
@@ -31,12 +32,25 @@ class DialogConfigHeaderHttp(
     private val TAG = "DialogConfigHeaderHttp"
     private val headerList = arrayListOf<ItemHeader>()
     private val adapterHeader: AdapterHeader by lazy {
-        AdapterHeader()
+        AdapterHeader(
+            onDelete = {pos, header->
+                if (pos != 0) {
+                    headerList.removeAt(pos)
+                    adapterHeader.notifyItemRemoved(pos)
+                }
+            }
+        )
     }
 
     override fun setupView(binding: DialogConfigHeaderHttpBinding) {
         binding.apply {
-
+            val maxHeight = (context.resources.displayMetrics.heightPixels * 0.3).toInt()
+                        rvHeader.viewTreeObserver.addOnGlobalLayoutListener {
+                if (rvHeader.height > maxHeight) {
+                    rvHeader.layoutParams.height = maxHeight
+                    rvHeader.requestLayout()
+                }
+            }
         }
     }
 
@@ -44,21 +58,38 @@ class DialogConfigHeaderHttp(
     override fun onDialogShown() {
         super.onDialogShown()
         binding.apply {
-            headerList.clear()
             rvHeader.adapter = adapterHeader
+            headerList.clear()
             headerList.add(ItemHeader(key = "", value = ""))
             adapterHeader.submitList(headerList)
             btnCancel.setOnClickListener {
-                dismiss()
-            }
-
-            btnCancel.setOnClickListener {
-                headerList.add(if (headerList.size == 1) 1 else headerList.size - 1, ItemHeader(key = "", value = ""))
-                adapterHeader.notifyItemInserted(headerList.size - 1)
+                onClose.invoke()
             }
 
             btnSave.setOnClickListener {
+                onHeadersConfiged.invoke(headerList)
+            }
 
+            btnAddHeader.setOnClickListener {
+                var isEmpty: Boolean = false
+                for (header in headerList) {
+                    if (header.key.isEmpty() || header.value.isEmpty()) {
+                        isEmpty = true
+                        break
+                    }
+                }
+
+                if (!isEmpty) {
+                    headerList.add(ItemHeader(key = "", value = ""))
+
+                    headerList.forEach {
+                        ILogR.D(TAG, "headerInfo: ", it.id, it.key, it.value)
+                    }
+
+                    adapterHeader.notifyItemInserted(headerList.size - 1)
+
+                    rvHeader.smoothScrollToPosition(headerList.size - 1)
+                }
             }
         }
     }

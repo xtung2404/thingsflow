@@ -10,98 +10,88 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.databinding.LayoutItemHeaderBinding
 import com.example.thingsflow.module.model.ItemHeader
 
-class AdapterHeader() : ListAdapter<ItemHeader, AdapterHeader.HeaderViewHolder>(
-    object : DiffUtil.ItemCallback<ItemHeader>() {
-        override fun areItemsTheSame(
-            oldItem: ItemHeader,
-            newItem: ItemHeader
-        ): Boolean {
-            return false
-        }
+class AdapterHeader(
+    private val onDelete: (Int, ItemHeader) -> Unit
+) :
+    ListAdapter<ItemHeader, AdapterHeader.HeaderViewHolder>(DIFF) {
 
-        override fun areContentsTheSame(
-            oldItem: ItemHeader,
-            newItem: ItemHeader
-        ): Boolean {
-            return false
-        }
+    companion object {
+        val DIFF = object : DiffUtil.ItemCallback<ItemHeader>() {
+            override fun areItemsTheSame(a: ItemHeader, b: ItemHeader) = a.id == b.id
 
+            override fun areContentsTheSame(a: ItemHeader, b: ItemHeader) =
+                a.key == b.key && a.value == b.value
+        }
     }
-) {
-    inner class HeaderViewHolder(private val binding: LayoutItemHeaderBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun onBind(item: ItemHeader) {
-            binding.apply {
-                edtKey.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        count: Int,
-                        after: Int
-                    ) {
 
-                    }
+    inner class HeaderViewHolder(
+        val binding: LayoutItemHeaderBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-                    override fun onTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        before: Int,
-                        count: Int
-                    ) {
-                        currentList.find { it.id == item.id }?.key = s.toString()
-                    }
+        private var keyWatcher: TextWatcher? = null
+        private var valueWatcher: TextWatcher? = null
 
-                    override fun afterTextChanged(s: Editable?) {
+        fun bind(item: ItemHeader) = binding.run {
+            keyWatcher?.let { edtKey.removeTextChangedListener(it) }
+            valueWatcher?.let { edtValue.removeTextChangedListener(it) }
 
-                    }
+            keyWatcher = object : TextWatcher {
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    currentList.find { it.id == item.id }?.key = s.toString()
+                }
 
-                })
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
-                edtValue.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        count: Int,
-                        after: Int
-                    ) {
-                        currentList.find { it.id == item.id }?.value = s.toString()
-
-                    }
-
-                    override fun onTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        before: Int,
-                        count: Int
-                    ) {
-                        item.value = s.toString()
-                    }
-
-                    override fun afterTextChanged(s: Editable?) {
-
-                    }
-
-                })
+                override fun afterTextChanged(s: Editable?) {}
             }
+
+            valueWatcher = object : TextWatcher {
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    currentList.find { it.id == item.id }?.value = s.toString()
+                }
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            }
+
+            btnDelete.setOnClickListener {
+                onDelete.invoke(position, item)
+            }
+
+            if (edtKey.text.toString() != item.key) {
+                edtKey.setText(item.key ?: "")
+            }
+            if (edtValue.text.toString() != item.value) {
+                edtValue.setText(item.value ?: "")
+            }
+            edtKey.addTextChangedListener(keyWatcher)
+            edtValue.addTextChangedListener(valueWatcher)
         }
     }
 
-    override fun onBindViewHolder(
-        holder: HeaderViewHolder,
-        position: Int
-    ) {
-        holder.onBind(getItem(position))
+    override fun onBindViewHolder(holder: HeaderViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): HeaderViewHolder {
-        val inflater = LayoutItemHeaderBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
+        val binding = LayoutItemHeaderBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return HeaderViewHolder(inflater)
+        return HeaderViewHolder(binding)
     }
 }

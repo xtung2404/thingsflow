@@ -13,6 +13,14 @@ import com.example.thingsflow.utils.getSupportedBoxEvent
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.type.FTypeEvent
 
+/**
+ * @file: This overlay is used to select type of box event(from device, etc...)
+ *
+ * @param context The application/Activity context.
+ * @param container The ViewGroup that hosts this overlay (usually the Root View).
+ * @param onBoxEventTypeSelected: triggered when type of box event is selected
+ * @param onClose: triggered when hide the overlay
+ */
 class OverlaySelectBoxEventType(
     context: Context,
     container: ViewGroup,
@@ -23,6 +31,7 @@ class OverlaySelectBoxEventType(
     container,
     LayoutOverlaySelectBoxEventTypeBinding::inflate
 ) {
+    // adapter for select type of box event
     private val adapterBoxEventType: AdapterBoxEventType by lazy {
         AdapterBoxEventType(
             onItemClicked = {

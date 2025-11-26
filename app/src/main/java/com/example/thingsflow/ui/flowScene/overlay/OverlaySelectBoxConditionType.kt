@@ -19,6 +19,14 @@ import rogo.iot.module.flowcommon.type.FTypeAction
 import rogo.iot.module.flowcommon.type.FTypeEvent
 import kotlin.getValue
 
+/**
+ * @file: This overlay is used to select type of box condition(condition general, device state, etc...)
+ *
+ * @param context The application/Activity context.
+ * @param container The ViewGroup that hosts this overlay (usually the Root View).
+ * @param onBoxConditionTypeSelected: triggered when type of box condition is selected
+ * @param onClose: triggered when hide the overlay
+ */
 class OverlaySelectBoxConditionType(
     context: Context,
     container: ViewGroup,
@@ -29,6 +37,7 @@ class OverlaySelectBoxConditionType(
     container,
     LayoutOverlaySelectBoxConditionTypeBinding::inflate
 ) {
+    // adapter for select type of box condition
     private val adapterBoxActionType: AdapterBoxActionType by lazy {
         AdapterBoxActionType(
             onItemClicked = {

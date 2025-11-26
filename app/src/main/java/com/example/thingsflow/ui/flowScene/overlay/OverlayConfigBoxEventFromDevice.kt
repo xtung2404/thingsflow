@@ -21,6 +21,15 @@ import rogo.iot.module.rogocore.sdk.SmartSdk
 import kotlin.collections.get
 import kotlin.text.set
 
+/**
+ * @file: This overlay is used to configure a box event from device(FBoxActionCallHttp)
+ * It allows user to configure:
+ * - set a device as a trigger for the flow
+ * @param context The application/Activity context.
+ * @param container The ViewGroup that hosts this overlay (usually the Root View).
+ * @param onBoxEventCreated: triggered when a box is setted up successfully
+ * @param onClose: triggered when hide the overlay
+ */
 class OverlayConfigBoxEventFromDevice(
     context: Context,
     container: ViewGroup,
@@ -31,26 +40,26 @@ class OverlayConfigBoxEventFromDevice(
     container,
     LayoutOverlayConfigBoxEventFromDeviceBinding::inflate
 ) {
+    // hashmap to check whether attributes is selected or not
+    //key: information of attribure. first: attribure, second: label of attribute
+    //value: is attribute selected
     private var attrMap: MutableMap<Pair<Int, String>, Boolean>  = mutableMapOf()
-    private val selectedDeviceMap: HashMap<String?, IntArray> = hashMapOf()
-    private val dialogDeviceList: DialogDeviceList by lazy {
-        DialogDeviceList(
-            context,
-            onDeviceSelected = { uuid, elms ->
-                binding.apply {
-                    selectedDeviceMap.clear()
-                    lnEmptyDevices.visibility = View.GONE
-                    lnDevices.visibility = View.VISIBLE
-                    selectedDeviceMap[uuid] = elms
-                    adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
-                }
-            }
-        )
-    }
 
+    // hashmap to store selected devices
+    // key: uuid of device, value: selected elements of device
+    private val selectedDeviceMap: HashMap<String?, IntArray> = hashMapOf()
+
+    //adapter for selected devices
     private val adapterSelectedDevices: AdapterSelectedDevice by lazy {
         AdapterSelectedDevice()
     }
+
+    // adapter for select device type
+    private val adapterSpinnerDeviceType: AdapterSpinnerDeviceType by lazy {
+        AdapterSpinnerDeviceType(context, getSupportedDeviceType())
+    }
+
+    // adapter for selecting attribute
     private val adapterAttributes: AdapterAttributes by lazy {
         AdapterAttributes(
             onItemClicked = {
@@ -60,25 +69,43 @@ class OverlayConfigBoxEventFromDevice(
         )
     }
 
+    // this dialog shows up when user want to select a device
+    private val dialogDeviceList: DialogDeviceList by lazy {
+        DialogDeviceList(
+            context,
+            onDeviceSelected = { uuid, elms ->
+                binding.apply {
+                    selectedDeviceMap.clear()
+                    lnEmptyDevices.visibility = View.GONE
+                    lnDevices.visibility = View.VISIBLE
+                    // set selected device to hashmap
+                    selectedDeviceMap[uuid] = elms
+                    adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
+                }
+            }
+        )
+    }
+
     override fun show() {
         super.show()
         binding.tabLayoutEvtDevice.getTabAt(0)?.select()
     }
 
-    private val adapterSpinnerDeviceType: AdapterSpinnerDeviceType by lazy {
-        AdapterSpinnerDeviceType(context, getSupportedDeviceType())
-    }
     override fun onViewCreated(binding: LayoutOverlayConfigBoxEventFromDeviceBinding) {
         binding.apply {
+            // set option to select device later
+            selectedDeviceMap.clear()
             cbLater.isChecked = true
             btnSelectDevice.isEnabled = false
             lnEmptyDevices.visibility = View.VISIBLE
             lnDevices.visibility = View.GONE
-            selectedDeviceMap.clear()
+
+            // set adapter for recyclerview and spinner
+            spinnerDeviceType.adapter = adapterSpinnerDeviceType
             rvAttr.adapter = adapterAttributes
             rvDevices.adapter = adapterSelectedDevices
             adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
-            spinnerDeviceType.adapter = adapterSpinnerDeviceType
+
             tabLayoutEvtDevice.getTabAt(0)?.select()
             // map every attribute to its label and set it to false(or unselected)
             attrMap = getSupportedAttribue()
@@ -118,6 +145,7 @@ class OverlayConfigBoxEventFromDevice(
             )
 
             btnCreateBox.setOnClickListener {
+                // check selected attributes
                 val selectedAttrs = arrayListOf<Int>()
                 attrMap.filter {
                     it.value

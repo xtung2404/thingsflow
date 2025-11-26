@@ -8,10 +8,12 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.thingflowsdk.core.define.TFMethodHttp
 import com.example.thingsflow.R
-class AdapterSpinnerMethodCallHttpType(
+import rogo.iot.module.platform.define.IoTAttribute
+
+class AdapterSpinnerControlAction(
     context: Context,
-    private val items: List<TFMethodHttp>
-): ArrayAdapter<TFMethodHttp>(context, R.layout.layout_spinner_item_location, items) {
+    private val items: List<Int>
+): ArrayAdapter<Int>(context, R.layout.layout_spinner_item_location, items) {
     init {
         setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
@@ -21,8 +23,7 @@ class AdapterSpinnerMethodCallHttpType(
             .inflate(R.layout.layout_spinner_item_location, parent, false)
 
         val textView = view.findViewById<TextView>(R.id.txt_label)
-        textView.text = getMethodHttpLabel(items[position])
-
+        textView.text = getControlActionLabel(items[position])
 
         return view
     }
@@ -32,17 +33,18 @@ class AdapterSpinnerMethodCallHttpType(
         if (items[position] == null) {
             view.text = context.resources.getString(R.string.undefined)
         } else {
-            view.text = getMethodHttpLabel(items[position])
+            view.text = getControlActionLabel(items[position])
         }
         return view
     }
 
-    fun getMethodHttpLabel(method: TFMethodHttp): String {
-        return when (method) {
-            TFMethodHttp.GET -> context.getString(R.string.get)
-            TFMethodHttp.POST ->  context.getString(R.string.post)
-            TFMethodHttp.DELETE -> context.getString(R.string.delete)
+    fun getControlActionLabel(action: Int): String {
+        when(action) {
+            IoTAttribute.ACT_ONOFF -> return context.getString(R.string.on_off)
+            IoTAttribute.ACT_LOCK_UNLOCK -> return context.getString(R.string.lock_unlock)
+            IoTAttribute.ACT_OPEN_CLOSE -> return context.getString(R.string.open_close)
             else -> ""
         }
+        return ""
     }
 }

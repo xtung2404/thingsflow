@@ -1,33 +1,29 @@
 package com.example.thingsflow.ui.flowScene.overlay
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
+import com.example.thingflowsdk.core.define.TFMethodHttp
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionCallHttpBinding
-import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionGeneralBinding
-import com.example.thingsflow.databinding.LayoutOverlayConfigBoxEventFromDeviceBinding
-import com.example.thingsflow.module.model.TypeCallHttpMethod
+import com.example.thingsflow.module.model.ItemHeader
 import com.example.thingsflow.ui.OverlayBase
-import com.example.thingsflow.ui.adapter.AdapterAttributes
-import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.ui.adapter.AdapterSpinnerMethodCallHttpType
-import com.example.thingsflow.ui.dialog.DialogConfigHeaderHttp
-import com.example.thingsflow.ui.dialog.DialogDeviceList
-import com.example.thingsflow.utils.getAttrLabel
-import com.example.thingsflow.utils.getSupportedAttribue
-import com.example.thingsflow.utils.getSupportedDeviceType
 import com.google.android.material.tabs.TabLayout
-import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
-import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
-import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
-import rogo.iot.module.rogocore.sdk.SmartSdk
-import kotlin.collections.get
-import kotlin.text.set
 
+/**
+ * @file: This overlay is used to configure a box action call http(FBoxActionCallHttp)
+ * It allows user to configure:
+ * - Type of method call HTTP: GET, POST, etc...
+ * - API url
+ * - HTTP headers
+ * - timeout
+ * @param context The application/Activity context.
+ * @param container The ViewGroup that hosts this overlay (usually the Root View).
+ * @param onConfigHeader: triggered when user want to set up headers
+ * @param onBoxActionCallHttpCreated: triggered when a box is setted up successfully
+ * @param onClose: triggered when hide the overlay
+ */
 class OverlayConfigBoxActionCallHttp(
     context: Context,
     container: ViewGroup,
@@ -39,13 +35,17 @@ class OverlayConfigBoxActionCallHttp(
     container,
     LayoutOverlayConfigBoxActionCallHttpBinding::inflate
 ) {
+    // hashmap to store headers that user insert
+    private val requiredHeaders: HashMap<String, String> = hashMapOf()
+
+    // adapter of method http spinner
     private val adapterSpinnerMethodCallHttpType: AdapterSpinnerMethodCallHttpType by lazy {
         AdapterSpinnerMethodCallHttpType(
             context,
-            listOf<TypeCallHttpMethod>(
-                TypeCallHttpMethod.GET,
-                TypeCallHttpMethod.POST,
-                TypeCallHttpMethod.DELETE
+            listOf<TFMethodHttp>(
+                TFMethodHttp.GET,
+                TFMethodHttp.POST,
+                TFMethodHttp.DELETE
             )
         )
     }
@@ -60,7 +60,6 @@ class OverlayConfigBoxActionCallHttp(
             btnConfigHeader.setOnClickListener {
                 onConfigHeader.invoke()
             }
-
 
             tabLayoutEvtDevice.addOnTabSelectedListener(
                 object : TabLayout.OnTabSelectedListener {
@@ -93,7 +92,9 @@ class OverlayConfigBoxActionCallHttp(
 
             btnCreateBox.setOnClickListener {
                 val fBox = FBoxActionCallHttp().apply {
-
+                    url = edtUrl.text.toString()
+                    headers = requiredHeaders
+                    timeoutMs = edtTimeout.text.toString().toInt()
                 }
                 onBoxActionCallHttpCreated.invoke(fBox)
             }
@@ -101,6 +102,21 @@ class OverlayConfigBoxActionCallHttp(
             btnOutputClose.setOnClickListener {
                 onClose.invoke()
             }
+        }
+    }
+
+    override fun show() {
+        super.show()
+        binding.apply {
+            edtUrl.setText("")
+        }
+    }
+
+    fun show(headers: ArrayList<ItemHeader>) {
+        super.show()
+        requiredHeaders.clear()
+        headers.forEach { header ->
+            requiredHeaders[header.key] = header.value
         }
     }
 }
