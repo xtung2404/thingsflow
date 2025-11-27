@@ -18,6 +18,7 @@ fun getFragmentLabel(context: Context, destination: Int?): String =
 
 fun getDeviceTypeLabel(context: Context, type: Int): String? =
     when(type) {
+        IoTDeviceType.ALL -> context.resources.getString(R.string.all)
         IoTDeviceType.LIGHT -> context.resources.getString(R.string.light)
         IoTDeviceType.SWITCH -> context.resources.getString(R.string.switch_device_type)
         IoTDeviceType.PLUG -> context.resources.getString(R.string.plug)

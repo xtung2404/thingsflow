@@ -1,25 +1,23 @@
 package com.example.thingsflow.ui.flowScene.overlay
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionCallHttpBinding
+import android.widget.AdapterView
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionControlDeviceBinding
-import com.example.thingsflow.module.model.ItemHeader
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterSelectedDevice
 import com.example.thingsflow.ui.adapter.AdapterSpinnerControlAction
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
-import com.example.thingsflow.ui.adapter.AdapterSpinnerMethodCallHttpType
-import com.example.thingsflow.utils.getAttrLabel
-import com.example.thingsflow.utils.getSupportedAttribue
+import com.example.thingsflow.utils.getControlableDeviceType
+import com.example.thingsflow.utils.getOnOffDeviceType
+import com.example.thingsflow.utils.getOpenCloseDeviceType
 import com.example.thingsflow.utils.getSupportedDeviceType
+import com.example.thingsflow.utils.gone
+import com.example.thingsflow.utils.show
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
-import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
-import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.platform.define.IoTAttribute
 
 /**
@@ -50,9 +48,7 @@ class OverlayConfigBoxActionControlDevice(
     }
 
     //adapter for select type of device
-    private val adapterSpinnerDeviceType: AdapterSpinnerDeviceType by lazy {
-        AdapterSpinnerDeviceType(context, getSupportedDeviceType())
-    }
+    private lateinit var adapterSpinnerDeviceType: AdapterSpinnerDeviceType
 
     //adapter for select type of action(onoff, lock-unlock,etc...)
     private val adapterSpinnerControlAction: AdapterSpinnerControlAction by lazy {
@@ -76,7 +72,6 @@ class OverlayConfigBoxActionControlDevice(
             selectedDeviceMap.clear()
             rvDevices.adapter = adapterSelectedDevices
             adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
-            spinnerDeviceType.adapter = adapterSpinnerDeviceType
             spinnerControlAction.adapter = adapterSpinnerControlAction
             tabLayoutEvtDevice.getTabAt(0)?.select()
             btnBack.setOnClickListener {
@@ -88,15 +83,18 @@ class OverlayConfigBoxActionControlDevice(
                     override fun onTabSelected(tab: TabLayout.Tab?) {
                         tab?.let {
                             if (tab.position == 0) {
-
+                                lnInput.show()
+                                lnConfig.gone()
+                                lnOutput.gone()
                             }
                             else if (tab.position == 1) {
-                                lnConfig.visibility = View.VISIBLE
-                                lnOutput.visibility = View.GONE
-                            }
-                            else {
-                                lnConfig.visibility = View.GONE
-                                lnOutput.visibility = View.VISIBLE
+                                lnInput.gone()
+                                lnConfig.show()
+                                lnOutput.gone()
+                            } else {
+                                lnInput.gone()
+                                lnConfig.gone()
+                                lnOutput.show()
                             }
 
                         }
@@ -112,44 +110,37 @@ class OverlayConfigBoxActionControlDevice(
                 }
             )
 
-            btnBack.setOnClickListener {
+            spinnerControlAction.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val action = spinnerControlAction.selectedItem as Int
+                    adapterSpinnerDeviceType = AdapterSpinnerDeviceType(
+                        context, getControlableDeviceType(action)
+                    )
+                    spinnerDeviceType.adapter = adapterSpinnerDeviceType
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                }
 
             }
 
-            tabLayoutEvtDevice.addOnTabSelectedListener(
-                object : TabLayout.OnTabSelectedListener {
-                    override fun onTabSelected(tab: TabLayout.Tab?) {
-                        tab?.let {
-                            if (tab.position == 0) {
-                                lnConfig.visibility = View.VISIBLE
-                                lnOutput.visibility = View.GONE
-                            }
-                            else if (tab.position == 1) {
-                                lnConfig.visibility = View.GONE
-                                lnOutput.visibility = View.VISIBLE
-                            }
-
-                        }
-                    }
-
-                    override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-                    }
-
-                    override fun onTabReselected(tab: TabLayout.Tab?) {
-
-                    }
-                }
-            )
-
             btnClose.setOnClickListener {
-
+                onClose.invoke()
             }
 
             btnSelectDevice.setOnClickListener {
                 onSelectDevice.invoke(
                     spinnerDeviceType.selectedItem as Int,
-                    intArrayOf()
+                    intArrayOf(
+                        spinnerControlAction.selectedItem as Int
+                    )
                 )
             }
 
@@ -183,7 +174,9 @@ class OverlayConfigBoxActionControlDevice(
                     if (selectedDeviceMap.isEmpty) {
                         onSelectDevice.invoke(
                             spinnerDeviceType.selectedItem as Int,
-                            intArrayOf()
+                            intArrayOf(
+                                spinnerControlAction.selectedItem as Int
+                            )
                         )
                     }
                 } else {

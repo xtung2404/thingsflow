@@ -5,9 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.thingflowsdk.core.define.TFMethodHttp
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionCallHttpBinding
-import com.example.thingsflow.module.model.ItemHeader
+import com.example.thingsflow.module.define.TFItemHeader
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterSpinnerMethodCallHttpType
+import com.example.thingsflow.utils.gone
+import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 
@@ -66,15 +68,19 @@ class OverlayConfigBoxActionCallHttp(
                     override fun onTabSelected(tab: TabLayout.Tab?) {
                         tab?.let {
                             if (tab.position == 0) {
-
+                                lnInput.show()
+                                lnConfig.gone()
+                                lnOutput.gone()
                             }
                             else if (tab.position == 1) {
-                                lnConfig.visibility = View.VISIBLE
-                                lnOutput.visibility = View.GONE
+                                lnInput.gone()
+                                lnConfig.show()
+                                lnOutput.gone()
                             }
                             else {
-                                lnConfig.visibility = View.GONE
-                                lnOutput.visibility = View.VISIBLE
+                                lnInput.gone()
+                                lnConfig.gone()
+                                lnOutput.show()
                             }
 
                         }
@@ -112,7 +118,7 @@ class OverlayConfigBoxActionCallHttp(
         }
     }
 
-    fun show(headers: ArrayList<ItemHeader>) {
+    fun show(headers: ArrayList<TFItemHeader>) {
         super.show()
         requiredHeaders.clear()
         headers.forEach { header ->

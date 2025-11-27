@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/on"
+            android:id="@+id/btn_on"
+            android:textSize="@dimen/text_button"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_medium"
+            android:textAlignment="textStart"
+            android:paddingHorizontal="8dp"
+            android:textAllCaps="false"
+            android:background="@drawable/btn_gray"
+            android:layout_marginEnd="8dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/off"
+            android:id="@+id/btn_off"
+            android:textSize="@dimen/text_button"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_medium"
+            android:textAlignment="textStart"
+            android:paddingHorizontal="8dp"
+            android:textAllCaps="false"
+            android:background="@drawable/btn_gray"/>
+    </LinearLayout>
+</layout>

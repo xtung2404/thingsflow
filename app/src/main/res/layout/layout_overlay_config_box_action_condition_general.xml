@@ -94,7 +94,13 @@
                         android:text="@string/output"/>
                 </com.google.android.material.tabs.TabLayout>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ln_input"
+                android:orientation="vertical">
 
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

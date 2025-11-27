@@ -203,6 +203,7 @@
     <string name="to_break">Bỏ qua</string>
     <string name="select_a_gateway">Chọn thiết bị trung tâm</string>
     <string name="select_device">Chọn thiết bị</string>
+    <string name="select_control_action">Chọn lệnh điều khiển</string>
     <string name="please_select_device_to_connect">Vui lòng chọn thiết bị để kết nối</string>
     <string name="gateway_belongs_to">Thiết bị trung tâm thuộc </string>
     <string name="select_connectivity">Lựa chọn kết nối</string>
@@ -218,6 +219,7 @@
     <string name="devices_are_being_added">Thiết bị đang được thêm</string>
     <string name="device_label">Tên thiết bị</string>
     <string name="group_of_device">Nhóm thiết bị</string>
+    <string name="device">Thiết bị</string>
     <string name="group">Nhóm</string>
     <string name="all">Tất cả</string>
     <string name="group_dot">Nhóm:</string>
@@ -231,8 +233,17 @@
     <string name="adding_zigbee_devices_warning">Lưu ý: Bạn chỉ có thể hủy các thiết bị chưa được thêm thành công</string>
     <string name="list_of_selected_devices">Danh sách thiết bị đã chọn</string>
     <string name="on_off">Bật / Tắt</string>
+    <string name="on">Bật</string>
+    <string name="off">Tắt</string>
     <string name="open_close">Đóng / Mở</string>
     <string name="lock_unlock">Khóa / Mở khóa</string>
+    <string name="compare_equal">Bằng</string>
+    <string name="compare_diff">Khác</string>
+    <string name="compare_between">Trong khoảng</string>
+    <string name="compare_less_than">Nhỏ hơn</string>
+    <string name="compare_less_equal">Nhỏ hơn hoặc bằng</string>
+    <string name="compare_greater_than">Lớn hơn</string>
+    <string name="compare_greater_equal">Lớn hơn hoặc bằng</string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>

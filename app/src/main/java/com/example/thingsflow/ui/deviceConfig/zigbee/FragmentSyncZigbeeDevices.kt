@@ -1,10 +1,8 @@
 package com.example.thingsflow.ui.deviceConfig.zigbee
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -12,25 +10,18 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
-import com.example.thingsflow.databinding.FragmentConfigZigbeeDevicesBinding
 import com.example.thingsflow.databinding.FragmentSyncZigbeeDevicesBinding
-import com.example.thingsflow.databinding.LayoutItemConfigZigbeeDeviceBinding
-import com.example.thingsflow.databinding.LayoutItemDiscoveredDeviceBinding
 import com.example.thingsflow.databinding.LayoutItemSyncingDeviceBinding
-import com.example.thingsflow.module.model.ConfigZigbeeDeviceModel
+import com.example.thingsflow.module.define.TFModelConfigZigbeeDevice
 import com.example.thingsflow.module.viewmodel.VMConfigZigbee
 import com.example.thingsflow.ui.FragmentBase
-import com.example.thingsflow.ui.adapter.AdapterSpinnerGroup
-import com.example.thingsflow.ui.adapter.AdapterSpinnerLocation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.callback.RequestCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
-import rogo.iot.module.rogocore.sdk.entity.IoTGroup
 import rogo.iot.module.rogocore.sdk.entity.IoTPairedZigbeeDevice
 
 @AndroidEntryPoint
@@ -42,7 +33,7 @@ class FragmentSyncZigbeeDevices : FragmentBase<FragmentSyncZigbeeDevicesBinding>
         AdapterSyncingZigbeeDevice()
     }
     private var pos: Int = 0
-    private val deviceList = arrayListOf<ConfigZigbeeDeviceModel>()
+    private val deviceList = arrayListOf<TFModelConfigZigbeeDevice>()
 
     private val vmConfigZigbee by activityViewModels<VMConfigZigbee>()
     override fun initVariable() {
@@ -138,18 +129,18 @@ class FragmentSyncZigbeeDevices : FragmentBase<FragmentSyncZigbeeDevicesBinding>
     }
 
     class AdapterSyncingZigbeeDevice() :
-        ListAdapter<ConfigZigbeeDeviceModel, AdapterSyncingZigbeeDevice.SyncingZigbeeDeviceViewHolder>(
-            object : DiffUtil.ItemCallback<ConfigZigbeeDeviceModel>() {
+        ListAdapter<TFModelConfigZigbeeDevice, AdapterSyncingZigbeeDevice.SyncingZigbeeDeviceViewHolder>(
+            object : DiffUtil.ItemCallback<TFModelConfigZigbeeDevice>() {
                 override fun areItemsTheSame(
-                    oldItem: ConfigZigbeeDeviceModel,
-                    newItem: ConfigZigbeeDeviceModel
+                    oldItem: TFModelConfigZigbeeDevice,
+                    newItem: TFModelConfigZigbeeDevice
                 ): Boolean {
                     return oldItem.device == newItem.device && oldItem.label == newItem.label && oldItem.groupId == newItem.groupId
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: ConfigZigbeeDeviceModel,
-                    newItem: ConfigZigbeeDeviceModel
+                    oldItem: TFModelConfigZigbeeDevice,
+                    newItem: TFModelConfigZigbeeDevice
                 ): Boolean {
                     return false
                 }
@@ -159,7 +150,7 @@ class FragmentSyncZigbeeDevices : FragmentBase<FragmentSyncZigbeeDevicesBinding>
         inner class SyncingZigbeeDeviceViewHolder(
             private val binding: LayoutItemSyncingDeviceBinding
         ) : RecyclerView.ViewHolder(binding.root) {
-            fun onBind(device: ConfigZigbeeDeviceModel) {
+            fun onBind(device: TFModelConfigZigbeeDevice) {
                 binding.apply {
                     val group = FlowSdk.groupHandler().get(device.groupId)
                     txtLabel.text = device.label
@@ -171,7 +162,7 @@ class FragmentSyncZigbeeDevices : FragmentBase<FragmentSyncZigbeeDevicesBinding>
         }
 
 
-        fun updateItemStatus(model: ConfigZigbeeDeviceModel, isAddedSuccessfully: Boolean) {
+        fun updateItemStatus(model: TFModelConfigZigbeeDevice, isAddedSuccessfully: Boolean) {
             val index = currentList.indexOfFirst { it.device == model.device }
             if (index != -1) {
                 statusMap[model.device!!] = if (isAddedSuccessfully) R.drawable.ic_success else R.drawable.ic_failure

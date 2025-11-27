@@ -14,6 +14,8 @@ import com.example.thingsflow.ui.dialog.DialogDeviceList
 import com.example.thingsflow.utils.getAttrLabel
 import com.example.thingsflow.utils.getSupportedAttribue
 import com.example.thingsflow.utils.getSupportedDeviceType
+import com.example.thingsflow.utils.gone
+import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
@@ -123,12 +125,12 @@ class OverlayConfigBoxEventFromDevice(
                     override fun onTabSelected(tab: TabLayout.Tab?) {
                         tab?.let {
                             if (tab.position == 0) {
-                                lnConfig.visibility = View.VISIBLE
-                                lnOutput.visibility = View.GONE
+                                lnConfig.show()
+                                lnOutput.gone()
                             }
                             else if (tab.position == 1) {
-                                lnConfig.visibility = View.GONE
-                                lnOutput.visibility = View.VISIBLE
+                                lnConfig.gone()
+                                lnOutput.show()
                             }
 
                         }

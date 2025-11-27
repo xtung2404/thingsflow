@@ -555,7 +555,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                                 (touchY - topCy) * (touchY - topCy)
                         if (distToTopRight <= buttonRadius * buttonRadius) {
                             // Gọi listener với nhánh POSITIVE
-                            onBoxActionListener?.onAddBoxPositiveClicked(box, OnBoxActionListener.AddType.POSITIVE)
+                            onBoxActionListener?.onAddBoxPositiveClicked(box, OnBoxActionListener.NewSegType.POSITIVE)
                             return true
                         }
                     }
@@ -567,7 +567,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                                 (touchY - bottomCy) * (touchY - bottomCy)
                         if (distToBottomRight <= buttonRadius * buttonRadius) {
                             // Gọi listener với nhánh NEGATIVE
-                            onBoxActionListener?.onAddBoxPositiveClicked(box, OnBoxActionListener.AddType.NEGATIVE)
+                            onBoxActionListener?.onAddBoxPositiveClicked(box, OnBoxActionListener.NewSegType.NEGATIVE)
                             return true
                         }
                     }
@@ -584,7 +584,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                                 (touchY - centerY) * (touchY - centerY)
                         if (distToRight <= buttonRadius * buttonRadius) {
                             // Gọi listener với nhánh DEFAULT
-                            onBoxActionListener?.onAddBoxPositiveClicked(box, OnBoxActionListener.AddType.DEFAULT)
+                            onBoxActionListener?.onAddBoxPositiveClicked(box, OnBoxActionListener.NewSegType.DEFAULT)
                             return true
                         }
                     }
@@ -607,7 +607,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                         if (distToRight <= buttonRadius * buttonRadius) {
                             // Gọi listener với nhánh DEFAULT
                             onBoxActionListener?.onAddBoxPositiveClicked(box,
-                                OnBoxActionListener.AddType.DEFAULT
+                                OnBoxActionListener.NewSegType.DEFAULT
                             )
                             return true
                         }
@@ -674,12 +674,12 @@ class LayoutZoomPan @JvmOverloads constructor(
     }
 
     interface OnBoxActionListener {
-        enum class AddType() {
+        enum class NewSegType() {
             DEFAULT,
             POSITIVE,
             NEGATIVE
         }
-        fun onAddBoxPositiveClicked(box: FBox, addType: AddType)
+        fun onAddBoxPositiveClicked(box: FBox, newSegType: NewSegType)
         fun onRemoveBoxClicked(box: FBox)
     }
 }

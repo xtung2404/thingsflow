@@ -1,18 +1,12 @@
 package com.example.thingsflow.ui.deviceConfig.zigbee
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentSelectPairedZigbeeBinding
-import com.example.thingsflow.module.model.ConfigZigbeeDeviceModel
+import com.example.thingsflow.module.define.TFModelConfigZigbeeDevice
 import com.example.thingsflow.module.viewmodel.VMConfigZigbee
 import com.example.thingsflow.ui.FragmentBase
-import com.example.thingsflow.ui.adapter.AdapterDevices
 import com.example.thingsflow.ui.adapter.AdapterDiscoveredZigbeeDevices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -64,10 +58,10 @@ class FragmentSelectPairedZigbee : FragmentBase<FragmentSelectPairedZigbeeBindin
                 if (adapterDiscoveredZigbeeDevices.getSelectedDevices().isEmpty()) {
                     return@setOnClickListener
                 }
-                val selectedDevices = arrayListOf<ConfigZigbeeDeviceModel>()
+                val selectedDevices = arrayListOf<TFModelConfigZigbeeDevice>()
                 adapterDiscoveredZigbeeDevices.getSelectedDevices().forEach {
                     selectedDevices.add(
-                        ConfigZigbeeDeviceModel(
+                        TFModelConfigZigbeeDevice(
                             it,
                             it.ioTProductModel.name,
                             null

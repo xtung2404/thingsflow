@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/root"
-        android:background="@color/gray"
         android:orientation="vertical"
         android:gravity="center_vertical"
         android:paddingVertical="@dimen/_space10dp"
@@ -24,23 +23,9 @@
             android:textSize="@dimen/text_body2"
             android:textStyle="bold"
             android:text="cong tac"
-            android:layout_marginEnd="@dimen/space_screen_super_small"
             android:maxLines="1"
             android:ellipsize="end"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_location"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_overline"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:layout_marginTop="@dimen/_space4dp"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/rv_elm"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            android:layout_marginTop="@dimen/_space4dp"/>
+        <include layout="@layout/layout_control_on_off"
+            android:id="@+id/ln_control_on_off"/>
     </LinearLayout>
 </layout>

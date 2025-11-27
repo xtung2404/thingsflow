@@ -133,7 +133,7 @@
     </fragment>
      <fragment
         android:id="@+id/fragmentFlowScenario"
-        android:name="com.example.thingsflow.ui.flowScene.FragmentFlowScenario"
+        android:name="com.example.thingsflow.ui.flowScene.fragmentFlowScenario.FragmentFlowScenario"
         android:label="FragmentFlowScenario" >
          <action
              android:id="@+id/action_fragmentFlowScenario_to_fragmentFlowScenManagement"

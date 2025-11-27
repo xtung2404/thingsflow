@@ -15,14 +15,12 @@ import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentConfigZigbeeDevicesBinding
 import com.example.thingsflow.databinding.LayoutItemConfigZigbeeDeviceBinding
-import com.example.thingsflow.module.model.ConfigZigbeeDeviceModel
+import com.example.thingsflow.module.define.TFModelConfigZigbeeDevice
 import com.example.thingsflow.module.viewmodel.VMConfigZigbee
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterSpinnerGroup
 import com.example.thingsflow.ui.dialog.DialogCreateGroup
 import dagger.hilt.android.AndroidEntryPoint
-import rogo.iot.module.platform.callback.RequestCallback
-import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import rogo.iot.module.rogocore.sdk.entity.IoTGroup
 
 @AndroidEntryPoint
@@ -36,7 +34,7 @@ class FragmentConfigZigbeeDevices : FragmentBase<FragmentConfigZigbeeDevicesBind
             }
         )
     }
-    private val deviceList = arrayListOf<ConfigZigbeeDeviceModel>()
+    private val deviceList = arrayListOf<TFModelConfigZigbeeDevice>()
     private val vmConfigZigbee by activityViewModels<VMConfigZigbee>()
     private val dialogCreateGroup: DialogCreateGroup by lazy {
         DialogCreateGroup(
@@ -75,18 +73,18 @@ class FragmentConfigZigbeeDevices : FragmentBase<FragmentConfigZigbeeDevicesBind
     class AdapterConfigZigbeeDevice(
         private val onCreateGroup: () -> Unit
     )
-        : ListAdapter<ConfigZigbeeDeviceModel, AdapterConfigZigbeeDevice.ConfigZigbeeDeviceViewHolder>(
-        object : DiffUtil.ItemCallback<ConfigZigbeeDeviceModel>() {
+        : ListAdapter<TFModelConfigZigbeeDevice, AdapterConfigZigbeeDevice.ConfigZigbeeDeviceViewHolder>(
+        object : DiffUtil.ItemCallback<TFModelConfigZigbeeDevice>() {
             override fun areItemsTheSame(
-                oldItem: ConfigZigbeeDeviceModel,
-                newItem: ConfigZigbeeDeviceModel
+                oldItem: TFModelConfigZigbeeDevice,
+                newItem: TFModelConfigZigbeeDevice
             ): Boolean {
                 return oldItem.device == newItem.device && oldItem.label == newItem.label && oldItem.groupId == newItem.groupId
             }
 
             override fun areContentsTheSame(
-                oldItem: ConfigZigbeeDeviceModel,
-                newItem: ConfigZigbeeDeviceModel
+                oldItem: TFModelConfigZigbeeDevice,
+                newItem: TFModelConfigZigbeeDevice
             ): Boolean {
                 return false
             }
@@ -95,7 +93,7 @@ class FragmentConfigZigbeeDevices : FragmentBase<FragmentConfigZigbeeDevicesBind
         inner class ConfigZigbeeDeviceViewHolder(
             private val binding: LayoutItemConfigZigbeeDeviceBinding
         ) : RecyclerView.ViewHolder(binding.root) {
-            fun onBind(device: ConfigZigbeeDeviceModel) {
+            fun onBind(device: TFModelConfigZigbeeDevice) {
                 binding.apply {
                     val label = device.device?.ioTProductModel?.name
                     edtLabel.setText(label)

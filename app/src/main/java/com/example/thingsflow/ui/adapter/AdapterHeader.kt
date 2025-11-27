@@ -8,18 +8,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.databinding.LayoutItemHeaderBinding
-import com.example.thingsflow.module.model.ItemHeader
+import com.example.thingsflow.module.define.TFItemHeader
 
 class AdapterHeader(
-    private val onDelete: (Int, ItemHeader) -> Unit
+    private val onDelete: (Int, TFItemHeader) -> Unit
 ) :
-    ListAdapter<ItemHeader, AdapterHeader.HeaderViewHolder>(DIFF) {
+    ListAdapter<TFItemHeader, AdapterHeader.HeaderViewHolder>(DIFF) {
 
     companion object {
-        val DIFF = object : DiffUtil.ItemCallback<ItemHeader>() {
-            override fun areItemsTheSame(a: ItemHeader, b: ItemHeader) = a.id == b.id
+        val DIFF = object : DiffUtil.ItemCallback<TFItemHeader>() {
+            override fun areItemsTheSame(a: TFItemHeader, b: TFItemHeader) = a.id == b.id
 
-            override fun areContentsTheSame(a: ItemHeader, b: ItemHeader) =
+            override fun areContentsTheSame(a: TFItemHeader, b: TFItemHeader) =
                 a.key == b.key && a.value == b.value
         }
     }
@@ -31,7 +31,7 @@ class AdapterHeader(
         private var keyWatcher: TextWatcher? = null
         private var valueWatcher: TextWatcher? = null
 
-        fun bind(item: ItemHeader) = binding.run {
+        fun bind(item: TFItemHeader) = binding.run {
             keyWatcher?.let { edtKey.removeTextChangedListener(it) }
             valueWatcher?.let { edtValue.removeTextChangedListener(it) }
 

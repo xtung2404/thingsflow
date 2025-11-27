@@ -3,37 +3,18 @@ package com.example.thingsflow.ui.flowScene.overlay
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-import com.example.thingsflow.R
-import com.example.thingsflow.databinding.LayoutOverlaySelectBoxActionTypeBinding
-import com.example.thingsflow.databinding.LayoutOverlaySelectBoxEventTypeBinding
-import com.example.thingsflow.databinding.LayoutOverlaySelectBoxTypeBinding
 import com.example.thingsflow.databinding.LayoutOverlaySelectDeviceBinding
 import com.example.thingsflow.module.viewmodel.VMDevice
 import com.example.thingsflow.ui.OverlayBase
-import com.example.thingsflow.ui.adapter.AdapterBoxActionType
-import com.example.thingsflow.ui.adapter.AdapterBoxEventType
-import com.example.thingsflow.ui.adapter.AdapterBoxType
 import com.example.thingsflow.ui.adapter.AdapterDevices
-import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.utils.getAttrLabel
-import com.example.thingsflow.utils.getSupportedBoxEvent
-import com.example.thingsflow.utils.getSupportedBoxType
+import com.example.thingsflow.utils.getDeviceTypeLabel
 import com.example.thingsflow.utils.getSupportedDeviceType
-import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.tabs.TabLayout
-import rogo.iot.module.flowcommon.type.FTypeAction
-import rogo.iot.module.flowcommon.type.FTypeEvent
-import rogo.iot.module.platform.ILogR
 import rogo.iot.module.platform.define.IoTDeviceType
-import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
-import kotlin.getValue
 
 /**
  * @file: This overlay is used to select devices
@@ -71,11 +52,7 @@ class OverlaySelectDevice(
     // selectedElms is to store selected attributes
     private var selectedAttrs: IntArray = intArrayOf()
 
-    // adapter for select device type
-    private val adapterSpinnerDeviceType: AdapterSpinnerDeviceType by lazy {
-        AdapterSpinnerDeviceType(context, getSupportedDeviceType())
-    }
-
+    private val originalDevList: MutableList<IoTDevice> = mutableListOf()
     // adapter for select attributes
     private val adapterDevices: AdapterDevices by lazy {
         AdapterDevices(
@@ -88,15 +65,7 @@ class OverlaySelectDevice(
 
     override fun onViewCreated(binding: LayoutOverlaySelectDeviceBinding) {
         binding.apply {
-            val devList = vmDevice?.getUserDevices()
-            selectedDeviceId = null
-            selectedElms = intArrayOf()
-
-
             rvDevice.adapter = adapterDevices
-            adapterDevices.submitList(devList)
-
-            spinnerDeviceType.adapter = adapterSpinnerDeviceType
 
             btnBack.setOnClickListener {
                 onClose.invoke()
@@ -112,75 +81,56 @@ class OverlaySelectDevice(
                 )
             }
 
-            edtLabel.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {}
-
-                override fun onTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    before: Int,
-                    count: Int
-                ) {
-                    val input = s?.toString().orEmpty()
-
-                    val filteredDeviceList = devList?.filter { dev ->
-                        // compare label
-                        dev.label.contains(input, ignoreCase = true) ||
-
-                                // so sánh theo devType (chỉ khi input là số)
-                                (input.toIntOrNull()?.let { inputNumber ->
-                                    getSupportedDeviceType().contains(inputNumber)
-                                            && dev.devType == inputNumber
-                                } ?: false)
-                    }
-
-                    adapterDevices.submitList(filteredDeviceList)
-                }
-
-                override fun afterTextChanged(s: Editable?) {}
-            })
-
-            spinnerDeviceType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    if (position != 0) {
-                        val selectedDevType = spinnerDeviceType.selectedItem as Int
-                        val filteredDeviceList = devList?.filter { dev->
-                            dev.devType == selectedDevType
-                        }
-                        adapterDevices.submitList(filteredDeviceList)
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-
-                }
+            edtLabel.doOnTextChanged { text, _, _, _ ->
+                filterAndDisplayDevices(text?.toString().orEmpty())
             }
         }
     }
 
+    private fun filterAndDisplayDevices(query: String) {
+        val filteredList = if (query.isBlank()) {
+            originalDevList
+        } else {
+            val queryAsInt = query.toIntOrNull()
+            val supportedDeviceTypes by lazy { getSupportedDeviceType() }
+
+            originalDevList.filter { dev ->
+                // Compare by label
+                dev.label?.contains(query, ignoreCase = true) == true ||
+                        // Compare by devType (only if input is a number and a supported type)
+                        (queryAsInt != null && supportedDeviceTypes.contains(queryAsInt) && dev.devType == queryAsInt)
+            }
+        }
+        adapterDevices.submitList(filteredList)
+    }
+
+
     fun show(devType: Int?, attrs: IntArray?) {
         super.show()
         binding.apply {
-            devType?.let {
-                selectedDevType = it
-                val devTypePos = adapterSpinnerDeviceType.getPosition(devType)
-                if (devTypePos != -1) {
-                    spinnerDeviceType.setSelection(adapterSpinnerDeviceType.getPosition(devType))
+            originalDevList.clear()
+            selectedDeviceId = null
+            selectedElms = intArrayOf()
+
+            selectedDevType = devType?: IoTDeviceType.ALL
+            selectedAttrs = attrs ?: intArrayOf()
+
+            txtDevType.text = getDeviceTypeLabel(context, selectedDevType)
+            txtAttr.text = if (selectedAttrs.isNotEmpty()) getAttrLabel(context, selectedAttrs[0]) else ""
+            if (selectedAttrs.isNotEmpty()) {
+                txtAttr.text = getAttrLabel(context, selectedAttrs[0])
+            }
+            val filteredDevices = vmDevice?.getUserDevices()
+                ?.asSequence() // Use sequence for better performance on large lists
+                ?.filter { dev ->
+                    (selectedDevType == IoTDeviceType.ALL || dev.devType == selectedDevType) &&
+                            (selectedAttrs.isEmpty() || dev.features?.any { it in selectedAttrs } == true)
                 }
-            }
-            attrs?.let {
-                selectedAttrs = it
-            }
+                ?.distinct() // Ensure unique devices if they match multiple attributes
+                ?.toList() ?: emptyList()
+
+            originalDevList.addAll(filteredDevices)
+            adapterDevices.submitList(originalDevList)
         }
     }
 }

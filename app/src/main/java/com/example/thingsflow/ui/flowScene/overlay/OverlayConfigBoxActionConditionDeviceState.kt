@@ -4,9 +4,17 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.example.thingflowsdk.core.define.TFComparision
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionDeviceStateBinding
+import com.example.thingsflow.module.define.TFInputSource
 import com.example.thingsflow.module.viewmodel.VMDevice
 import com.example.thingsflow.ui.OverlayBase
+import com.example.thingsflow.ui.adapter.AdapterSelectedDevice
+import com.example.thingsflow.ui.adapter.AdapterSpinnerComparision
+import com.example.thingsflow.ui.adapter.AdapterSpinnerInputSource
+import com.example.thingsflow.utils.getDeviceTypeLabel
+import com.example.thingsflow.utils.gone
+import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
 
@@ -36,8 +44,38 @@ class OverlayConfigBoxActionConditionDeviceState(
             ViewModelProvider(it)[VMDevice::class.java]
         }
     }
+
+    private val adapterSelectedDevice: AdapterSelectedDevice by lazy {
+        AdapterSelectedDevice()
+    }
+
+    private val adapterSpinnerInputSource: AdapterSpinnerInputSource by lazy {
+        AdapterSpinnerInputSource(
+            context,
+            listOf<Int>(
+                TFInputSource.INPUT_FROM_PREVIOUS_BOX,
+                TFInputSource.INPUT_FROM_OTHER_DEVICES
+            ))
+    }
+
+    private val adapterSpinnerComparision: AdapterSpinnerComparision by lazy {
+        AdapterSpinnerComparision(
+            context,
+            listOf<Int>(
+                TFComparision.EQUAL,
+                TFComparision.DIFF
+            )
+        )
+    }
     override fun onViewCreated(binding: LayoutOverlayConfigBoxActionConditionDeviceStateBinding) {
         binding.apply {
+            txtDeviceType.text = ""
+            txtAttr.text = ""
+
+            rvSelectedDevices.adapter = adapterSelectedDevice
+            spinnerInputType.adapter = adapterSpinnerInputSource
+            spinnerComparisionType.adapter = adapterSpinnerComparision
+
             btnBack.setOnClickListener {
                 onClose.invoke(true)
             }
@@ -52,21 +90,20 @@ class OverlayConfigBoxActionConditionDeviceState(
                     override fun onTabSelected(tab: TabLayout.Tab?) {
                         tab?.let {
                             if (tab.position == 0) {
-                                lnInput.visibility = View.VISIBLE
-                                lnConfig.visibility = View.GONE
-                                lnOutput.visibility = View.GONE
+                                lnInput.show()
+                                lnConfig.gone()
+                                lnOutput.gone()
                             }
                             else if (tab.position == 1) {
-                                lnInput.visibility = View.GONE
-                                lnConfig.visibility = View.VISIBLE
-                                lnOutput.visibility = View.GONE
+                                lnInput.gone()
+                                lnConfig.show()
+                                lnOutput.gone()
                             }
                             else {
-                                lnInput.visibility = View.GONE
-                                lnConfig.visibility = View.GONE
-                                lnOutput.visibility = View.VISIBLE
+                                lnInput.gone()
+                                lnConfig.gone()
+                                lnOutput.show()
                             }
-
                         }
                     }
 
@@ -97,10 +134,23 @@ class OverlayConfigBoxActionConditionDeviceState(
         }
     }
 
+    override fun show() {
+        super.show()
+        binding.apply {
+            btnConfigInput.show()
+            lnInputConfigured.gone()
+        }
+    }
+
     fun show(devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) {
         super.show()
         binding.apply {
-
+            btnConfigInput.gone()
+            lnInputConfigured.show()
+            devType?.let {
+                txtDeviceType.text = getDeviceTypeLabel(context, it)
+            }
+            adapterSelectedDevice.submitList(selectedDevices.entries.toList())
         }
     }
 }
