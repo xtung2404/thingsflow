@@ -7,7 +7,7 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.DialogCreateGroupBinding
 import com.example.thingsflow.module.viewmodel.VMGroup
 import com.example.thingsflow.ui.adapter.AdapterSpinnerLocationType
-import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.base.callback.RequestResultCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTGroup
 
 class DialogCreateGroup(
@@ -34,12 +34,12 @@ class DialogCreateGroup(
                     vmGroup?.create(
                         edtLabel.text.toString(),
                         spinnerGroupType.selectedItem as String,
-                        object : RequestCallback<IoTGroup> {
-                            override fun onSuccess(p0: IoTGroup?) {
+                        object : RequestResultCallback<IoTGroup> {
+                            override fun onResult(p0: IoTGroup?) {
                                 dismiss()
                             }
 
-                            override fun onFailure(p0: Int, p1: String?) {
+                            override fun onError(p0: Int) {
 
                             }
                         }

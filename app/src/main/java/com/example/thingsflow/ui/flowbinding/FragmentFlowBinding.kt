@@ -1,40 +1,22 @@
 package com.example.thingsflow.ui.flowbinding
 
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowBindingBinding
-import com.example.thingsflow.databinding.FragmentFlowScenarioBinding
 import com.example.thingsflow.module.viewmodel.VMFlowBinding
 import com.example.thingsflow.ui.FragmentBase
-import com.example.thingsflow.ui.adapter.AdapterAttributes
-import com.example.thingsflow.ui.adapter.AdapterSpinnerBoxEventType
-import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
-import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.example.thingsflow.ui.customview.ViewBox
-import com.example.thingsflow.ui.dialog.DialogDeviceList
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
 import com.example.thingsflow.ui.flowbinding.overlayBinding.OverlayBindingBoxEventFromDevice
-import com.example.thingsflow.utils.getAttrLabel
-import com.example.thingsflow.utils.getSupportedAttribue
-import com.example.thingsflow.utils.getSupportedBoxEvent
-import com.example.thingsflow.utils.getSupportedDeviceType
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.internal.toImmutableList
+import rogo.iot.module.base.ILogR
 import rogo.iot.module.flowcommon.box.FBox
-import rogo.iot.module.flowcommon.box.action.FBoxAction
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGemini
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 import rogo.iot.module.flowcommon.box.action.FBoxActionCodeFunction
-import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
-import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
-import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionTime
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
 import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDLearn
 import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRecognize
@@ -42,7 +24,9 @@ import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRemove
 import rogo.iot.module.flowcommon.box.action.FBoxActionHandlerAnotherBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionPublishMqtt
 import rogo.iot.module.flowcommon.box.action.FBoxActionSendWebSocket
-import rogo.iot.module.flowcommon.box.event.FBoxEvent
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionTime
 import rogo.iot.module.flowcommon.box.event.FBoxEventCameraStreaming
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.box.event.FBoxEventFaceID
@@ -56,8 +40,6 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventTimerInterval
 import rogo.iot.module.flowcommon.box.event.FBoxEventTouchID
 import rogo.iot.module.flowcommon.box.event.FBoxEventVoiceRecognize
 import rogo.iot.module.flowcommon.box.event.FBoxEventWeather
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
 
 @AndroidEntryPoint

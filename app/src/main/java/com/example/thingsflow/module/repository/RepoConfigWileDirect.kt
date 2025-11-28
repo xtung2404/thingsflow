@@ -7,15 +7,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.callback.RequestCallback
-import rogo.iot.module.platform.callback.SuccessRequestCallback
-import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
-import rogo.iot.module.platform.entity.IoTWifiInfo
+import rogo.iot.module.base.callback.RequestResultCallback
+import rogo.iot.module.base.callback.RequestStatusCallback
+import rogo.iot.module.base.entity.IoTModelSmartConfig
+import rogo.iot.module.base.entity.IoTWifiInfo
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.callback.DiscoverySmartDeviceCallback
 import rogo.iot.module.rogocore.sdk.callback.SetupWileDirectDeviceCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
-import rogo.iot.module.rogocore.sdk.entity.IoTObjState
 import javax.inject.Inject
 
 class RepoConfigWileDirect @Inject constructor() {
@@ -31,10 +30,10 @@ class RepoConfigWileDirect @Inject constructor() {
             SmartSdk.discoverySmartDeviceHandler()
                 .discovery(
                     object : DiscoverySmartDeviceCallback {
-                        override fun onSmartDeviceFound(p0: IoTDirectDeviceInfo?) {
+                        override fun onSmartDeviceFound(p0: IoTModelSmartConfig?) {
                             p0?.let {
                                 isEmpty = false
-                                if (it.typeConnect != IoTDirectDeviceInfo.TypeConnect.MESH) {
+                                if (it.typeConnect != IoTModelSmartConfig.TypeConnect.MESH) {
                                     callback.onDeviceFound(it)
                                 }
                             }
@@ -63,7 +62,7 @@ class RepoConfigWileDirect @Inject constructor() {
     }
 
     fun connectAndIdentifyDevice(
-        device: IoTDirectDeviceInfo,
+        device: IoTModelSmartConfig,
         callback: SetupWileDirectDeviceCallback
     ) {
         cancelDiscovery()
@@ -74,7 +73,7 @@ class RepoConfigWileDirect @Inject constructor() {
     }
 
     fun scanWiFi(
-        callback: RequestCallback<Collection<IoTWifiInfo>>
+        callback: RequestResultCallback<Collection<IoTWifiInfo>>
     ) {
         handler.scanWifi(
             8,
@@ -85,7 +84,7 @@ class RepoConfigWileDirect @Inject constructor() {
     fun requestConnectWifiNetwork(
         ssid: String,
         pwd: String,
-        callback: SuccessRequestCallback
+        callback: RequestStatusCallback
     ) {
         handler.requestConnectWifiNetwork(
                 0,
@@ -100,7 +99,7 @@ class RepoConfigWileDirect @Inject constructor() {
         label: String,
         selectedGroup: String?,
         deviceSubType: Int,
-        callback: RequestCallback<IoTDevice>
+        callback: RequestResultCallback<IoTDevice>
     ) {
         handler.setupAndSyncDeviceToCloud(
             label,

@@ -56,7 +56,7 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventTimerInterval
 import rogo.iot.module.flowcommon.box.event.FBoxEventTouchID
 import rogo.iot.module.flowcommon.box.event.FBoxEventVoiceRecognize
 import rogo.iot.module.flowcommon.box.event.FBoxEventWeather
-import rogo.iot.module.platform.ILogR
+import rogo.iot.module.base.ILogR
 
 /**
  * @file: is to set up a flow scenario
@@ -70,7 +70,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     override val layoutId: Int
         get() = R.layout.fragment_flow_scenario
 
-    private val TAG = "FragmentFlowScenario"
+    internal val TAG = "FragmentFlowScenario"
 
     internal val vmFlowScenario: VMFlowScenario by activityViewModels<VMFlowScenario>()
     internal var currentBoxType: Int = -1
@@ -180,7 +180,14 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     override fun onBoxClick(box: FBox?) {
         ILogR.D(TAG, "onBoxClick")
         when (box) {
-            is FBoxEventDevice,
+            is FBoxEventDevice -> {
+                if (box.id == null) {
+                    overlaySelectBoxEventType.show()
+                } else {
+                    overlayConfigBoxEventFromDevice.show(box)
+                }
+            }
+
             is FBoxEventMqtt,
             is FBoxEventWeather,
             is FBoxEventSchedule,
@@ -192,22 +199,26 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             is FBoxEventTouchID,
             is FBoxEventVoiceRecognize,
             is FBoxEventTimerInterval,
-            is FBoxEventStatistic
-                -> {
-                overlaySelectBoxEventType.show()
+            is FBoxEventStatistic -> {
+
             }
 
             is FBoxActionConditionGeneral,
             is FBoxActionConditionTime,
-            is FBoxActionConditionDeviceState
-                -> {
+            is FBoxActionConditionDeviceState -> {
 
             }
 
+            is FBoxActionControlDevice -> {
+                if (box.id == null) {
+                    overlaySelectBoxActionType.show()
+                } else {
+                    overlayConfigBoxActionControlDevice.show()
+                }
+            }
             is FBoxActionAIGPT,
             is FBoxActionAIGemini,
             is FBoxActionCallHttp,
-            is FBoxActionControlDevice,
             is FBoxActionCodeFunction,
             is FBoxActionFaceIDLearn,
             is FBoxActionFaceIDRecognize,
@@ -235,7 +246,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     ILogR.D(TAG, "onAddBoxClicked:fBoxId ", box.id)
                     this@FragmentFlowScenario.newSegType = newSegType
                     overlaySelectBoxType.show()
-                    when(box) {
+                    when (box) {
                         is FBoxAction -> {
                             vmFlowScenario.setRootBoxId(box.id)
                         }

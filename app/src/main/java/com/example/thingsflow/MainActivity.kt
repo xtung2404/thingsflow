@@ -1,20 +1,14 @@
 package com.example.thingsflow
 
+import rogo.iot.module.base.ILogR
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.thingsflow.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import rogo.iot.module.platform.ILogR
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkEventCallback
 import rogo.iot.module.rogocore.sdk.define.IoTEventNotify
@@ -52,6 +46,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
         SmartSdk.registerEventCallback(object : SmartSdkEventCallback() {
             override fun onCloudConnectionReady(p0: Boolean) {
                 ILogR.D(TAG, "onCloudConnectionReady", p0)

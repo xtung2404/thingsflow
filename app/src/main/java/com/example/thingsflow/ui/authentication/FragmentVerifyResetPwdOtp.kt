@@ -17,8 +17,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import rogo.iot.module.base.ILogR
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
-import rogo.iot.module.platform.ILogR
 
 @AndroidEntryPoint
 class FragmentVerifyResetPwdOtp : FragmentBase<FragmentVerifyResetPwdOtpBinding>() {

@@ -15,8 +15,8 @@ import com.example.thingsflow.ui.adapter.AdapterFlowNode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.callback.RequestResultCallback
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation

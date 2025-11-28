@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.ILogR
+import rogo.iot.module.base.ILogR
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.callback.PairZigbeeDeviceCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTPairedZ2mDevice

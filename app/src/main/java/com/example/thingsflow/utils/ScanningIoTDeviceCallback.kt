@@ -1,8 +1,8 @@
 package com.example.thingsflow.utils
 
-import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
+import rogo.iot.module.base.entity.IoTModelSmartConfig
 
 interface ScanningIoTDeviceCallback {
-    fun onDeviceFound(device: IoTDirectDeviceInfo)
+    fun onDeviceFound(device: IoTModelSmartConfig)
     fun onTimeOut()
 }

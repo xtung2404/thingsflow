@@ -30,8 +30,8 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.type.FTypeAction
 import rogo.iot.module.flowcommon.type.FTypeEvent
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.define.IoTDeviceType
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import kotlin.getValue
@@ -60,9 +60,7 @@ class OverlayConfigOutputJson(
     }
     private val adapterDevices: AdapterDevices by lazy {
         AdapterDevices(
-            onDeviceSelected = { devId, elms ->
-                selectedDeviceId = devId
-                selectedElms = elms
+            onDevicesSelected = { devMap ->
             }
         )
     }
@@ -74,7 +72,7 @@ class OverlayConfigOutputJson(
             selectedDeviceId = null
             selectedElms = intArrayOf()
             adapterDevices.submitList(devList)
-            spinnerDeviceType.adapter = adapterSpinnerDeviceType
+//            spinnerDeviceType.adapter = adapterSpinnerDeviceType
             btnBack.setOnClickListener {
                 onClose.invoke()
             }
@@ -122,26 +120,26 @@ class OverlayConfigOutputJson(
                 override fun afterTextChanged(s: Editable?) {}
             })
 
-            spinnerDeviceType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    if (position != 0) {
-                        val selectedDevType = spinnerDeviceType.selectedItem as Int
-                        val filteredDeviceList = devList?.filter { dev->
-                            dev.devType == selectedDevType
-                        }
-                        adapterDevices.submitList(filteredDeviceList)
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-
-                }
-            }
+//            spinnerDeviceType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//                override fun onItemSelected(
+//                    parent: AdapterView<*>?,
+//                    view: View?,
+//                    position: Int,
+//                    id: Long
+//                ) {
+//                    if (position != 0) {
+////                        val selectedDevType = spinnerDeviceType.selectedItem as Int
+//                        val filteredDeviceList = devList?.filter { dev->
+//                            dev.devType == selectedDevType
+//                        }
+//                        adapterDevices.submitList(filteredDeviceList)
+//                    }
+//                }
+//
+//                override fun onNothingSelected(parent: AdapterView<*>?) {
+//
+//                }
+//            }
         }
     }
 
@@ -152,7 +150,7 @@ class OverlayConfigOutputJson(
                 selectedDevType = it
                 val devTypePos = adapterSpinnerDeviceType.getPosition(devType)
                 if (devTypePos != -1) {
-                    spinnerDeviceType.setSelection(adapterSpinnerDeviceType.getPosition(devType))
+//                    spinnerDeviceType.setSelection(adapterSpinnerDeviceType.getPosition(devType))
                 }
             }
             attrs?.let {

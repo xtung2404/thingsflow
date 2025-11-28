@@ -19,8 +19,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.callback.RequestResultCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import rogo.iot.module.rogocore.sdk.entity.IoTPairedZigbeeDevice
 
@@ -59,8 +59,8 @@ class FragmentSyncZigbeeDevices : FragmentBase<FragmentSyncZigbeeDevicesBinding>
         }
     }
 
-    private val requestCallback: RequestCallback<IoTDevice> = object : RequestCallback<IoTDevice> {
-        override fun onSuccess(p0: IoTDevice?) {
+    private val RequestResultCallback: RequestResultCallback<IoTDevice> = object : RequestResultCallback<IoTDevice> {
+        override fun onResult(p0: IoTDevice?) {
             ILogR.D(TAG, "onAdd", "onSuccess")
             CoroutineScope(Dispatchers.Main).launch {
                 adapterSyncingZigbeeDevice.updateItemStatus(deviceList[pos], true)
@@ -81,7 +81,7 @@ class FragmentSyncZigbeeDevices : FragmentBase<FragmentSyncZigbeeDevicesBinding>
             }
         }
 
-        override fun onFailure(p0: Int, p1: String?) {
+        override fun onError(p0: Int) {
             ILogR.D(TAG, "onFailure", "onFailure")
             CoroutineScope(Dispatchers.Main).launch {
                 adapterSyncingZigbeeDevice.updateItemStatus(deviceList[pos], false)
@@ -111,7 +111,7 @@ class FragmentSyncZigbeeDevices : FragmentBase<FragmentSyncZigbeeDevicesBinding>
             deviceList[position].label!!,
             deviceList[position].groupId,
             deviceList[position].device?.ioTProductModel?.devSubType?: 0,
-            requestCallback
+            RequestResultCallback
         )
     }
 

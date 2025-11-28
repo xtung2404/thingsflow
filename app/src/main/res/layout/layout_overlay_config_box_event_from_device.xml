@@ -94,11 +94,12 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/ln_config"
                 android:orientation="vertical"
                 android:paddingHorizontal="@dimen/_space16dp"
-                android:visibility="visible">
+                android:visibility="visible"
+                android:layout_marginBottom="20dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -153,7 +154,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_attr"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="120dp"
                     android:background="@color/background_color"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
@@ -176,82 +177,87 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="@dimen/space_screen_super_small"
                     android:background="@color/gray" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:layout_width="@dimen/_space32dp"
-                        android:layout_height="@dimen/_space32dp"
-                        android:id="@+id/cb_later"
-                        android:button="@drawable/custom_checkbox_emerald"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/later"
-                        android:textColor="@color/black"
-                        android:textSize="13sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_screen_super_small"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:layout_width="@dimen/_space32dp"
-                        android:layout_height="@dimen/_space32dp"
-                        android:id="@+id/cb_select_device"
-                        android:button="@drawable/custom_checkbox_emerald"/>
-                    <FrameLayout
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ln_empty_devices"
-                            android:visibility="gone"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:background="@color/background_color">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/choose_device_from_list"
-                                android:textStyle="bold"
-                                android:textColor="@color/gray"
-                                android:paddingStart="@dimen/space_screen_super_small"
-                                android:paddingVertical="16dp"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ln_devices"
-                            android:background="@color/background_color"
-                            android:visibility="gone">
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/rv_devices"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-                        </LinearLayout>
-                        <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <CheckBox
                             android:layout_width="@dimen/_space32dp"
                             android:layout_height="@dimen/_space32dp"
-                            android:id="@+id/btn_select_device"
-                            android:src="@drawable/ic_note"
-                            android:padding="@dimen/_space4dp"
-                            android:layout_gravity="end" />
-                    </FrameLayout>
+                            android:id="@+id/cb_later"
+                            android:button="@drawable/custom_checkbox_emerald"/>
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/later"
+                            android:textColor="@color/black"
+                            android:textSize="13sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_screen_super_small"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:layout_width="@dimen/_space32dp"
+                            android:layout_height="@dimen/_space32dp"
+                            android:id="@+id/cb_select_device"
+                            android:button="@drawable/custom_checkbox_emerald"/>
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ln_empty_devices"
+                                android:visibility="gone"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:background="@color/background_color">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/choose_device_from_list"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/gray"
+                                    android:paddingStart="@dimen/space_screen_super_small"
+                                    android:paddingVertical="16dp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ln_devices"
+                                android:background="@color/background_color"
+                                android:visibility="gone">
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/rv_devices"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                            </LinearLayout>
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="@dimen/_space32dp"
+                                android:layout_height="@dimen/_space32dp"
+                                android:id="@+id/btn_select_device"
+                                android:src="@drawable/ic_note"
+                                android:padding="@dimen/_space4dp"
+                                android:layout_gravity="end" />
+                        </FrameLayout>
+                    </LinearLayout>
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/rv_elm"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
             android:layout_marginTop="@dimen/_space4dp"/>
     </LinearLayout>
 </layout>

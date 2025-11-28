@@ -1,6 +1,7 @@
 package com.example.thingsflow.module.repository
 
 import com.example.thingflowsdk.core.FlowSdk
+import rogo.iot.module.base.callback.RequestResultCallback
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback
 import javax.inject.Inject

@@ -9,8 +9,8 @@ import com.example.thingsflow.module.viewmodel.VMLocation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.callback.RequestResultCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class DialogDeleteLocation(
@@ -36,16 +36,16 @@ class DialogDeleteLocation(
                 ioTLocation?.let {
                     vmLocation?.delete(
                         it.uuid,
-                        object: RequestCallback<Boolean> {
-                            override fun onSuccess(p0: Boolean?) {
+                        object: RequestResultCallback<Boolean> {
+                            override fun onResult(p0: Boolean?) {
                                 CoroutineScope(Dispatchers.Main).launch {
                                     vmLocation?.refresh()
                                     dismiss()
                                 }
                             }
 
-                            override fun onFailure(p0: Int, p1: String?) {
-                                ILogR.D(TAG, "ON_DELETE:onFailure", p0, p1)
+                            override fun onError(p0: Int) {
+                                ILogR.D(TAG, "ON_DELETE:onFailure", p0)
                             }
                         }
                     )

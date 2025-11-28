@@ -11,16 +11,14 @@ import com.example.thingsflow.ui.adapter.AdapterDiscoveredDevices
 import com.example.thingsflow.ui.dialog.DialogSelectConnectivity
 import com.example.thingsflow.ui.dialog.showDialogLoadingWithAnimation
 import com.example.thingsflow.utils.ScanningIoTDeviceCallback
-import com.example.thingsflow.utils.getFragmentLabel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.callback.RequestCallback
-import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
-import rogo.iot.module.platform.entity.IoTNetworkConnectivity
-import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.callback.RequestResultCallback
+import rogo.iot.module.base.entity.IoTModelSmartConfig
+import rogo.iot.module.base.entity.IoTNetworkConnectivity
 
 @AndroidEntryPoint
 class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
@@ -31,7 +29,7 @@ class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
     private val DISCOVERY_TIMEOUT_SECONDS: Long = 15
     private val vmConfigWileDirect by activityViewModels<VMConfigWileDirect>()
     // list of discovered devices
-    private val discoveredGateways = arrayListOf<IoTDirectDeviceInfo>()
+    private val discoveredGateways = arrayListOf<IoTModelSmartConfig>()
     private val adapterDiscoveredDevices: AdapterDiscoveredDevices by lazy {
         AdapterDiscoveredDevices(
             onItemSelected = {
@@ -106,7 +104,7 @@ class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
             .  discovery(
                 DISCOVERY_TIMEOUT_SECONDS,
                 object : ScanningIoTDeviceCallback {
-                    override fun onDeviceFound(device: IoTDirectDeviceInfo) {
+                    override fun onDeviceFound(device: IoTModelSmartConfig) {
                         CoroutineScope(Dispatchers.Main).launch {
                             if (discoveredGateways.isEmpty()) {
                                 binding.lnSelectDevice.visibility = View.VISIBLE
@@ -133,7 +131,7 @@ class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
     /**
      * connect to one of discovered devices
      */
-    private fun identifyAndConnectToDevice(ioTDirectDeviceInfo: IoTDirectDeviceInfo) {
+    private fun identifyAndConnectToDevice(IoTModelSmartConfig: IoTModelSmartConfig) {
         val dialogLoading = context?.showDialogLoadingWithAnimation(
             R.string.connect,
             R.string.connect,
@@ -141,9 +139,9 @@ class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
         )
         dialogLoading?.show()
         vmConfigWileDirect.connectAndIdentifyDevice(
-            ioTDirectDeviceInfo,
-            object : RequestCallback<HashMap<IoTNetworkConnectivity, Boolean>> {
-                override fun onSuccess(p0: HashMap<IoTNetworkConnectivity, Boolean>?) {
+            IoTModelSmartConfig,
+            object : RequestResultCallback<HashMap<IoTNetworkConnectivity, Boolean>> {
+                override fun onResult(p0: HashMap<IoTNetworkConnectivity, Boolean>?) {
                     CoroutineScope(Dispatchers.Main).launch {
                         p0?.let{
                             dialogLoading?.dismiss()
@@ -152,7 +150,7 @@ class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
                     }
                 }
 
-                override fun onFailure(p0: Int, p1: String?) {
+                override fun onError(p0: Int) {
                     dialogLoading?.dismiss()
                 }
             }

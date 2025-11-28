@@ -11,7 +11,7 @@ import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxAction
 import rogo.iot.module.flowcommon.box.event.FBoxEvent
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
-import rogo.iot.module.platform.ILogR
+import rogo.iot.module.base.ILogR
 import javax.inject.Inject
 
 @HiltViewModel

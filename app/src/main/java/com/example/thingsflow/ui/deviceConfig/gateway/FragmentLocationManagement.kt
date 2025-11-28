@@ -10,7 +10,7 @@ import com.example.thingsflow.ui.adapter.AdapterLocation
 import com.example.thingsflow.ui.dialog.DialogDeleteLocation
 import com.example.thingsflow.ui.dialog.DialogEditLocation
 import dagger.hilt.android.AndroidEntryPoint
-import rogo.iot.module.platform.ILogR
+import rogo.iot.module.base.ILogR
 
 @AndroidEntryPoint
 class FragmentLocationManagement : FragmentBase<FragmentLocationManagementBinding>() {

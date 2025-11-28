@@ -3,14 +3,12 @@ package com.example.thingsflow.ui.dialog
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.DialogConfigWifiBinding
 import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.callback.SuccessRequestCallback
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.callback.RequestStatusCallback
 
 class DialogConfigWiFi(
     context: Context,
@@ -65,14 +63,14 @@ class DialogConfigWiFi(
                     vmConfigWileDirect?.requestConnectWifiNetwork(
                         it,
                         pwd,
-                        object : SuccessRequestCallback {
+                        object : RequestStatusCallback {
                             override fun onSuccess() {
                                 dismiss()
                                 onConfigSuccess.invoke()
                             }
 
-                            override fun onFailure(p0: Int, p1: String?) {
-                                ILogR.D(TAG, "requestConnectWifiNetwork:onFailure ", p0, p1)
+                            override fun onError(p0: Int) {
+                                ILogR.D(TAG, "requestConnectWifiNetwork:onFailure ", p0)
                             }
                         }
                     )

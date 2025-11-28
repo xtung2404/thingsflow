@@ -45,5 +45,6 @@ dependencies {
     implementation(group = "", name = "rogoplatformandroid-release", ext = "aar")
     implementation(group = "", name = "rogoutils", ext = "jar")
     implementation(group = "", name = "rogosigmesh", ext = "jar")
-    implementation(group = "", name = "rogocli", ext = "jar")
+    implementation(group = "", name = "rogobase", ext = "jar")
+//    implementation(group = "", name = "rogocli", ext = "jar")
 }

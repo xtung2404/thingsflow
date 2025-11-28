@@ -15,9 +15,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.callback.RequestCallback
-import rogo.iot.module.platform.entity.IoTNetworkConnectivity
-import rogo.iot.module.platform.entity.IoTWifiInfo
+import rogo.iot.module.base.callback.RequestResultCallback
+import rogo.iot.module.base.entity.IoTNetworkConnectivity
+import rogo.iot.module.base.entity.IoTWifiInfo
 
 @AndroidEntryPoint
 class FragmentConfigWiFi : FragmentBase<FragmentConfigWiFiBinding>() {
@@ -37,7 +37,7 @@ class FragmentConfigWiFi : FragmentBase<FragmentConfigWiFiBinding>() {
 
     private val dialogConfigWiFi: DialogConfigWiFi by lazy {
         DialogConfigWiFi(
-            requireContext(),
+            requireActivity(),
             onConfigSuccess = {
                 CoroutineScope(Dispatchers.Main).launch {
                     val map = vmConfigWileDirect.getSupportedConnectivities()
@@ -54,7 +54,7 @@ class FragmentConfigWiFi : FragmentBase<FragmentConfigWiFiBinding>() {
 
     private val dialogConfigWiFiManually: DialogConfigWiFiManually by lazy {
         DialogConfigWiFiManually(
-            requireContext(),
+            requireActivity(),
             onConfigSuccess = {
                 CoroutineScope(Dispatchers.Main).launch {
                     val map = vmConfigWileDirect.getSupportedConnectivities()
@@ -121,14 +121,14 @@ class FragmentConfigWiFi : FragmentBase<FragmentConfigWiFiBinding>() {
     fun scanWifi() {
         adapterDiscoveredWiFi.submitList(listOf())
         vmConfigWileDirect.scanWiFi(
-            object: RequestCallback<Collection<IoTWifiInfo>> {
-                override fun onSuccess(p0: Collection<IoTWifiInfo>?) {
+            object: RequestResultCallback<Collection<IoTWifiInfo>> {
+                override fun onResult(p0: Collection<IoTWifiInfo>?) {
                     p0?.let {
                         adapterDiscoveredWiFi.submitList(it.toList())
                     }
                 }
 
-                override fun onFailure(p0: Int, p1: String?) {
+                override fun onError(p0: Int) {
 
                 }
             }

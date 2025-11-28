@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.thingsflow.module.repository.RepoGroup
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.base.callback.RequestResultCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTGroup
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class VMGroup @Inject constructor(val repo: RepoGroup): ViewModel() {
     fun create(
         label: String,
         type: String,
-        callback: RequestCallback<IoTGroup>
+        callback: RequestResultCallback<IoTGroup>
     ) {
         viewModelScope.launch {
             repo.create(
@@ -43,7 +43,7 @@ class VMGroup @Inject constructor(val repo: RepoGroup): ViewModel() {
     fun update(
         ioTGroup: IoTGroup,
         label: String,
-        callback: RequestCallback<IoTGroup>
+        callback: RequestResultCallback<IoTGroup>
     ) {
         viewModelScope.launch {
             repo.update(
@@ -56,7 +56,7 @@ class VMGroup @Inject constructor(val repo: RepoGroup): ViewModel() {
 
     fun delete(
         uuid: String,
-        callback: RequestCallback<Boolean>
+        callback: RequestResultCallback<Boolean>
     ) {
         viewModelScope.launch {
             repo.delete(

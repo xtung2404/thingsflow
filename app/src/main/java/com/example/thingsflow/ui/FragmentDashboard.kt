@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import rogo.iot.module.platform.ILogR
+import rogo.iot.module.base.ILogR
 
 @AndroidEntryPoint
 class FragmentDashboard : FragmentBase<FragmentHomeBinding>() {

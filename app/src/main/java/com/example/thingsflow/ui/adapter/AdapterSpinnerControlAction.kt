@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.example.thingflowsdk.core.define.TFMethodHttp
 import com.example.thingsflow.R
-import rogo.iot.module.platform.define.IoTAttribute
+import rogo.iot.module.base.define.IoTAttribute
 
 class AdapterSpinnerControlAction(
     context: Context,

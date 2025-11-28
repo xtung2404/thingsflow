@@ -63,9 +63,9 @@ dependencies {
     implementation(group = "", name = "rogoplatformandroid-release", ext = "aar")
     implementation(group = "", name = "rogoutils", ext = "jar")
     implementation(group = "", name = "rogosigmesh", ext = "jar")
-    implementation(group = "", name = "rogocli", ext = "jar")
+//    implementation(group = "", name = "rogocli", ext = "jar")
     implementation(group = "", name = "flowcommon", ext = "jar")
-
+    implementation(group = "", name = "rogobase", ext = "jar")
 
     //GSON
     implementation ("com.google.code.gson:gson:2.10.1")

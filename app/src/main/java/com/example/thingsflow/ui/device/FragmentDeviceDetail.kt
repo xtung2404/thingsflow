@@ -1,22 +1,8 @@
 package com.example.thingsflow.ui.device
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentDeviceDetailBinding
 import com.example.thingsflow.ui.FragmentBase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import rogo.iot.module.platform.feature.IoTFeature
-import rogo.iot.module.platform.invoking.IoTInvokingParam
-import rogo.iot.module.platform.invoking.IoTInvokingProperty
-import rogo.iot.module.rogocore.sdk.SmartSdk
-import rogo.iot.module.rogocore.sdk.callback.FeatureMethodRequestCallback
 
 
 class FragmentDeviceDetail : FragmentBase<FragmentDeviceDetailBinding>() {
@@ -49,14 +35,14 @@ class FragmentDeviceDetail : FragmentBase<FragmentDeviceDetailBinding>() {
 //
 //                    },
 //                    30000,
-//                    object : FeatureMethodRequestCallback {
-//                        override fun onSuccess(p0: Int, p1: String?) {
+//                    object : FeatureMethodRequestResultCallback {
+//                        override fun onResult(p0: Int, p1: String?) {
 //                            CoroutineScope(Dispatchers.Main).launch {
 //                                Toast.makeText(requireContext(), "getSuccess", Toast.LENGTH_LONG).show()
 //                            }
 //                        }
 //
-//                        override fun onFailure(p0: Int, p1: String?) {
+//                        override fun onError(p0: Int) {
 //                            CoroutineScope(Dispatchers.Main).launch {
 //                                Toast.makeText(requireContext(), "onFailure $p1", Toast.LENGTH_LONG).show()
 //                            }
@@ -77,14 +63,14 @@ class FragmentDeviceDetail : FragmentBase<FragmentDeviceDetailBinding>() {
 //
 //                    },
 //                    30000,
-//                    object : FeatureMethodRequestCallback {
-//                        override fun onSuccess(p0: Int, p1: String?) {
+//                    object : FeatureMethodRequestResultCallback {
+//                        override fun onResult(p0: Int, p1: String?) {
 //                            CoroutineScope(Dispatchers.Main).launch {
 //                                Toast.makeText(requireContext(), "setSuccess", Toast.LENGTH_LONG).show()
 //                            }
 //                        }
 //
-//                        override fun onFailure(p0: Int, p1: String?) {
+//                        override fun onError(p0: Int) {
 //                            CoroutineScope(Dispatchers.Main).launch {
 //                                Toast.makeText(requireContext(), "setFailure $p1", Toast.LENGTH_LONG).show()
 //                            }

@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.thingsflow.module.repository.RepoLocation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.base.callback.RequestResultCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 import javax.inject.Inject
 
@@ -27,7 +27,7 @@ class VMLocation @Inject constructor(val repo: RepoLocation): ViewModel() {
     fun createLocation(
         label: String,
         type: String,
-        callback: RequestCallback<IoTLocation>
+        callback: RequestResultCallback<IoTLocation>
     ) {
         viewModelScope.launch {
             repo.createLocation(
@@ -41,7 +41,7 @@ class VMLocation @Inject constructor(val repo: RepoLocation): ViewModel() {
     fun update(
         ioTLocation: IoTLocation,
         label: String,
-        callback: RequestCallback<IoTLocation>
+        callback: RequestResultCallback<IoTLocation>
     ) {
         viewModelScope.launch {
             repo.editLocation(
@@ -54,7 +54,7 @@ class VMLocation @Inject constructor(val repo: RepoLocation): ViewModel() {
 
     fun delete(
         uuid: String,
-        callback: RequestCallback<Boolean>
+        callback: RequestResultCallback<Boolean>
     ) {
         viewModelScope.launch {
             repo.deleteLocation(

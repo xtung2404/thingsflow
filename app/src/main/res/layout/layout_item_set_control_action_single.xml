@@ -19,6 +19,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+            <CheckBox
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:button="@drawable/custom_checkbox"/>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -33,7 +37,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_body2"
                     android:textStyle="bold"
-                    android:text="cong tac"
                     android:maxLines="1"
                     android:ellipsize="end"/>
                 <TextView

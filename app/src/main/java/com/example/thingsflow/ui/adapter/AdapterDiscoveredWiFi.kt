@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.databinding.LayoutItemDiscoveredWifiBinding
-import rogo.iot.module.platform.entity.IoTWifiInfo
+import rogo.iot.module.base.entity.IoTWifiInfo
 
 class AdapterDiscoveredWiFi(
     private val onWiFiSelected: (IoTWifiInfo) -> Unit

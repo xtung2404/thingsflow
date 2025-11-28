@@ -38,7 +38,7 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventTimerInterval
 import rogo.iot.module.flowcommon.box.event.FBoxEventTouchID
 import rogo.iot.module.flowcommon.box.event.FBoxEventVoiceRecognize
 import rogo.iot.module.flowcommon.box.event.FBoxEventWeather
-import rogo.iot.module.platform.ILogR
+import rogo.iot.module.base.ILogR
 import java.util.Arrays
 
 class ViewBox @JvmOverloads constructor(

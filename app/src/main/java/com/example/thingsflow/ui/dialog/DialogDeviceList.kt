@@ -2,25 +2,17 @@ package com.example.thingsflow.ui.dialog
 
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
-import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
-import com.example.thingsflow.databinding.DialogDeleteLocationBinding
 import com.example.thingsflow.databinding.DialogDeviceListBinding
 import com.example.thingsflow.module.viewmodel.VMDevice
-import com.example.thingsflow.module.viewmodel.VMLocation
 import com.example.thingsflow.ui.adapter.AdapterDevices
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.rogocore.sdk.SmartSdk
-import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
 class DialogDeviceList(
     context: Context,
-    private val onDeviceSelected: (String?, IntArray) -> Unit
+    private val onDeviceSelected: (selectedDevices: HashMap<String?, IntArray>) -> Unit
 ): DialogBase<DialogDeviceListBinding>(
     context,
     R.layout.dialog_device_list
@@ -31,13 +23,16 @@ class DialogDeviceList(
             ViewModelProvider(it)[VMDevice::class.java]
         }
     }
-    private var selectedDeviceId: String?= null
-    private var selectedElms: IntArray = intArrayOf()
+    private var selectedDeviceMap: HashMap<String?, IntArray> = hashMapOf()
     private val adapterDevices: AdapterDevices by lazy {
         AdapterDevices(
-            onDeviceSelected = { devId, elms ->
-                selectedDeviceId = devId
-                selectedElms = elms
+            onDevicesSelected = { devMap ->
+                ILogR.D(TAG, "adapterDevices:onDeviceSelected ", devMap.size)
+                devMap.forEach {
+                    ILogR.D(TAG, "adapterDevices:selectedDeviceInfo ", it.key, it.value)
+                }
+                selectedDeviceMap = devMap
+                binding.btnConfig.isEnabled = devMap.isNotEmpty()
             }
         )
     }
@@ -50,7 +45,7 @@ class DialogDeviceList(
 
             btnConfig.setOnClickListener {
                 dismiss()
-                onDeviceSelected.invoke(selectedDeviceId, selectedElms)
+                onDeviceSelected.invoke(selectedDeviceMap)
             }
         }
     }
@@ -60,15 +55,17 @@ class DialogDeviceList(
         super.onDialogShown()
         binding.apply {
             rvDevice.adapter = adapterDevices
-            selectedDeviceId = null
-            selectedElms = intArrayOf()
+            btnConfig.isEnabled = false
 
+            selectedDeviceMap.clear()
             ILogR.D(TAG, "getList", viewModelOwner, vmDevice?.getAll()?.size, SmartSdk.deviceHandler().all.size)
             vmDevice?.getAll()?.forEach {
                 ILogR.D(TAG, "deviceInfo", it?.uuid, it?.label, vmDevice?.getAll()?.size)
             }
             adapterDevices.submitList(
-                vmDevice?.getUserDevices()
+                vmDevice?.getUserDevices()?.filter {
+                    it.devType != IoTDeviceType.GATEWAY && it.devType != IoTDeviceType.MEDIA_BOX
+                }
             )
         }
     }

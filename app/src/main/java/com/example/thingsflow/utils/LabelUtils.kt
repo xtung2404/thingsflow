@@ -2,8 +2,8 @@ package com.example.thingsflow.utils
 
 import android.content.Context
 import com.example.thingsflow.R
-import rogo.iot.module.platform.define.IoTAttribute
-import rogo.iot.module.platform.define.IoTDeviceType
+import rogo.iot.module.base.define.IoTAttribute
+import rogo.iot.module.base.define.IoTDeviceType
 
 fun getFragmentLabel(context: Context, destination: Int?): String =
     when(destination) {

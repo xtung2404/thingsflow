@@ -7,13 +7,13 @@ import com.example.thingsflow.utils.ScanningIoTDeviceCallback
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.callback.RequestCallback
-import rogo.iot.module.platform.callback.SuccessRequestCallback
-import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
-import rogo.iot.module.platform.entity.IoTNetworkConnectivity
-import rogo.iot.module.platform.entity.IoTSoftwareInfo
-import rogo.iot.module.platform.entity.IoTWifiInfo
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.callback.RequestResultCallback
+import rogo.iot.module.base.callback.RequestStatusCallback
+import rogo.iot.module.base.entity.IoTModelSmartConfig
+import rogo.iot.module.base.entity.IoTNetworkConnectivity
+import rogo.iot.module.base.entity.IoTSoftwareInfo
+import rogo.iot.module.base.entity.IoTWifiInfo
 import rogo.iot.module.rogocore.sdk.callback.SetupWileDirectDeviceCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class VMConfigWileDirect
 @Inject constructor(val repo: RepoConfigWileDirect) :ViewModel()
 {
     private val TAG = "ConfigWileDirectViewModel"
-    private var identifiedDevice: IoTDirectDeviceInfo?= null
+    private var identifiedDevice: IoTModelSmartConfig?= null
     private var supportedConnecitivities: HashMap<IoTNetworkConnectivity, Boolean> = hashMapOf()
     fun discovery(
         scanningTime: Long,
@@ -38,8 +38,8 @@ class VMConfigWileDirect
     }
 
     fun connectAndIdentifyDevice(
-        device: IoTDirectDeviceInfo,
-        callback: RequestCallback<HashMap<IoTNetworkConnectivity, Boolean>>
+        device: IoTModelSmartConfig,
+        callback: RequestResultCallback<HashMap<IoTNetworkConnectivity, Boolean>>
     ) {
         identifiedDevice = device
         viewModelScope.launch {
@@ -64,7 +64,7 @@ class VMConfigWileDirect
                         }
                         networkConnectivities?.let {
                             supportedConnecitivities = networkConnectivities.associateWith { false } as HashMap<IoTNetworkConnectivity, Boolean>
-                            callback.onSuccess(supportedConnecitivities)
+                            callback.onResult(supportedConnecitivities)
                         }
                     }
 
@@ -72,9 +72,13 @@ class VMConfigWileDirect
 
                     }
 
-                    override fun onSetupFailure(p0: Int, p1: String?) {
+                    override fun onSetupFailure(
+                        p0: Int,
+                        p1: Int,
+                        p2: String?
+                    ) {
                         ILogR.D(TAG, "connectAndIdentifyDevice", p0, p1)
-                        callback.onFailure(p0, p1)
+                        callback.onError(p0)
                     }
                 }
             )
@@ -88,7 +92,7 @@ class VMConfigWileDirect
     }
 
     fun scanWiFi(
-        callback: RequestCallback<Collection<IoTWifiInfo>>
+        callback: RequestResultCallback<Collection<IoTWifiInfo>>
     ) {
         viewModelScope.launch {
             repo.scanWiFi(callback)
@@ -98,7 +102,7 @@ class VMConfigWileDirect
     fun requestConnectWifiNetwork(
         ssid: String,
         pwd: String,
-        callback: SuccessRequestCallback
+        callback: RequestStatusCallback
     ) {
         viewModelScope.launch {
             repo.requestConnectWifiNetwork(
@@ -113,7 +117,7 @@ class VMConfigWileDirect
         label: String,
         selectedGroup: String?,
         deviceSubType: Int,
-        callback: RequestCallback<IoTDevice>
+        callback: RequestResultCallback<IoTDevice>
     ) {
         viewModelScope.launch {
             repo.setupAndSyncDeviceToCloud(
@@ -124,7 +128,7 @@ class VMConfigWileDirect
             )
         }
     }
-    fun getIdentifiedDevice(): IoTDirectDeviceInfo? = identifiedDevice
+    fun getIdentifiedDevice(): IoTModelSmartConfig? = identifiedDevice
 
     fun getSupportedConnectivities(): HashMap<IoTNetworkConnectivity, Boolean> = supportedConnecitivities
 }

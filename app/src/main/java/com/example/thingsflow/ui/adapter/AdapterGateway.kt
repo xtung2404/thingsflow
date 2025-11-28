@@ -11,7 +11,7 @@ import com.example.thingsflow.databinding.LayoutItemDeviceGatewayBinding
 import com.example.thingsflow.databinding.LayoutItemDeviceGridBinding
 import com.example.thingsflow.databinding.LayoutItemDeviceSingleBinding
 import com.example.thingsflow.databinding.LayoutItemElementBinding
-import rogo.iot.module.platform.ILogR
+import rogo.iot.module.base.ILogR
 import rogo.iot.module.platform.entity.IoTElementInfo
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import java.util.concurrent.Flow

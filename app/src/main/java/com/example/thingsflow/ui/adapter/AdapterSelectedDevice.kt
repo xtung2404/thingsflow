@@ -13,30 +13,30 @@ import com.example.thingsflow.databinding.LayoutItemDeviceGridBinding
 import com.example.thingsflow.databinding.LayoutItemDeviceSingleBinding
 import com.example.thingsflow.databinding.LayoutItemElementBinding
 import com.example.thingsflow.databinding.LayoutItemSelectedDeviceBinding
-import rogo.iot.module.platform.ILogR
+import rogo.iot.module.base.ILogR
 import rogo.iot.module.platform.entity.IoTElementInfo
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import java.util.concurrent.Flow
 
-class  AdapterSelectedDevice():
-ListAdapter<Map.Entry<String?, IntArray>, AdapterSelectedDevice.SelectedDeviceViewHolder>(
-    object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
-        override fun areItemsTheSame(
-            oldItem: Map.Entry<String?, IntArray>,
-            newItem: Map.Entry<String?, IntArray>
-        ): Boolean {
-            return oldItem.key == newItem.key && oldItem.value == newItem.value
-        }
+class AdapterSelectedDevice() :
+    ListAdapter<Map.Entry<String?, IntArray>, AdapterSelectedDevice.SelectedDeviceViewHolder>(
+        object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
+            override fun areItemsTheSame(
+                oldItem: Map.Entry<String?, IntArray>,
+                newItem: Map.Entry<String?, IntArray>
+            ): Boolean {
+                return oldItem.key == newItem.key && oldItem.value == newItem.value
+            }
 
-        override fun areContentsTheSame(
-            oldItem: Map.Entry<String?, IntArray>,
-            newItem: Map.Entry<String?, IntArray>
-        ): Boolean {
-            return oldItem.key == newItem.key && oldItem.value == newItem.value
+            override fun areContentsTheSame(
+                oldItem: Map.Entry<String?, IntArray>,
+                newItem: Map.Entry<String?, IntArray>
+            ): Boolean {
+                return oldItem.key == newItem.key && oldItem.value == newItem.value
+            }
         }
-    }
-) {
+    ) {
     private val adapterSelectedElement: AdapterSelectedElement by lazy {
         AdapterSelectedElement()
     }
@@ -47,7 +47,7 @@ ListAdapter<Map.Entry<String?, IntArray>, AdapterSelectedDevice.SelectedDeviceVi
         fun onBind(selectedDevice: Map.Entry<String?, IntArray>) {
             binding.apply {
                 val device = FlowSdk.deviceHandler().get(selectedDevice.key)
-                val selectedElements = arrayListOf<IoTElementInfo>()
+                val selectedElements = hashMapOf<Int, IoTElementInfo>()
                 device?.let {
                     txtLabel.text = device.label
                     val location = FlowSdk.locationHandler().get(device.locationId)
@@ -59,11 +59,11 @@ ListAdapter<Map.Entry<String?, IntArray>, AdapterSelectedDevice.SelectedDeviceVi
                         rvElm.adapter = adapterSelectedElement
                         device.elementInfos.forEach {
                             if (selectedDevice.value.contains(it.key)) {
-                                selectedElements.add(it.value)
+                                selectedElements[it.key] = it.value
                             }
                         }
                         adapterSelectedElement.submitList(
-                            selectedElements
+                            selectedElements.entries.toList()
                         )
                     }
                 }
@@ -90,31 +90,31 @@ ListAdapter<Map.Entry<String?, IntArray>, AdapterSelectedDevice.SelectedDeviceVi
         return SelectedDeviceViewHolder(inflater)
     }
 
-    inner class AdapterSelectedElement()
-        : ListAdapter<IoTElementInfo, AdapterSelectedElement.SelectedElementViewHolder>(
-        object : DiffUtil.ItemCallback<IoTElementInfo>() {
-            override fun areItemsTheSame(
-                oldItem: IoTElementInfo,
-                newItem: IoTElementInfo
-            ): Boolean {
-                return oldItem.label == newItem.label
-            }
-
-            override fun areContentsTheSame(
-                oldItem: IoTElementInfo,
-                newItem: IoTElementInfo
-            ): Boolean {
-                return oldItem.label == newItem.label
-            }
-
+    inner class AdapterSelectedElement() : ListAdapter<
+            Map.Entry<Int, IoTElementInfo>,
+            AdapterSelectedElement.SelectedElementViewHolder
+            >(object : DiffUtil.ItemCallback<Map.Entry<Int, IoTElementInfo>>() {
+        override fun areItemsTheSame(
+            oldItem: Map.Entry<Int, IoTElementInfo>,
+            newItem: Map.Entry<Int, IoTElementInfo>
+        ): Boolean {
+            return oldItem.key == newItem.key && oldItem.value.label == newItem.value.label
         }
-    ) {
+
+        override fun areContentsTheSame(
+            oldItem: Map.Entry<Int, IoTElementInfo>,
+            newItem: Map.Entry<Int, IoTElementInfo>
+        ): Boolean {
+            return oldItem.key == newItem.key && oldItem.value.label == newItem.value.label
+        }
+    }
+            ) {
         inner class SelectedElementViewHolder(
             private val binding: LayoutItemElementBinding
-        ): RecyclerView.ViewHolder(binding.root) {
-            fun bind(element: IoTElementInfo) {
+        ) : RecyclerView.ViewHolder(binding.root) {
+            fun bind(element: Map.Entry<Int, IoTElementInfo>) {
                 binding.apply {
-                    txtLabel.text = element.label
+                    txtLabel.text = element.value.label ?: "Nút ${element.key}"
                 }
             }
         }
@@ -122,7 +122,7 @@ ListAdapter<Map.Entry<String?, IntArray>, AdapterSelectedDevice.SelectedDeviceVi
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-        ):  SelectedElementViewHolder {
+        ): SelectedElementViewHolder {
             val inflater = LayoutItemElementBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,

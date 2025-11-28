@@ -6,7 +6,7 @@ import com.example.thingsflow.module.define.TFModelConfigZigbeeDevice
 import com.example.thingsflow.module.repository.RepoConfigZigbee
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.callback.RequestCallback
+import rogo.iot.module.base.callback.RequestResultCallback
 import rogo.iot.module.rogocore.sdk.callback.CheckDeviceAvailableCallback
 import rogo.iot.module.rogocore.sdk.callback.PairZigbeeDeviceCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
@@ -26,7 +26,7 @@ class VMConfigZigbee
     fun isGatewayAvailable(
         gatewayId: String,
         scanningTime: Int,
-        callback: RequestCallback<Boolean>
+        callback: RequestResultCallback<Boolean>
     ) {
         viewModelScope.launch {
             repo.isGatewayAvailable(
@@ -86,7 +86,7 @@ class VMConfigZigbee
         label: String,
         groupId: String?= null,
         deviceSubType: Int,
-        callback: RequestCallback<IoTDevice>
+        callback: RequestResultCallback<IoTDevice>
     ) {
         viewModelScope.launch {
             repo.syncDeviceToCloud(

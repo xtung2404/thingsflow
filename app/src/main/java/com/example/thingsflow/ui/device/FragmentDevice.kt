@@ -1,10 +1,6 @@
 package com.example.thingsflow.ui.device
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
@@ -19,11 +15,9 @@ import com.example.thingsflow.ui.adapter.AdapterDevices
 import com.example.thingsflow.ui.adapter.AdapterGroupHorizontal
 import com.example.thingsflow.ui.adapter.AdapterSpinnerLocation
 import com.example.thingsflow.ui.dialog.DialogDeviceType
-import com.google.android.material.navigation.NavigationBarView
 import dagger.hilt.android.AndroidEntryPoint
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.define.IoTDeviceType
-import rogo.iot.module.rogocore.sdk.SmartSdk
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.rogocore.sdk.entity.IoTGroup
 
 @AndroidEntryPoint
@@ -58,14 +52,6 @@ class FragmentDevice : FragmentBase<FragmentDeviceBinding>() {
         })
     }
 
-    private val adapterDevices: AdapterDevices by lazy {
-        AdapterDevices(
-            onDeviceSelected = { uuid, elm ->
-                val bundle = bundleOf("device" to uuid)
-                findNavController().navigate(R.id.fragmentDeviceDetail, bundle)
-            }
-        )
-    }
     override fun initVariable() {
         super.initVariable()
         binding.apply {

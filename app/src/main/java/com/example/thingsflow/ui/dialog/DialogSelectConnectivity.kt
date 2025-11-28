@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.DialogSelectConnectivityBinding
 import com.example.thingsflow.ui.adapter.AdapterConnectivity
-import rogo.iot.module.platform.entity.IoTNetworkConnectivity
+import rogo.iot.module.base.entity.IoTNetworkConnectivity
 import rogo.iot.module.rogocore.sdk.define.IoTConnectivity
 
 class DialogSelectConnectivity(

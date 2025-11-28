@@ -7,33 +7,22 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
-import com.example.thingsflow.databinding.FragmentIdentifyDeviceBinding
 import com.example.thingsflow.databinding.FragmentSelectZigbeeGatewayBinding
-import com.example.thingsflow.module.viewmodel.VMConfigWileDirect
 import com.example.thingsflow.module.viewmodel.VMConfigZigbee
 import com.example.thingsflow.module.viewmodel.VMLocation
 import com.example.thingsflow.ui.FragmentBase
-import com.example.thingsflow.ui.adapter.AdapterDevices
-import com.example.thingsflow.ui.adapter.AdapterDiscoveredDevices
 import com.example.thingsflow.ui.adapter.AdapterGateway
 import com.example.thingsflow.ui.adapter.AdapterSpinnerLocation
 import com.example.thingsflow.ui.dialog.showDialogLoadingWithAnimation
-import com.example.thingsflow.utils.ScanningIoTDeviceCallback
-import com.example.thingsflow.utils.getFragmentLabel
-import com.google.android.material.navigation.NavigationBarView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.callback.RequestCallback
-import rogo.iot.module.platform.define.IoTDeviceType
-import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.callback.RequestResultCallback
+import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.rogocore.sdk.SmartSdk
-import rogo.iot.module.rogocore.sdk.callback.CheckDeviceAvailableCallback
-import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 
@@ -122,8 +111,8 @@ class FragmentSelectZigbeeGateway : FragmentBase<FragmentSelectZigbeeGatewayBind
                     vmConfigZigbee.isGatewayAvailable(
                         it,
                         8,
-                        object : RequestCallback<Boolean> {
-                            override fun onSuccess(p0: Boolean?) {
+                        object : RequestResultCallback<Boolean> {
+                            override fun onResult(p0: Boolean?) {
                                 CoroutineScope(Dispatchers.Main).launch {
                                     loadingDialog.dismiss()
                                     if (p0 == true) {
@@ -136,9 +125,9 @@ class FragmentSelectZigbeeGateway : FragmentBase<FragmentSelectZigbeeGatewayBind
                                 }
                             }
 
-                            override fun onFailure(p0: Int, p1: String?) {
+                            override fun onError(p0: Int) {
                                 loadingDialog.dismiss()
-                                ILogR.D(TAG, "isGatewayAvailabel:onFailure", p0, p1)
+                                ILogR.D(TAG, "isGatewayAvailabel:onFailure", p0)
                             }
                         }
                     )

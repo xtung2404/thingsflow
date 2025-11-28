@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemConnectivityBinding
-import com.example.thingsflow.databinding.LayoutItemLocationManagementBinding
-import rogo.iot.module.platform.entity.IoTElementInfo
-import rogo.iot.module.platform.entity.IoTNetworkConnectivity
+import rogo.iot.module.base.entity.IoTNetworkConnectivity
 
 class AdapterConnectivity(
     private val onItemClick: (Int) -> Unit

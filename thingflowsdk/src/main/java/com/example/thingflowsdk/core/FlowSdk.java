@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.example.thingflowsdk.core.handler.FlowHandler;
 
+import rogo.iot.module.base.ILogR;
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback;
-import rogo.iot.module.platform.ILogR;
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback;
 import rogo.iot.module.rogocore.sdk.entity.IoTProductModel;
 import rogo.iot.module.rogocore.sdk.handler.ConfigWileDirectDeviceHandler;

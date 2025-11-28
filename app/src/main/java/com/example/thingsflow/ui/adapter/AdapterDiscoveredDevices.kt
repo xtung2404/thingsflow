@@ -7,24 +7,24 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.databinding.LayoutItemDiscoveredDeviceBinding
-import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
+import rogo.iot.module.base.entity.IoTModelSmartConfig
 import rogo.iot.module.rogocore.sdk.SmartSdk
 
 class AdapterDiscoveredDevices(
-    private val onItemSelected: (IoTDirectDeviceInfo) -> Unit
+    private val onItemSelected: (IoTModelSmartConfig) -> Unit
 ):
-ListAdapter<IoTDirectDeviceInfo, AdapterDiscoveredDevices.DiscoveredDevicesViewHolder>(
-    object : DiffUtil.ItemCallback<IoTDirectDeviceInfo>() {
+ListAdapter<IoTModelSmartConfig, AdapterDiscoveredDevices.DiscoveredDevicesViewHolder>(
+    object : DiffUtil.ItemCallback<IoTModelSmartConfig>() {
         override fun areItemsTheSame(
-            oldItem: IoTDirectDeviceInfo,
-            newItem: IoTDirectDeviceInfo
+            oldItem: IoTModelSmartConfig,
+            newItem: IoTModelSmartConfig
         ): Boolean {
             return oldItem.mac == newItem.mac && oldItem.label.contentEquals(newItem.label)
         }
 
         override fun areContentsTheSame(
-            oldItem: IoTDirectDeviceInfo,
-            newItem: IoTDirectDeviceInfo
+            oldItem: IoTModelSmartConfig,
+            newItem: IoTModelSmartConfig
         ): Boolean {
             return oldItem.mac == newItem.mac
         }
@@ -33,7 +33,7 @@ ListAdapter<IoTDirectDeviceInfo, AdapterDiscoveredDevices.DiscoveredDevicesViewH
     inner class DiscoveredDevicesViewHolder(
         private val binding: LayoutItemDiscoveredDeviceBinding
     ): RecyclerView.ViewHolder(binding.root) {
-        fun onBind(device: IoTDirectDeviceInfo) {
+        fun onBind(device: IoTModelSmartConfig) {
             binding.apply {
                 txtLabel.text = SmartSdk.getProductModel(device.productId).name
                 imgCheck.visibility = View.GONE

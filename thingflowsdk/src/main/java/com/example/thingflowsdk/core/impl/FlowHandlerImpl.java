@@ -3,11 +3,8 @@ package com.example.thingflowsdk.core.impl;
 import com.example.thingflowsdk.core.handler.FlowHandler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
-import rogo.iot.module.flowcommon.FlowBinding;
+import rogo.iot.module.base.ILogR;
 import rogo.iot.module.flowcommon.box.FBox;
 import rogo.iot.module.flowcommon.box.action.FBoxAction;
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice;
@@ -15,13 +12,9 @@ import rogo.iot.module.flowcommon.box.event.FBoxEvent;
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice;
 import rogo.iot.module.flowcommon.type.FTypeAction;
 import rogo.iot.module.flowcommon.type.FTypeEvent;
-import rogo.iot.module.platform.ILogR;
 import rogo.iot.module.platform.feature.IoTFeature;
-import rogo.iot.module.platform.invoking.IoTInvokingParam;
 import rogo.iot.module.platform.invoking.IoTInvokingProperty;
-import rogo.iot.module.platform.invoking.IoTInvokingPropertyType;
 import rogo.iot.module.rogocore.sdk.SmartSdk;
-import rogo.iot.module.rogocore.sdk.callback.FeatureMethodRequestCallback;
 import rogo.iot.module.rogocore.sdk.callback.FeatureRequestCallback;
 import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback;
 

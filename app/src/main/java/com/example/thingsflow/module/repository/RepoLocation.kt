@@ -1,8 +1,7 @@
 package com.example.thingsflow.module.repository
 
 import com.example.thingflowsdk.core.FlowSdk
-import rogo.iot.module.platform.callback.RequestCallback
-import rogo.iot.module.rogocore.sdk.SmartSdk
+import rogo.iot.module.base.callback.RequestResultCallback
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 import javax.inject.Inject
 
@@ -14,7 +13,7 @@ class RepoLocation @Inject constructor() {
     fun createLocation(
         label: String,
         type: String,
-        callback: RequestCallback<IoTLocation>
+        callback: RequestResultCallback<IoTLocation>
     ) {
         handler.createLocation(
             label,
@@ -26,7 +25,7 @@ class RepoLocation @Inject constructor() {
     fun editLocation(
         ioTLocation: IoTLocation,
         label: String,
-        callback: RequestCallback<IoTLocation>
+        callback: RequestResultCallback<IoTLocation>
     ) {
         handler.updateLocation(
             ioTLocation.uuid,
@@ -38,7 +37,7 @@ class RepoLocation @Inject constructor() {
 
     fun deleteLocation(
         uuid: String,
-        callback: RequestCallback<Boolean>
+        callback: RequestResultCallback<Boolean>
     ) {
         handler.delete(
             uuid,

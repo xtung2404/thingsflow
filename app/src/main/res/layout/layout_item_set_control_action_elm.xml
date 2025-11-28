@@ -22,7 +22,6 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_body2"
             android:textStyle="bold"
-            android:text="cong tac"
             android:maxLines="1"
             android:ellipsize="end"/>
         <include layout="@layout/layout_control_on_off"

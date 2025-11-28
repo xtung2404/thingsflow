@@ -13,7 +13,11 @@ import com.example.thingsflow.ui.adapter.AdapterDevices
 import com.example.thingsflow.utils.getAttrLabel
 import com.example.thingsflow.utils.getDeviceTypeLabel
 import com.example.thingsflow.utils.getSupportedDeviceType
-import rogo.iot.module.platform.define.IoTDeviceType
+import okhttp3.internal.notify
+import rogo.iot.module.base.define.IoTDeviceType
+import rogo.iot.module.flowcommon.box.FBox
+import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
+import rogo.iot.module.flowcommon.type.FTypeAction
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 
 /**
@@ -40,40 +44,25 @@ class OverlaySelectDevice(
         }
     }
 
-    // selectedDeviceId is to store uuid of selected device
-    private var selectedDeviceId: String? = null
+    private var selectedDeviceMap: HashMap<String?, IntArray> = hashMapOf()
 
-    // selectedElms is to store selected elements of selected devices
-    private var selectedElms: IntArray = intArrayOf()
-
-    // selectedElms is to store selected type of device
     private var selectedDevType: Int = IoTDeviceType.ALL
 
     // selectedElms is to store selected attributes
     private var selectedAttrs: IntArray = intArrayOf()
 
     private val originalDevList: MutableList<IoTDevice> = mutableListOf()
+
     // adapter for select attributes
-    private val adapterDevices: AdapterDevices by lazy {
-        AdapterDevices(
-            onDeviceSelected = { devId, elms ->
-                selectedDeviceId = devId
-                selectedElms = elms
-            }
-        )
-    }
+    private lateinit var adapterDevices: AdapterDevices
 
     override fun onViewCreated(binding: LayoutOverlaySelectDeviceBinding) {
         binding.apply {
-            rvDevice.adapter = adapterDevices
-
             btnBack.setOnClickListener {
                 onClose.invoke()
             }
 
             btnSave.setOnClickListener {
-                val selectedDeviceMap = hashMapOf<String?, IntArray>()
-                selectedDeviceMap[selectedDeviceId] = selectedElms
                 onDevicesSelected.invoke(
                     selectedDevType,
                     selectedAttrs,
@@ -98,39 +87,64 @@ class OverlaySelectDevice(
                 // Compare by label
                 dev.label?.contains(query, ignoreCase = true) == true ||
                         // Compare by devType (only if input is a number and a supported type)
-                        (queryAsInt != null && supportedDeviceTypes.contains(queryAsInt) && dev.devType == queryAsInt)
+                        (queryAsInt != null && supportedDeviceTypes.contains(queryAsInt) && if (selectedDevType == IoTDeviceType.ALL) true else dev.devType == selectedDevType)
             }
         }
         adapterDevices.submitList(filteredList)
     }
 
 
-    fun show(devType: Int?, attrs: IntArray?) {
+    fun show(currentBoxType: Int?, devType: Int?, attrs: IntArray?) {
         super.show()
         binding.apply {
-            originalDevList.clear()
-            selectedDeviceId = null
-            selectedElms = intArrayOf()
+            when (currentBoxType) {
+                FTypeAction.ACT_CONTROL_DEVICE -> {
+                    adapterDevices = AdapterDevices(
+                        isAllowedToSelectOneDevice = false,
+                        onDevicesSelected = { devMap ->
+                            selectedDeviceMap = devMap
+                        }
+                    )
+                }
+                else -> {
+                    adapterDevices = AdapterDevices(
+                        isAllowedToSelectOneDevice = true,
+                        onDevicesSelected = { devMap ->
+                            selectedDeviceMap = devMap
+                        }
+                    )
+                }
+            }
 
-            selectedDevType = devType?: IoTDeviceType.ALL
+            rvDevice.adapter = adapterDevices
+
+            selectedDeviceMap.clear()
+            originalDevList.clear()
+            adapterDevices.submitList(originalDevList)
+
+            selectedDevType = devType ?: IoTDeviceType.ALL
             selectedAttrs = attrs ?: intArrayOf()
 
             txtDevType.text = getDeviceTypeLabel(context, selectedDevType)
-            txtAttr.text = if (selectedAttrs.isNotEmpty()) getAttrLabel(context, selectedAttrs[0]) else ""
+            txtAttr.text =
+                if (selectedAttrs.isNotEmpty()) getAttrLabel(context, selectedAttrs[0]) else ""
             if (selectedAttrs.isNotEmpty()) {
                 txtAttr.text = getAttrLabel(context, selectedAttrs[0])
             }
             val filteredDevices = vmDevice?.getUserDevices()
                 ?.asSequence() // Use sequence for better performance on large lists
                 ?.filter { dev ->
-                    (selectedDevType == IoTDeviceType.ALL || dev.devType == selectedDevType) &&
-                            (selectedAttrs.isEmpty() || dev.features?.any { it in selectedAttrs } == true)
+                    if (selectedDevType != IoTDeviceType.ALL) {
+                        dev.devType == selectedDevType
+                    } else {
+                        true
+                    }
                 }
                 ?.distinct() // Ensure unique devices if they match multiple attributes
                 ?.toList() ?: emptyList()
 
             originalDevList.addAll(filteredDevices)
-            adapterDevices.submitList(originalDevList)
+            adapterDevices.notifyDataSetChanged()
         }
     }
 }

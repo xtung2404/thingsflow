@@ -14,9 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import rogo.iot.module.platform.ILogR
-import rogo.iot.module.platform.callback.RequestCallback
-import rogo.iot.module.platform.entity.IoTDirectDeviceInfo
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.callback.RequestResultCallback
+import rogo.iot.module.base.entity.IoTModelSmartConfig
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import rogo.iot.module.rogocore.sdk.entity.IoTGroup
@@ -27,7 +27,7 @@ class FragmentConfigGateway : FragmentBase<FragmentConfigGatewayBinding>() {
         get() = R.layout.fragment_config_gateway
 
     private val TAG = "FragmentSetDeviceLabel"
-    private var identifiedDevice: IoTDirectDeviceInfo?= null
+    private var identifiedDevice: IoTModelSmartConfig?= null
     private var selectedGroup: String?= null
     private val vmConfigWileDirect by activityViewModels<VMConfigWileDirect>()
     private val vmGroup by activityViewModels<VMGroup>()
@@ -75,15 +75,15 @@ class FragmentConfigGateway : FragmentBase<FragmentConfigGatewayBinding>() {
                     edtLabel.text.toString(),
                     selectedGroup,
                     SmartSdk.getProductModel(identifiedDevice?.productId).devSubType,
-                    object : RequestCallback<IoTDevice> {
-                        override fun onSuccess(p0: IoTDevice?) {
+                    object : RequestResultCallback<IoTDevice> {
+                        override fun onResult(p0: IoTDevice?) {
                             CoroutineScope(Dispatchers.Main).launch {
                                 dialogLoading?.dismiss()
                                 findNavController().navigate(R.id.fragmentDevice)
                             }
                         }
 
-                        override fun onFailure(p0: Int, p1: String?) {
+                        override fun onError(p0: Int) {
 
                         }
                     }

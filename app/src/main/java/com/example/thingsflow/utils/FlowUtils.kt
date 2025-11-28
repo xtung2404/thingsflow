@@ -3,13 +3,9 @@ package com.example.thingsflow.utils
 import android.content.Context
 import android.view.View
 import com.example.thingsflow.R
-import rogo.iot.module.flowcommon.box.FBox
-import rogo.iot.module.flowcommon.box.event.FBoxEvent
-import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
-import rogo.iot.module.flowcommon.box.event.FBoxEventMqtt
+import rogo.iot.module.base.define.IoTAttribute
+import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.flowcommon.type.FTypeEvent
-import rogo.iot.module.platform.define.IoTAttribute
-import rogo.iot.module.platform.define.IoTDeviceType
 
 
 fun View.show() {

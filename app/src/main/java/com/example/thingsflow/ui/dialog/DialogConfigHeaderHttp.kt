@@ -5,7 +5,7 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.DialogConfigHeaderHttpBinding
 import com.example.thingsflow.module.define.TFItemHeader
 import com.example.thingsflow.ui.adapter.AdapterHeader
-import rogo.iot.module.platform.ILogR
+import rogo.iot.module.base.ILogR
 
 class DialogConfigHeaderHttp(
     context: Context,

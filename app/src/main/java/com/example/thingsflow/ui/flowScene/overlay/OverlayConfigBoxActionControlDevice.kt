@@ -10,15 +10,13 @@ import com.example.thingsflow.ui.adapter.AdapterSelectedDevice
 import com.example.thingsflow.ui.adapter.AdapterSpinnerControlAction
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.utils.getControlableDeviceType
-import com.example.thingsflow.utils.getOnOffDeviceType
-import com.example.thingsflow.utils.getOpenCloseDeviceType
-import com.example.thingsflow.utils.getSupportedDeviceType
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
-import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
+import rogo.iot.module.base.define.IoTAttribute
+import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
-import rogo.iot.module.platform.define.IoTAttribute
+//import rogo.iot.module.base.define.IoTAttribute
 
 /**
  * @file: This overlay is used to configure a box action control device(FBoxActionControlDevice)
@@ -193,6 +191,14 @@ class OverlayConfigBoxActionControlDevice(
         }
     }
 
+    fun show(box: FBox?) {
+        binding.apply {
+            if (box is FBoxActionControlDevice) {
+//                inititialize(box.devType, box.elms)
+            }
+        }
+    }
+
     fun show(devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) {
         super.show()
         binding.apply {
@@ -209,6 +215,12 @@ class OverlayConfigBoxActionControlDevice(
                 rvDevices.adapter = adapterSelectedDevices
                 adapterSelectedDevices.submitList(selectedDevices.entries.toList())
             }
+        }
+    }
+
+    private fun inititialize(devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) {
+        binding.apply {
+
         }
     }
 }

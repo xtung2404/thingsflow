@@ -14,6 +14,7 @@ import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectDevice
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySetControlDevice
 import com.example.thingsflow.utils.FTypeBox
+import rogo.iot.module.base.ILogR
 import rogo.iot.module.flowcommon.type.FTypeAction
 import rogo.iot.module.flowcommon.type.FTypeEvent
 
@@ -47,11 +48,19 @@ fun FragmentFlowScenario.handleOverlaySelectDevice() {
         requireActivity(),
         binding.overlayContainer,
         onDevicesSelected = { devType, attrs, devMap ->
+            ILogR.D(TAG, "overlaySelectDevice:onDevicesSelected ", devMap.size)
+            devMap.forEach {
+                ILogR.D(TAG, "overlaySelectDevice:selectedDevInfo ", it.key, it.value.toString())
+            }
             if (devMap.isNotEmpty()) {
                 overlaySelectDevice.hide()
                 when (currentBoxType) {
                     FTypeAction.ACT_CONTROL_DEVICE -> {
                         overlaySetControlDevice.show(attrs, devMap)
+                    }
+
+                    FTypeEvent.EVT_FROM_DEVICE -> {
+                        overlayConfigBoxEventFromDevice.show(devType, attrs, devMap)
                     }
 
                     FTypeAction.ACT_CONDITION_DEVICE -> {
@@ -186,6 +195,9 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxEventFromDevice() {
     overlayConfigBoxEventFromDevice = OverlayConfigBoxEventFromDevice(
         requireActivity(),
         binding.overlayContainer,
+        onSelectDevice = { devType, attrs ->
+            overlaySelectDevice.show(currentBoxType, devType, attrs)
+        },
         onBoxEventCreated = {
             overlayConfigBoxEventFromDevice.hide()
             vmFlowScenario.boxes.value?.clear()
@@ -234,7 +246,7 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionControlDevice() {
         binding.overlayContainer,
         onSelectDevice = { devType, attrs ->
             overlayConfigBoxActionControlDevice.hide()
-            overlaySelectDevice.show(devType, attrs)
+            overlaySelectDevice.show(currentBoxType, devType, attrs)
         },
         onBoxActionControlDeviceCreated = {
             overlayConfigBoxActionControlDevice.hide()
@@ -311,7 +323,7 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionConditionDeviceStat
             binding.overlayContainer,
             // triggered when user select a specific device as a input(based on device type and attributes)
             onSelectDevice = { devType, attrs ->
-                overlaySelectDevice.show(devType, attrs)
+                overlaySelectDevice.show(currentBoxType, devType, attrs)
             },
             // triggered when the new input is setted
             onInputSetted = { devType, attrs, devMap ->

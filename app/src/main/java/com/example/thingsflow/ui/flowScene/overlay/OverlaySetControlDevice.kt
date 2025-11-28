@@ -13,7 +13,7 @@ import com.example.thingsflow.databinding.LayoutItemSetControlActionSingleBindin
 import com.example.thingsflow.databinding.LayoutOverlaySetControlDeviceBinding
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.utils.show
-import rogo.iot.module.platform.define.IoTAttribute
+import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.platform.entity.IoTElementInfo
 
 /**
@@ -94,7 +94,7 @@ class OverlaySetControlDevice(
             private const val TYPE_SINGLE = 0
             private const val TYPE_GRID = 1
         }
-
+        private var actionMap: HashMap<String?, HashMap<Int, IntArray>> = hashMapOf()
         private lateinit var adapterControlElement: AdapterControlElement
         inner class SingleViewHolder(private val binding: LayoutItemSetControlActionSingleBinding) :
             RecyclerView.ViewHolder(binding.root) {
@@ -108,6 +108,15 @@ class OverlaySetControlDevice(
                             txtLocation.text = loc.label
                         }
                     }
+
+                    lnControlOnOff.btnOn.setOnClickListener {
+
+                    }
+
+                    lnControlOnOff.btnOn.setOnClickListener {
+
+                    }
+
                     when(action) {
                         IoTAttribute.ACT_ONOFF -> {
                             lnControlOnOff.root.show()
@@ -215,7 +224,7 @@ class OverlaySetControlDevice(
                 RecyclerView.ViewHolder(binding.root) {
                 fun onBind(elmInfo: MutableMap.MutableEntry<Int, IoTElementInfo>) {
                     binding.apply {
-                        txtLabel.text = elmInfo.value.label
+                        txtLabel.text = elmInfo.value.label?: "Nuts ${elmInfo.key}"
                         when(action) {
                             IoTAttribute.ACT_ONOFF -> lnControlOnOff.root.show()
                         }
