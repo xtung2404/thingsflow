@@ -10,6 +10,7 @@ import rogo.iot.module.flowcommon.box.action.FBoxAction;
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice;
 import rogo.iot.module.flowcommon.box.event.FBoxEvent;
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice;
+import rogo.iot.module.flowcommon.type.FBoxType;
 import rogo.iot.module.flowcommon.type.FTypeAction;
 import rogo.iot.module.flowcommon.type.FTypeEvent;
 import rogo.iot.module.platform.feature.IoTFeature;
@@ -130,7 +131,7 @@ public class FlowHandlerImpl implements FlowHandler {
                 targetId.add(i, boxTargetId);
             }
             if (eventBoxes.get(i) instanceof FBoxEventDevice) {
-                evtTypes.add(i, FTypeEvent.EVT_FROM_DEVICE);
+                evtTypes.add(i, FBoxType.EVT_FROM_DEVICE);
             }
         }
         SmartSdk.featureHandler().runFeatureMethod(
@@ -190,7 +191,7 @@ public class FlowHandlerImpl implements FlowHandler {
             actPosSegIds.add(i, (((FBoxAction) boxes.get(i)).getPositiveSegId()));
             actNegSegIds.add(i, (((FBoxAction) boxes.get(i)).getNegativeSegId()));
             if (boxes.get(i) instanceof FBoxActionControlDevice) {
-                actTypes.add(i, FTypeAction.ACT_CONTROL_DEVICE);
+                actTypes.add(i, FBoxType.ACT_CONTROL_DEVICE);
                 actDatas.add(i, null);
             }
         }

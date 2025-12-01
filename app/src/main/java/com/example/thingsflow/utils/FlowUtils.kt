@@ -2,10 +2,14 @@ package com.example.thingsflow.utils
 
 import android.content.Context
 import android.view.View
+import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
+import com.example.thingsflow.module.define.TFInputType
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.base.define.IoTDeviceType
-import rogo.iot.module.flowcommon.type.FTypeEvent
+import rogo.iot.module.flowcommon.box.FBox
+import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
+import rogo.iot.module.flowcommon.type.FBoxType
 
 
 fun View.show() {
@@ -23,7 +27,7 @@ fun View.invisible() {
 
 
 fun getSupportedBoxEvent(): List<Int> = listOf(
-    FTypeEvent.EVT_FROM_DEVICE
+    FBoxType.EVT_FROM_DEVICE
 )
 
 fun getControlableDeviceType(attr: Int): List<Int> {
@@ -95,7 +99,7 @@ fun getSupportedAttribue(): List<Int> = listOf(
 )
 fun getBoxEventTypeLabel(context: Context, type: Int): String =
     when(type) {
-        FTypeEvent.EVT_FROM_DEVICE ->  context.resources.getString(R.string.event_from_device)
+        FBoxType.EVT_FROM_DEVICE ->  context.resources.getString(R.string.event_from_device)
         else -> ""
     }
 
@@ -103,3 +107,4 @@ fun getSupportedBoxType(): List<Int> = listOf(
     FTypeBox.TYPE_BOX_ACTION,
     FTypeBox.TYPE_BOX_CONDITION
 )
+

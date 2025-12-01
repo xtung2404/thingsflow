@@ -30,7 +30,7 @@ import kotlin.math.ln
  * @param onInputSetted: triggered when user configed input successfully
  * @param onClose: triggered when hide the overlay
  */
-class  OverlayConfigInputBoxActionConditionDeviceState(
+class OverlayConfigInputBoxActionConditionDeviceState(
     context: Context,
     container: ViewGroup,
     private val onSelectDevice: (devType: Int?, attrs: IntArray?) -> Unit,

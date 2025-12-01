@@ -246,11 +246,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     ILogR.D(TAG, "onAddBoxClicked:fBoxId ", box.id)
                     this@FragmentFlowScenario.newSegType = newSegType
                     overlaySelectBoxType.show()
-                    when (box) {
-                        is FBoxAction -> {
-                            vmFlowScenario.setRootBoxId(box.id)
-                        }
-                    }
+                    vmFlowScenario.setRootBoxId(box.id)
                 }
 
                 override fun onRemoveBoxClicked(box: FBox) {

@@ -24,7 +24,9 @@
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"/>
-        <include layout="@layout/layout_control_on_off"
+        <com.example.thingsflow.ui.customview.ViewControlOnOff
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/ln_control_on_off"/>
     </LinearLayout>
 </layout>

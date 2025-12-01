@@ -3,9 +3,10 @@ package com.example.thingsflow.ui.flowScene.overlay
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxEventFromDeviceBinding
+import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterAttributes
 import com.example.thingsflow.ui.adapter.AdapterSelectedDevice
@@ -15,6 +16,7 @@ import com.example.thingsflow.utils.getSupportedAttribue
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
+import rogo.iot.module.base.ILogR
 import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
@@ -39,6 +41,13 @@ class OverlayConfigBoxEventFromDevice(
     container,
     LayoutOverlayConfigBoxEventFromDeviceBinding::inflate
 ) {
+    private val vmFlowScenario: VMFlowScenario? by lazy {
+        viewModelOwner?.let {
+            ViewModelProvider(it)[VMFlowScenario::class.java]
+        }
+    }
+    private val TAG = "OverlayConfigBoxEventFromDevice"
+
     // hashmap to check whether attributes is selected or not
     //key: information of attribure. first: attribure, second: label of attribute
     //value: is attribute selected
@@ -85,42 +94,35 @@ class OverlayConfigBoxEventFromDevice(
 
     override fun onViewCreated(binding: LayoutOverlayConfigBoxEventFromDeviceBinding) {
         binding.apply {
-            setUpInitialState()
-            setUpAdapters()
-            initAction()
+
         }
     }
 
-    private fun setUpInitialState() {
+    override fun initVariable() {
+        super.initVariable()
+        selectedDeviceMap.clear()
+    }
+
+    override fun initUI() {
+        super.initUI()
         binding.apply {
-            selectedDeviceMap.clear()
+            setUIDevicesSelected(isSelected = false)
             tabLayoutEvtDevice.getTabAt(0)?.select()
-            //reset layout to default, always choose later
-            cbLater.isChecked = true
-            btnSelectDevice.isEnabled = false
-            lnEmptyDevices.visibility = View.VISIBLE
-            lnDevices.visibility = View.GONE
-        }
-    }
 
-    private fun setUpAdapters() {
-        binding.apply {
+            // set up adapters
             spinnerDeviceType.adapter = adapterSpinnerDeviceType
             rvAttr.adapter = adapterAttributes
             rvDevices.adapter = adapterSelectedDevices
             adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
 
             // map every attribute to its label and set it to false(or unselected)
-            attrMap = getSupportedAttribue()
-                .map { (it to getAttrLabel(context, it)) to false }
-                .toMap()
-                .toMutableMap()
+            attrMap =
+                getSupportedAttribue().associate {
+                    (it to getAttrLabel(context, it)) to false
+                }.toMutableMap()
             adapterAttributes.submitList(attrMap.entries.toList())
-        }
-    }
 
-    private fun initAction() {
-        binding.apply {
+
             btnBack.setOnClickListener {
                 onClose.invoke(true)
             }
@@ -156,7 +158,11 @@ class OverlayConfigBoxEventFromDevice(
                     override fun onTabReselected(tab: TabLayout.Tab?) {}
                 }
             )
+        }
+    }
 
+    override fun initAction() {
+        binding.apply {
             btnCreateBox.setOnClickListener {
                 val fBox = FBoxEventDevice().apply {
                     devId = if (selectedDeviceMap.isNotEmpty()) selectedDeviceMap.keys.first() else ""
@@ -229,15 +235,6 @@ class OverlayConfigBoxEventFromDevice(
         }
     }
 
-    private fun getSelectedAttrs(): IntArray {
-        return attrMap.filter { it.value }.map { it.key.first }.toIntArray()
-    }
-
-    override fun show() {
-        super.show()
-        setUpInitialState()
-    }
-
     fun show(fBox: FBox?) {
         super.show()
         binding.apply {
@@ -245,7 +242,9 @@ class OverlayConfigBoxEventFromDevice(
             fBox?.let {
                 if (it is FBoxEventDevice) {
                     selectedDeviceMap.clear()
-                    selectedDeviceMap[it.devId] = it.elms
+                    if (it.devId.isNotEmpty()) {
+                        selectedDeviceMap[it.devId] = it.elms
+                    }
                     initialize(it.devType, it.attrTypes, selectedDeviceMap)
                 }
             }
@@ -261,22 +260,36 @@ class OverlayConfigBoxEventFromDevice(
 
     private fun initialize(devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>) {
         binding.apply {
+            ILogR.D(TAG, "initialize:size ", devMap.size)
             devType?.let {
                 val devTypePos = adapterSpinnerDeviceType.getPosition(it)
                 if (devTypePos != -1) {
                     spinnerDeviceType.setSelection(devTypePos)
                 }
             }
-            if (devMap.isNotEmpty()) {
-                lnEmptyDevices.gone()
-                lnDevices.show()
-                rvDevices.adapter = adapterSelectedDevices
-                adapterSelectedDevices.submitList(devMap.entries.toList())
-            } else {
-                cbLater.isChecked = true
-                cbSelectDevice.isChecked = false
-                lnEmptyDevices.show()
-                lnDevices.gone()
+            selectedDeviceMap = devMap
+            setUIDevicesSelected(selectedDeviceMap.isNotEmpty())
+        }
+    }
+
+    private fun getSelectedAttrs(): IntArray {
+        return attrMap.filter { it.value }.map { it.key.first }.toIntArray()
+    }
+
+    private fun setUIDevicesSelected(isSelected: Boolean) {
+        binding.apply {
+            cbLater.isChecked = !isSelected
+            btnSelectDevice.isEnabled = isSelected
+            when(isSelected) {
+                true -> {
+                    lnEmptyDevices.gone()
+                    lnDevices.show()
+                    adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
+                }
+                false -> {
+                    lnEmptyDevices.show()
+                    lnDevices.gone()
+                }
             }
         }
     }

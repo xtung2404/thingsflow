@@ -49,13 +49,16 @@
                     android:ellipsize="end"
                     android:layout_marginTop="@dimen/_space4dp"/>
             </LinearLayout>
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_forward"
-                android:padding="12dp"/>
+                android:padding="12dp"
+                android:src="@drawable/ic_up" />
         </LinearLayout>
-        <include layout="@layout/layout_control_on_off"
+        <com.example.thingsflow.ui.customview.ViewControlOnOff
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/ln_control_on_off"/>
 
     </LinearLayout>

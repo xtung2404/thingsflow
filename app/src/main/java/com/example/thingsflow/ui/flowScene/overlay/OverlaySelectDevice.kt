@@ -1,8 +1,6 @@
 package com.example.thingsflow.ui.flowScene.overlay
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
@@ -13,11 +11,8 @@ import com.example.thingsflow.ui.adapter.AdapterDevices
 import com.example.thingsflow.utils.getAttrLabel
 import com.example.thingsflow.utils.getDeviceTypeLabel
 import com.example.thingsflow.utils.getSupportedDeviceType
-import okhttp3.internal.notify
 import rogo.iot.module.base.define.IoTDeviceType
-import rogo.iot.module.flowcommon.box.FBox
-import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
-import rogo.iot.module.flowcommon.type.FTypeAction
+import rogo.iot.module.flowcommon.type.FBoxType
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 
 /**
@@ -98,7 +93,7 @@ class OverlaySelectDevice(
         super.show()
         binding.apply {
             when (currentBoxType) {
-                FTypeAction.ACT_CONTROL_DEVICE -> {
+                FBoxType.ACT_CONTROL_DEVICE -> {
                     adapterDevices = AdapterDevices(
                         isAllowedToSelectOneDevice = false,
                         onDevicesSelected = { devMap ->

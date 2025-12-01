@@ -45,6 +45,7 @@ class OverlayConfigBoxActionConditionGeneral(
     LayoutOverlayConfigBoxActionConditionGeneralBinding::inflate
 ) {
 
+    private var parentBoxId: String?= null
     override fun onViewCreated(binding: LayoutOverlayConfigBoxActionConditionGeneralBinding) {
         binding.apply {
             btnBack.setOnClickListener {

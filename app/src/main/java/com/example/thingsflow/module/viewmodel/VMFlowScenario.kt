@@ -3,6 +3,8 @@ package com.example.thingsflow.module.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.thingflowsdk.core.FlowSdk
+import com.example.thingsflow.module.define.TFInputType
 import com.example.thingsflow.module.repository.RepoFlowScenario
 import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.google.gson.Gson
@@ -12,6 +14,8 @@ import rogo.iot.module.flowcommon.box.action.FBoxAction
 import rogo.iot.module.flowcommon.box.event.FBoxEvent
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.define.IoTDeviceType
+import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,6 +48,8 @@ class VMFlowScenario
     fun setRootBoxId(id: String?) {
         rootBoxId = id
     }
+
+    fun getRootBoxId(): String?= rootBoxId
 
     /**
      * Configures a box before adding it to the list of boxes
@@ -114,6 +120,39 @@ class VMFlowScenario
         _boxes.value?.forEach {
             ILogR.D(TAG, "configBox:boxInfo", Gson().toJson(it))
         }
+    }
+
+    fun getInputsFromParentBox(box: FBox?): ArrayList<Pair<TFInputType, Int>> {
+        val availableInputs: ArrayList<Pair<TFInputType, Int>> = arrayListOf()
+        when(box) {
+            is FBoxEventDevice -> {
+                if (box.devType != IoTDeviceType.ALL) {
+                    availableInputs.add(Pair(TFInputType.DEVICE_TYPE, box.devType))
+                }
+
+                if (box.attrTypes.isNotEmpty()) {
+                    box.attrTypes.forEach {
+                        availableInputs.add(Pair(TFInputType.ATTRIBUTE, it))
+                    }
+                }
+
+                if (!box.devId.isNullOrEmpty()) {
+                    val device = FlowSdk.deviceHandler().get(box.devId)
+                    device?.let {
+                        it.features.forEach { feature ->
+                            availableInputs.add(Pair(TFInputType.PAYLOAD, feature))
+                        }
+                    }
+                }
+            }
+
+            is FBoxActionControlDevice -> {
+                if (box.devType != IoTDeviceType.ALL) {
+                    availableInputs.add(Pair(TFInputType.DEVICE_TYPE, box.devType))
+                }
+            }
+        }
+        return availableInputs
     }
 
 }

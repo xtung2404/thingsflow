@@ -10,6 +10,7 @@ import com.example.thingsflow.databinding.LayoutItemBoxActionTypeBinding
 import com.example.thingsflow.databinding.LayoutItemBoxEventTypeBinding
 import com.example.thingsflow.databinding.LayoutItemBoxTypeBinding
 import com.example.thingsflow.ui.adapter.AdapterBoxActionType.BoxActionTypeViewHolder
+import rogo.iot.module.flowcommon.type.FBoxType
 import rogo.iot.module.flowcommon.type.FTypeAction
 import rogo.iot.module.flowcommon.type.FTypeEvent
 
@@ -53,21 +54,21 @@ class AdapterBoxActionType(
         fun bindData(boxActionType: Int) {
             binding.apply {
                 when (boxActionType) {
-                    FTypeAction.ACT_CONTROL_DEVICE -> {
+                    FBoxType.ACT_CONTROL_DEVICE -> {
                         txtLabel.text = root.context.getString(R.string.control_device)
                         txtDesc.text = root.context.getString(R.string.config_control_one_device_or_a_group)
                     }
 
-                    FTypeAction.ACT_CALL_HTTP -> {
+                    FBoxType.ACT_CALL_HTTP -> {
                         txtLabel.text = root.context.getString(R.string.call_http)
                         txtDesc.text = root.context.getString(R.string.config_connection_through_api)
                     }
 
-                    FTypeAction.ACT_CONDITION_GENERAL -> {
+                    FBoxType.ACT_CONDITION_GENERAL -> {
                         txtLabel.text = root.context.getString(R.string.condition_general)
 
                     }
-                    FTypeAction.ACT_CONDITION_DEVICE -> {
+                    FBoxType.ACT_CONDITION_DEVICE -> {
                         txtLabel.text = root.context.getString(R.string.state_from_device)
 
                     }

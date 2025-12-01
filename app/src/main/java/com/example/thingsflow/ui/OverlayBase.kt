@@ -35,6 +35,9 @@ abstract class OverlayBase<VB: ViewBinding>(
             view = binding.root
             container.addView(view)
             onViewCreated(binding)
+            initVariable()
+            initUI()
+            initAction()
         }
         handleOverlayAnimation(isOpen = true)
     }
@@ -68,6 +71,17 @@ abstract class OverlayBase<VB: ViewBinding>(
     }
 
     protected abstract fun onViewCreated(binding: VB)
+
+    open fun initVariable() {
+
+    }
+    open fun initUI() {
+
+    }
+
+    open fun initAction() {
+
+    }
 
 
 }

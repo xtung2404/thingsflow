@@ -8,7 +8,9 @@ import com.example.thingflowsdk.core.define.TFComparision
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionDeviceStateBinding
 import com.example.thingsflow.module.define.TFInputSource
 import com.example.thingsflow.module.viewmodel.VMDevice
+import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
+import com.example.thingsflow.ui.adapter.AdapterInput
 import com.example.thingsflow.ui.adapter.AdapterSelectedDevice
 import com.example.thingsflow.ui.adapter.AdapterSpinnerComparision
 import com.example.thingsflow.ui.adapter.AdapterSpinnerInputSource
@@ -39,14 +41,22 @@ class OverlayConfigBoxActionConditionDeviceState(
     container,
     LayoutOverlayConfigBoxActionConditionDeviceStateBinding::inflate
 ) {
-    private val vmDevice: VMDevice? by lazy {
+    private val vmFlowScenario: VMFlowScenario? by lazy {
         viewModelOwner?.let {
-            ViewModelProvider(it)[VMDevice::class.java]
+            ViewModelProvider(it)[VMFlowScenario::class.java]
         }
     }
 
     private val adapterSelectedDevice: AdapterSelectedDevice by lazy {
         AdapterSelectedDevice()
+    }
+
+    private val adapterInput: AdapterInput by lazy {
+        AdapterInput(
+            onItemClicked = {
+
+            }
+        )
     }
 
     private val adapterSpinnerInputSource: AdapterSpinnerInputSource by lazy {
@@ -69,10 +79,23 @@ class OverlayConfigBoxActionConditionDeviceState(
     }
     override fun onViewCreated(binding: LayoutOverlayConfigBoxActionConditionDeviceStateBinding) {
         binding.apply {
+
+        }
+    }
+
+    override fun initVariable() {
+        super.initVariable()
+
+    }
+
+    override fun initUI() {
+        super.initUI()
+        binding.apply {
             txtDeviceType.text = ""
             txtAttr.text = ""
 
             rvSelectedDevices.adapter = adapterSelectedDevice
+            rvInputFromParentBox.adapter = adapterInput
             spinnerInputType.adapter = adapterSpinnerInputSource
             spinnerComparisionType.adapter = adapterSpinnerComparision
 
@@ -82,6 +105,14 @@ class OverlayConfigBoxActionConditionDeviceState(
 
             btnConfigInput.setOnClickListener {
                 onConfigInput.invoke()
+            }
+
+            btnOutputClose.setOnClickListener {
+                onClose.invoke(false)
+            }
+
+            btnClose.setOnClickListener {
+                onClose.invoke(false)
             }
 
 
@@ -116,35 +147,47 @@ class OverlayConfigBoxActionConditionDeviceState(
                     }
                 }
             )
+        }
+    }
 
+    override fun initAction() {
+        super.initAction()
+        binding.apply {
             btnCreateBox.setOnClickListener {
                 val fBox = FBoxActionConditionDeviceState().apply {
                     segId = "1"
                 }
                 onBoxActionCondtionDeviceStateCreated.invoke(fBox)
             }
-
-            btnOutputClose.setOnClickListener {
-                onClose.invoke(false)
-            }
-
-            btnClose.setOnClickListener {
-                onClose.invoke(false)
-            }
         }
+
     }
 
     override fun show() {
         super.show()
         binding.apply {
+            tabLayoutEvtDevice.getTabAt(0)?.select()
+            val parentBoxId = vmFlowScenario?.getRootBoxId()
+            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
+            parentBoxId?.let {
+                adapterInput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
+            }
             btnConfigInput.show()
             lnInputConfigured.gone()
+
         }
     }
 
     fun show(devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) {
         super.show()
         binding.apply {
+            val parentBoxId = vmFlowScenario?.getRootBoxId()
+            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
+            parentBoxId?.let {
+                adapterInput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
+            }
+
+
             btnConfigInput.gone()
             lnInputConfigured.show()
             devType?.let {
