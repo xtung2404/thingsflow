@@ -15,6 +15,8 @@ import com.example.thingsflow.ui.dialog.DialogDeviceList
 import com.example.thingsflow.utils.getAttrLabel
 import com.example.thingsflow.utils.getSupportedAttribue
 import com.example.thingsflow.utils.getSupportedDeviceType
+import com.example.thingsflow.utils.gone
+import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
 import rogo.iot.module.rogocore.sdk.SmartSdk
@@ -71,53 +73,31 @@ class OverlayConfigInputBoxActionConditionDeviceState(
 
     override fun onViewCreated(binding: LayoutOverlayConfigInputBoxActionConditionDeviceStateBinding) {
         binding.apply {
-            // set to select device later
             selectedDeviceMap.clear()
-            cbLater.isChecked = true
-            btnSelectDevice.isEnabled = false
-            lnEmptyDevices.visibility = View.VISIBLE
-            lnDevices.visibility = View.GONE
+            setUIDevicesSelected(isSelected = false)
+        }
+    }
 
+    override fun initVariable() {
+        super.initVariable()
+
+    }
+
+    override fun initUI() {
+        super.initUI()
+        binding.apply {
             //bind adapter to recyclerview and spinner
             rvAttr.adapter = adapterAttributes
             spinnerDeviceType.adapter = adapterSpinnerDeviceType
 
             // map every attribute to its label and set it to false(or unselected)
-            attrMap = getSupportedAttribue()
-                .map { (it to getAttrLabel(context, it)) to false }
-                .toMap()
-                .toMutableMap()
+            attrMap =
+                getSupportedAttribue().associate { (it to getAttrLabel(context, it)) to false }
+                    .toMutableMap()
             adapterAttributes.submitList(attrMap.entries.toList())
 
             btnBack.setOnClickListener {
                 onClose.invoke(true)
-            }
-
-            btnSelectDevice.setOnClickListener {
-                val selectedAttrs = intArrayOf()
-                attrMap.filter {
-                    it.value
-                }.keys.forEach {
-                    selectedAttrs.plus(it.first)
-                }
-                onSelectDevice.invoke(
-                    spinnerDeviceType.selectedItem as Int,
-                    selectedAttrs
-                )
-            }
-
-            btnConfig.setOnClickListener {
-                val selectedAttrs = intArrayOf()
-                attrMap.filter {
-                    it.value
-                }.keys.forEach {
-                    selectedAttrs.plus(it.first)
-                }
-                onInputSetted.invoke(
-                    spinnerDeviceType.selectedItem as Int,
-                    selectedAttrs,
-                    selectedDeviceMap
-                )
             }
 
             edtAttr.addTextChangedListener(
@@ -154,6 +134,20 @@ class OverlayConfigInputBoxActionConditionDeviceState(
 
                 }
             )
+        }
+    }
+
+    override fun initAction() {
+        super.initAction()
+        binding.apply {
+
+            btnConfig.setOnClickListener {
+                onInputSetted.invoke(
+                    spinnerDeviceType.selectedItem as Int,
+                    getSelectedAttrs(),
+                    selectedDeviceMap
+                )
+            }
 
             cbLater.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -167,21 +161,29 @@ class OverlayConfigInputBoxActionConditionDeviceState(
                     cbLater.isChecked = false
                     btnSelectDevice.isEnabled = true
                     if (selectedDeviceMap.isEmpty) {
-                        val selectedAttrs = intArrayOf()
-                        attrMap.filter {
-                            it.value
-                        }.keys.forEach {
-                            selectedAttrs.plus(it.first)
-                        }
                         onSelectDevice.invoke(
                             spinnerDeviceType.selectedItem as Int,
-                            selectedAttrs
+                            getSelectedAttrs()
                         )
                     }
                 } else {
                     btnSelectDevice.isEnabled = false
                 }
             }
+
+            btnSelectDevice.setOnClickListener {
+                onSelectDevice.invoke(
+                    spinnerDeviceType.selectedItem as Int,
+                    getSelectedAttrs()
+                )
+            }
+        }
+    }
+
+    override fun show() {
+        super.show()
+        binding.apply {
+            setUIDevicesSelected(isSelected = false)
         }
     }
 
@@ -203,4 +205,26 @@ class OverlayConfigInputBoxActionConditionDeviceState(
             }
         }
     }
+
+    private fun setUIDevicesSelected(isSelected: Boolean) {
+        binding.apply {
+            cbLater.isChecked = !isSelected
+            btnSelectDevice.isEnabled = isSelected
+            when(isSelected) {
+                true -> {
+                    lnEmptyDevices.gone()
+                    lnDevices.show()
+                }
+                false -> {
+                    lnEmptyDevices.show()
+                    lnDevices.gone()
+                }
+            }
+        }
+    }
+
+    private fun getSelectedAttrs(): IntArray {
+        return attrMap.filter { it.value }.map { it.key.first }.toIntArray()
+    }
+
 }

@@ -10,6 +10,9 @@ import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.databinding.LayoutItemSetControlActionElmBinding
 import com.example.thingsflow.databinding.LayoutItemSetControlActionGridBinding
 import com.example.thingsflow.databinding.LayoutItemSetControlActionSingleBinding
+import com.example.thingsflow.module.define.TFElementCmd
+import com.example.thingsflow.module.define.TFViewHolderType.Companion.TYPE_GRID
+import com.example.thingsflow.module.define.TFViewHolderType.Companion.TYPE_SINGLE
 import com.example.thingsflow.utils.show
 import rogo.iot.module.base.ILogR
 import rogo.iot.module.base.define.IoTAttribute
@@ -24,31 +27,23 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
         oldItem: Map.Entry<String?, IntArray>,
         newItem: Map.Entry<String?, IntArray>
     ): Boolean {
-        return oldItem.key?.contentEquals(newItem.key) == true && oldItem.value.contentEquals(
-            newItem.value
-        )
+        return oldItem.key.contentEquals(newItem.key) && oldItem.value.contentEquals(newItem.value)
     }
 
     override fun areContentsTheSame(
         oldItem: Map.Entry<String?, IntArray>,
         newItem: Map.Entry<String?, IntArray>
     ): Boolean {
-        return oldItem.key?.contentEquals(newItem.key) == true && oldItem.value.contentEquals(
-            newItem.value)
+        return oldItem.key.contentEquals(newItem.key) && oldItem.value.contentEquals(newItem.value)
     }
+
 }
 ) {
     private val TAG = "AdapterConfigControlCommand"
+    private var deviceActionMap: HashMap<String?, ArrayList<TFElementCmd>> = hashMapOf()
 
-    companion object {
-        private const val TYPE_SINGLE = 0
-        private const val TYPE_GRID = 1
-    }
-
-    private var actionMap: HashMap<String?, IntArray> = hashMapOf()
-
-    fun getActionMap(): HashMap<String?, IntArray> {
-        return actionMap
+    fun getDeviceActionMap(): HashMap<String?, ArrayList<TFElementCmd>> {
+        return deviceActionMap
     }
     private lateinit var adapterControlElement: AdapterControlElement
     inner class SingleViewHolder(private val binding: LayoutItemSetControlActionSingleBinding) :
@@ -64,14 +59,40 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
                     }
 
                     lnControlOnOff.initView(onOnOffSelected = { newActionValue ->
-                        val oldCommand = actionMap[device.uuid]
-                        if (oldCommand != null && oldCommand.drop(1).toIntArray().contentEquals(newActionValue)) {
-                            actionMap.remove(device.uuid)
+                        val elm = device.elementIds.first()
+                        var commands = deviceActionMap[device.uuid]
+                        val newCmd = TFElementCmd(elm, newActionValue)
+                        if (commands != null) {
+                            val cmd = commands.firstOrNull {
+                                it.elmId == elm
+                            }
+                            if (cmd != null) {
+                                if (cmd.cmd.contentEquals(newActionValue)) {
+                                    commands.remove(cmd)
+                                } else {
+                                    commands.remove(cmd)
+                                    commands.add(newCmd)
+                                }
+                            } else {
+                                commands.add(newCmd)
+                            }
                         } else {
-                            actionMap[device.uuid] = device.elementIds + newActionValue
+                            commands = arrayListOf<TFElementCmd>(newCmd)
                         }
-                        ILogR.D(TAG, "onOnOffSelected:action ", actionMap[device.uuid].contentToString())
-                        lnControlOnOff.updateButtonState(actionMap[device.uuid]?.drop(1)?.toIntArray())
+                        if (commands.isNotEmpty()) {
+                            deviceActionMap[device.uuid] = commands
+                        } else {
+                            deviceActionMap.remove(device.uuid)
+                        }
+                        cbConfiged.isChecked = deviceActionMap[device.uuid]?.isEmpty() == false
+                        ILogR.D(TAG, "onOnOffSelected:actionSize ", deviceActionMap.size)
+                        deviceActionMap.entries.forEach { entry ->
+                            ILogR.D(TAG, "onOnOffSelected:device ", device.uuid, entry.value.size)
+                            entry.value.forEach { value ->
+                                ILogR.D(TAG, "onOnOffSelected:elmAction ", value.elmId, value.cmd.contentToString())
+                            }
+                        }
+                        lnControlOnOff.updateButtonState(deviceActionMap[device.uuid]?.find { it == newCmd }?.cmd)
                     })
                 }
             }
@@ -85,8 +106,8 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
                 adapterControlElement = AdapterControlElement(
                     deviceEntry.key,
                     action,
-                    onElementClick = {
-
+                    onCmdSelected = {
+                        cbConfiged.isChecked = deviceActionMap[deviceEntry.key]?.isEmpty() == false
                     }
                 )
 
@@ -98,10 +119,8 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
                     location?.let { loc ->
                         txtLocation.text = loc.label
                     }
-                    dev.elementInfos.forEach {
-                        if (device.elementIds.contains(it.key)) {
-                            selectedElmsInfo[it.key] = it.value
-                        }
+                    deviceEntry.value.forEach { elm->
+                        selectedElmsInfo[elm] = dev.elementInfos?.toList()?.find { it.first == elm }?.second!!
                     }
 
                     rvElms.adapter = adapterControlElement
@@ -155,7 +174,7 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
     inner class AdapterControlElement(
         private val devId: String?= null,
         private val action: Int,
-        private val onElementClick: (Int) -> Unit
+        private val onCmdSelected: () -> Unit
     ) :
         ListAdapter<MutableMap.MutableEntry<Int, IoTElementInfo>, AdapterControlElement.ControlElementViewHolder>(
             object : DiffUtil.ItemCallback<MutableMap.MutableEntry<Int, IoTElementInfo>>() {
@@ -185,14 +204,44 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
                     }
 
                     lnControlOnOff.initView(onOnOffSelected = { newActionValue ->
-                        val oldCommand = actionMap[devId]
-                        if (oldCommand != null && oldCommand.drop(1).toIntArray().contentEquals(newActionValue)) {
-                            actionMap.remove(devId)
-                        } else {
-                            actionMap[devId] = intArrayOf(elmInfo.key) + newActionValue
+                        val device = FlowSdk.deviceHandler().get(devId)
+                        device?.let {
+                            var commands = deviceActionMap[device.uuid]
+                            val newCmd = TFElementCmd(elmInfo.key, newActionValue)
+                            if (commands != null) {
+                                val cmd = commands.firstOrNull {
+                                    it.elmId == elmInfo.key
+                                }
+                                if (cmd != null) {
+                                    if (cmd.cmd.contentEquals(newActionValue)) {
+                                        commands.remove(cmd)
+                                    } else {
+                                        commands.remove(cmd)
+                                        commands.add(newCmd)
+                                    }
+                                } else {
+                                    commands.add(newCmd)
+                                }
+                            } else {
+                                commands = arrayListOf<TFElementCmd>(newCmd)
+                            }
+                            if (commands.isNotEmpty()) {
+                                deviceActionMap[device.uuid] = commands
+                            } else {
+                                deviceActionMap.remove(device.uuid)
+                            }
+
+                            ILogR.D(TAG, "onOnOffSelected:actionSize ", deviceActionMap.size)
+                            deviceActionMap.entries.forEach { entry ->
+                                ILogR.D(TAG, "onOnOffSelected:device ", device.uuid, entry.value.size)
+                                entry.value.forEach { value ->
+                                    ILogR.D(TAG, "onOnOffSelected:elmAction ", value.elmId, value.cmd.contentToString())
+                                }
+                            }
+
+                            onCmdSelected.invoke()
+                            lnControlOnOff.updateButtonState(deviceActionMap[device.uuid]?.find { it == newCmd }?.cmd)
                         }
-                        ILogR.D(TAG, "onOnOffSelected:action ", actionMap[devId].contentToString())
-                        lnControlOnOff.updateButtonState(actionMap[devId]?.drop(1)?.toIntArray())
                     })
                 }
             }

@@ -3,10 +3,13 @@ package com.example.thingsflow.ui.flowScene.overlay
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
+import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.define.TFComparision
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionDeviceStateBinding
 import com.example.thingsflow.module.define.TFInputSource
+import com.example.thingsflow.module.define.TFInputType
 import com.example.thingsflow.module.viewmodel.VMDevice
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
@@ -17,6 +20,7 @@ import com.example.thingsflow.ui.adapter.AdapterSpinnerInputSource
 import com.example.thingsflow.utils.getDeviceTypeLabel
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
 
@@ -47,11 +51,23 @@ class OverlayConfigBoxActionConditionDeviceState(
         }
     }
 
+    private var selectedDeviceInputs: HashMap<String?, IntArray> = hashMapOf()
+
+    private var inputFromParentBoxList: List<Pair<TFInputType, Int>>? = listOf()
+    private var inputFromOtherDevicesList: List<Pair<TFInputType, Int>>? = listOf()
     private val adapterSelectedDevice: AdapterSelectedDevice by lazy {
         AdapterSelectedDevice()
     }
 
     private val adapterInput: AdapterInput by lazy {
+        AdapterInput(
+            onItemClicked = {
+
+            }
+        )
+    }
+
+    private val adapterInputOtherDevices: AdapterInput by lazy {
         AdapterInput(
             onItemClicked = {
 
@@ -96,6 +112,7 @@ class OverlayConfigBoxActionConditionDeviceState(
 
             rvSelectedDevices.adapter = adapterSelectedDevice
             rvInputFromParentBox.adapter = adapterInput
+            rvOtherInputs.adapter = adapterInputOtherDevices
             spinnerInputType.adapter = adapterSpinnerInputSource
             spinnerComparisionType.adapter = adapterSpinnerComparision
 
@@ -159,6 +176,31 @@ class OverlayConfigBoxActionConditionDeviceState(
                 }
                 onBoxActionCondtionDeviceStateCreated.invoke(fBox)
             }
+
+            spinnerInputType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val inputType = parent?.getItemAtPosition(position) as Int
+                    when(inputType) {
+                        TFInputSource.INPUT_FROM_PREVIOUS_BOX -> {
+
+                        }
+
+                        TFInputSource.INPUT_FROM_OTHER_DEVICES -> {
+
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                }
+
+            }
         }
 
     }
@@ -167,33 +209,48 @@ class OverlayConfigBoxActionConditionDeviceState(
         super.show()
         binding.apply {
             tabLayoutEvtDevice.getTabAt(0)?.select()
-            val parentBoxId = vmFlowScenario?.getRootBoxId()
-            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
-            parentBoxId?.let {
-                adapterInput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
-            }
-            btnConfigInput.show()
-            lnInputConfigured.gone()
-
+            showInputFromPreviousBox()
+            setInputFromOtherDevicesSelected(false, null, null, hashMapOf())
         }
     }
 
     fun show(devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) {
         super.show()
         binding.apply {
-            val parentBoxId = vmFlowScenario?.getRootBoxId()
-            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
-            parentBoxId?.let {
-                adapterInput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
-            }
-
-
-            btnConfigInput.gone()
-            lnInputConfigured.show()
+            selectedDeviceInputs = selectedDevices
             devType?.let {
                 txtDeviceType.text = getDeviceTypeLabel(context, it)
             }
-            adapterSelectedDevice.submitList(selectedDevices.entries.toList())
+            setInputFromOtherDevicesSelected(true, devType, attrs, selectedDevices)
+        }
+    }
+
+    private fun showInputFromPreviousBox() {
+        binding.apply {
+            val parentBoxId = vmFlowScenario?.getRootBoxId()
+            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
+            parentBox?.let {
+                inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)
+                adapterInput.submitList(inputFromParentBoxList)
+            }
+        }
+    }
+
+    private fun setInputFromOtherDevicesSelected(isSelected: Boolean, devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) {
+        binding.apply {
+            when(isSelected) {
+                true -> {
+                    btnConfigInput.gone()
+                    lnInputConfigured.show()
+                    adapterSelectedDevice.submitList(selectedDevices.entries.toList())
+                    inputFromOtherDevicesList = vmFlowScenario?.getInputFromOtherBox(devType, attrs, selectedDevices)?.filter { it.first == TFInputType.PAYLOAD }
+                    adapterInputOtherDevices.submitList(inputFromOtherDevicesList)
+                }
+                else -> {
+                    btnConfigInput.show()
+                    lnInputConfigured.gone()
+                }
+            }
         }
     }
 }

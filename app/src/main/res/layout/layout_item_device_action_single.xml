@@ -13,19 +13,13 @@
         android:orientation="vertical"
         android:gravity="center_vertical"
         android:paddingVertical="@dimen/_space10dp"
-        android:paddingHorizontal="@dimen/space_screen_super_small">
+        android:paddingHorizontal="@dimen/space_screen_super_small"
+        android:layout_marginTop="4dp"
+        android:background="@color/background_color">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="4dp"
-            android:gravity="center_vertical">
-            <androidx.appcompat.widget.AppCompatCheckBox
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="8dp"
-                android:id="@+id/cb_configed"
-                android:button="@drawable/custom_checkbox"/>
+            android:orientation="horizontal">
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -54,16 +48,18 @@
             </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:padding="10dp"
-                android:src="@drawable/ic_up" />
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_delete" />
         </LinearLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rv_elms"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            android:id="@+id/txt_action"
+            android:textSize="@dimen/text_caption"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_regular"/>
 
     </LinearLayout>
 </layout>

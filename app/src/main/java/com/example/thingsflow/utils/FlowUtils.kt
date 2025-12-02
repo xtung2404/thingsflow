@@ -68,7 +68,7 @@ fun getLockUnlockDeviceType(): List<Int> = listOf(
 )
 
 fun getSupportedDeviceType(): List<Int> = listOf(
-    -1,
+    IoTDeviceType.ALL,
     IoTDeviceType.LIGHT,
     IoTDeviceType.SWITCH,
     IoTDeviceType.PLUG,

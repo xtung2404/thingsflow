@@ -99,7 +99,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:id="@+id/ln_input"
-                android:paddingHorizontal="16dp">
+                android:paddingHorizontal="16dp"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -188,8 +189,9 @@
                         android:orientation="horizontal">
 
                         <CheckBox
-                            android:layout_width="@dimen/_space32dp"
-                            android:layout_height="@dimen/_space32dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="8dp"
                             android:id="@+id/cb_later"
                             android:button="@drawable/custom_checkbox_emerald"/>
 
@@ -209,8 +211,9 @@
                         android:orientation="horizontal">
 
                         <CheckBox
-                            android:layout_width="@dimen/_space32dp"
-                            android:layout_height="@dimen/_space32dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="8dp"
                             android:id="@+id/cb_select_device"
                             android:button="@drawable/custom_checkbox_emerald"/>
                         <FrameLayout
@@ -238,21 +241,36 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/ln_devices"
-                                android:background="@color/background_color"
-                                android:visibility="gone">
+                                android:visibility="visible"
+                                android:orientation="vertical">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:id="@+id/txt_number_of_devices"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/text_body2"
+                                        android:textStyle="bold"
+                                        android:maxLines="1"
+                                        android:ellipsize="end"/>
+                                    <androidx.appcompat.widget.AppCompatImageView
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:padding="8dp"
+                                        android:id="@+id/btn_select_device"
+                                        android:src="@drawable/ic_add_circle"/>
+                                </LinearLayout>
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:id="@+id/rv_devices"
                                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
                             </LinearLayout>
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:layout_width="@dimen/_space32dp"
-                                android:layout_height="@dimen/_space32dp"
-                                android:id="@+id/btn_select_device"
-                                android:src="@drawable/ic_note"
-                                android:padding="@dimen/_space4dp"
-                                android:layout_gravity="end" />
                         </FrameLayout>
                     </LinearLayout>
                 </LinearLayout>

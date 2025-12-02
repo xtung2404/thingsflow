@@ -78,7 +78,7 @@ ListAdapter<IoTDevice, RecyclerView.ViewHolder>(DIFF) {
                 val isSelected = selectedDeviceMap.keys.contains(device.uuid)
                 root.isSelected = isSelected
 
-                val backgroundRes = if (isSelected) R.drawable.bg_light_gray_stroke_blue else R.drawable.bg_gray
+                val backgroundRes = if (isSelected) R.drawable.bg_gray_stroke_emerald else R.drawable.bg_gray
                 root.setBackgroundResource(backgroundRes)
             }
         }
@@ -214,7 +214,7 @@ ListAdapter<IoTDevice, RecyclerView.ViewHolder>(DIFF) {
                             val isSelected = device != null && device.contains(elmInfo.key)
                             root.isSelected = isSelected
 
-                            val backgroundRes = if (isSelected) R.drawable.bg_light_gray_stroke_blue else R.drawable.bg_gray
+                            val backgroundRes = if (isSelected) R.drawable.bg_gray_stroke_emerald else R.drawable.bg_gray
                             root.setBackgroundResource(backgroundRes)
 
                             root.setOnClickListener {

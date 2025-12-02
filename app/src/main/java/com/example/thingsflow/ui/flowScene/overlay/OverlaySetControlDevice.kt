@@ -1,22 +1,13 @@
 package com.example.thingsflow.ui.flowScene.overlay
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.example.thingflowsdk.core.FlowSdk
-import com.example.thingsflow.databinding.LayoutItemSetControlActionElmBinding
-import com.example.thingsflow.databinding.LayoutItemSetControlActionGridBinding
-import com.example.thingsflow.databinding.LayoutItemSetControlActionSingleBinding
 import com.example.thingsflow.databinding.LayoutOverlaySetControlDeviceBinding
+import com.example.thingsflow.module.define.TFElementCmd
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterConfigControlCommand
-import com.example.thingsflow.utils.show
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.base.define.IoTDeviceType
-import rogo.iot.module.platform.entity.IoTElementInfo
 
 /**
  * @file: This overlay is used to select type of box(action or condition)
@@ -29,7 +20,7 @@ import rogo.iot.module.platform.entity.IoTElementInfo
 class OverlaySetControlDevice(
     context: Context,
     container: ViewGroup,
-    private val onCommandSetted: (devType: Int?, attrs: IntArray?, HashMap<String?, IntArray>) -> Unit,
+    private val onCommandSetted: (devType: Int?, attrs: IntArray?, HashMap<String?, ArrayList<TFElementCmd>>) -> Unit,
     private val onClose: () -> Unit
 ) : OverlayBase<LayoutOverlaySetControlDeviceBinding>(
     context,
@@ -63,7 +54,7 @@ class OverlaySetControlDevice(
                 onCommandSetted.invoke(
                     selectedDeviceType,
                     intArrayOf(action),
-                    adapterConfigControlCommand.getActionMap()
+                    adapterConfigControlCommand.getDeviceActionMap()
                 )
             }
         }

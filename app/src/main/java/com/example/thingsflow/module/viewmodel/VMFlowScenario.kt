@@ -155,4 +155,36 @@ class VMFlowScenario
         return availableInputs
     }
 
+    fun getInputFromOtherBox(devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>?): ArrayList<Pair<TFInputType, Int>> {
+        val availableInputs: ArrayList<Pair<TFInputType, Int>> = arrayListOf()
+        if (devType != null && devType != IoTDeviceType.ALL) {
+            availableInputs.add(Pair(TFInputType.DEVICE_TYPE, devType))
+        }
+
+        attrs?.let {
+            if (attrs.isNotEmpty()) {
+                attrs.forEach {
+                    availableInputs.add(Pair(TFInputType.ATTRIBUTE, it))
+                }
+            }
+        }
+
+
+        devMap?.let {
+            if (!devMap.isEmpty()) {
+                devMap.forEach { deviceEntry ->
+                    val device = FlowSdk.deviceHandler().get(deviceEntry.key)
+                    device?.let {
+                        it.features.forEach { feature ->
+                            availableInputs.add(Pair(TFInputType.PAYLOAD, feature))
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return availableInputs
+    }
+
 }

@@ -262,7 +262,7 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionControlDevice() {
         binding.overlayContainer,
         onCommandSetted = { devType, attrs, deviceActionMap ->
             overlaySetControlDevice.hide()
-            overlayConfigBoxActionControlDevice.show()
+            overlayConfigBoxActionControlDevice.show(devType, attrs, deviceActionMap)
         },
         onClose = {
             overlaySetControlDevice.hide()
@@ -302,6 +302,7 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionConditionDeviceStat
         binding.overlayContainer,
         // triggered when user config inputs for box
         onConfigInput = {
+            overlayConfigBoxActionConditionDeviceState.hide()
             overlayConfigInputBoxActionConditionDeviceState.show()
         },
         // triggered when a new box action condition device state is created

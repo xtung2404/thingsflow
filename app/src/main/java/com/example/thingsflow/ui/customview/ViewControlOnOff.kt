@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.cardview.widget.CardView
 import com.example.thingsflow.R
 import com.example.thingsflow.utils.getDeviceTypeLabel
@@ -50,16 +51,16 @@ class ViewControlOnOff @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
     private val TAG = "ViewControlOnOff"
-    private var btnOn: AppCompatButton
-    private var btnOff: AppCompatButton
+    private var btnOn: AppCompatTextView
+    private var btnOff: AppCompatTextView
 
 
     init {
         val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.layout_control_on_off, this, true)
 
-        btnOn = findViewById<AppCompatButton>(R.id.btn_on)
-        btnOff = findViewById<AppCompatButton>(R.id.btn_off)
+        btnOn = findViewById<AppCompatTextView>(R.id.btn_on)
+        btnOff = findViewById<AppCompatTextView>(R.id.btn_off)
     }
 
     fun initView(
@@ -98,13 +99,13 @@ class ViewControlOnOff @JvmOverloads constructor(
         when (actionValue[1]) {
             IoTCmdConst.POWER_ON -> {
                 // Cập nhật background cho trạng thái BẬT
-                btnOn.setBackgroundResource(R.drawable.bg_light_gray_stroke_blue) // Thay bằng background khi được chọn
+                btnOn.setBackgroundResource(R.drawable.bg_gray_stroke_emerald) // Thay bằng background khi được chọn
                 btnOff.setBackgroundResource(R.drawable.bg_gray)
             }
             IoTCmdConst.POWER_OFF -> {
                 // Cập nhật background cho trạng thái TẮT
                 btnOn.setBackgroundResource(R.drawable.bg_gray)
-                btnOff.setBackgroundResource(R.drawable.bg_light_gray_stroke_blue) // Thay bằng background khi được chọn
+                btnOff.setBackgroundResource(R.drawable.bg_gray_stroke_emerald) // Thay bằng background khi được chọn
             }
         }
     }

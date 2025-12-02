@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.thingsflow.R
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.base.define.IoTDeviceType
+import rogo.iot.module.platform.define.IoTCmdConst
 
 fun getFragmentLabel(context: Context, destination: Int?): String =
     when(destination) {
@@ -44,6 +45,27 @@ fun getDeviceTypeLabel(context: Context, type: Int): String? =
 fun getAttrLabel(context: Context, attr: Int): String =
     when(attr) {
         IoTAttribute.ACT_ONOFF -> context.resources.getString(R.string.on_splash_off)
+        IoTAttribute.ACT_OPEN_CLOSE -> context.resources.getString(R.string.open_splash_close)
+        IoTAttribute.ACT_LOCK_UNLOCK -> context.resources.getString(R.string.lock_splash_unlock)
+        IoTAttribute.EVT_BATTERY -> context.resources.getString(R.string.battery)
+        IoTAttribute.ACT_BRIGHTNESS -> context.resources.getString(R.string.brightness)
+        IoTAttribute.EVT_HUMID -> context.resources.getString(R.string.humid)
+        IoTAttribute.EVT_TEMP -> context.resources.getString(R.string.temp)
+        IoTAttribute.EVT_MOTION -> context.resources.getString(R.string.motion)
+        IoTAttribute.EVT_LUX -> context.resources.getString(R.string.lux)
+        IoTAttribute.EVT_SMOKE -> context.resources.getString(R.string.smoke)
+        IoTAttribute.EVT_WALL_MOUNTED -> context.resources.getString(R.string.wall_mounted)
+        else -> ""
+    }
+
+fun getCmdLabel(context: Context, attr: Int?, cmd: Int?): String =
+    when(attr) {
+        IoTAttribute.ACT_ONOFF -> {
+            when (cmd) {
+                IoTCmdConst.POWER_ON -> context.resources.getString(R.string.on)
+                else -> context.resources.getString(R.string.off)
+            }
+        }
         IoTAttribute.ACT_OPEN_CLOSE -> context.resources.getString(R.string.open_splash_close)
         IoTAttribute.ACT_LOCK_UNLOCK -> context.resources.getString(R.string.lock_splash_unlock)
         IoTAttribute.EVT_BATTERY -> context.resources.getString(R.string.battery)
