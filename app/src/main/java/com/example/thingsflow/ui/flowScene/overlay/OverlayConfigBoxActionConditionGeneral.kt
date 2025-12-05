@@ -1,28 +1,16 @@
 package com.example.thingsflow.ui.flowScene.overlay
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionGeneralBinding
-import com.example.thingsflow.databinding.LayoutOverlayConfigBoxEventFromDeviceBinding
+import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
-import com.example.thingsflow.ui.adapter.AdapterAttributes
-import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
-import com.example.thingsflow.ui.dialog.DialogDeviceList
-import com.example.thingsflow.utils.getAttrLabel
-import com.example.thingsflow.utils.getSupportedAttribue
-import com.example.thingsflow.utils.getSupportedDeviceType
+import com.example.thingsflow.ui.adapter.AdapterInput
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
-import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
-import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
-import rogo.iot.module.rogocore.sdk.SmartSdk
-import kotlin.collections.get
-import kotlin.text.set
 
 /**
  * @file: This overlay is used to configure a box action condition general(FBoxActionConditionGeneral)
@@ -44,14 +32,43 @@ class OverlayConfigBoxActionConditionGeneral(
     container,
     LayoutOverlayConfigBoxActionConditionGeneralBinding::inflate
 ) {
+    private val vmFlowScenario: VMFlowScenario? by lazy {
+        viewModelOwner?.let {
+            ViewModelProvider(it)[VMFlowScenario::class.java]
+        }
+    }
 
-    private var parentBoxId: String?= null
+    private val adapterInput: AdapterInput by lazy {
+        AdapterInput()
+    }
+
     override fun onViewCreated(binding: LayoutOverlayConfigBoxActionConditionGeneralBinding) {
         binding.apply {
+
+        }
+    }
+
+    override fun initVariable() {
+        super.initVariable()
+
+    }
+
+    override fun initUI() {
+        super.initUI()
+        binding.apply {
+            rvInputFromParentBox.adapter = adapterInput
+
             btnBack.setOnClickListener {
                 onClose.invoke(true)
             }
 
+            btnOutputClose.setOnClickListener {
+                onClose.invoke(false)
+            }
+
+            btnClose.setOnClickListener {
+                onClose.invoke(false)
+            }
 
             tabLayoutEvtDevice.addOnTabSelectedListener(
                 object : TabLayout.OnTabSelectedListener {
@@ -76,15 +93,17 @@ class OverlayConfigBoxActionConditionGeneral(
                         }
                     }
 
-                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
-                    }
-
-                    override fun onTabReselected(tab: TabLayout.Tab?) {
-
-                    }
+                    override fun onTabReselected(tab: TabLayout.Tab?) {}
                 }
             )
+        }
+    }
+
+    override fun initAction() {
+        super.initAction()
+        binding.apply {
 
             btnCreateBox.setOnClickListener {
                 val fBox = FBoxActionConditionGeneral().apply {
@@ -93,13 +112,25 @@ class OverlayConfigBoxActionConditionGeneral(
                 onBoxActionCondtionGeneralCreated.invoke(fBox)
             }
 
-            btnOutputClose.setOnClickListener {
-                onClose.invoke(false)
-            }
+        }
+    }
 
-            btnClose.setOnClickListener {
-                onClose.invoke(false)
+    override fun show() {
+        super.show()
+        binding.apply {
+            tabLayoutEvtDevice.getTabAt(0)?.select()
+        }
+        showInputFromPreviousBox()
+    }
+
+    private fun showInputFromPreviousBox() {
+        binding.apply {
+            val parentBoxId = vmFlowScenario?.getRootBoxId()
+            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
+            parentBox?.let {
+                adapterInput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
             }
         }
     }
+
 }

@@ -74,7 +74,6 @@ class OverlayConfigInputBoxActionConditionDeviceState(
     override fun onViewCreated(binding: LayoutOverlayConfigInputBoxActionConditionDeviceStateBinding) {
         binding.apply {
             selectedDeviceMap.clear()
-            setUIDevicesSelected(isSelected = false)
         }
     }
 

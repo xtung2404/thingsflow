@@ -7,7 +7,6 @@ import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionControlDeviceBinding
 import com.example.thingsflow.module.define.TFElementCmd
-import com.example.thingsflow.module.define.TFInputType
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterConfigedDeviceAction
@@ -68,9 +67,7 @@ class OverlayConfigBoxActionControlDevice(
     }
 
     private val adapterInput: AdapterInput by lazy {
-        AdapterInput(onItemClicked = {
-
-        })
+        AdapterInput()
     }
 
     private val adapterConfigedDeviceAction: AdapterConfigedDeviceAction by lazy {
@@ -175,7 +172,8 @@ class OverlayConfigBoxActionControlDevice(
                     spinnerDeviceType.selectedItem as Int,
                     intArrayOf(
                         spinnerControlAction.selectedItem as Int
-                    )
+                    ),
+
                 )
             }
 

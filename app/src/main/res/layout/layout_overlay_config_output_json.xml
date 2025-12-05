@@ -7,7 +7,6 @@
     </data>
 
     <FrameLayout
-        android:id="@+id/overlay_select_box_event"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"
@@ -36,8 +35,7 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/_space16dp"
                 android:gravity="center_vertical"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="30dp">
+                android:layout_marginTop="40dp">
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
@@ -51,21 +49,23 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_headline6" />
             </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_screen_super_small"
+                android:text="@string/you_can_add_and_delete_value"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_caption"
+                android:paddingHorizontal="16dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:paddingHorizontal="16dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_screen_super_small"
-                    android:text="@string/you_can_add_and_delete_value"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_caption" />
+
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_device"
+                    android:id="@+id/rv_json"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"

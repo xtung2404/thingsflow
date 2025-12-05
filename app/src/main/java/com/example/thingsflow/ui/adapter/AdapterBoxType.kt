@@ -6,10 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.R
-import com.example.thingsflow.databinding.LayoutItemBoxEventTypeBinding
 import com.example.thingsflow.databinding.LayoutItemBoxTypeBinding
 import com.example.thingsflow.utils.FTypeBox
-import rogo.iot.module.flowcommon.type.FTypeEvent
 
 class AdapterBoxType(
     private val onItemClicked: (Int) -> Unit

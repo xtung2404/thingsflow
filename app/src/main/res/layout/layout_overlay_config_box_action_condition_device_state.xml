@@ -106,31 +106,38 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="0dp"
+                    android:id="@+id/ln_input_from_previous_box"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/input_from_previous_box"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_caption" />
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:src="@drawable/ic_up"
-                        android:padding="8dp"/>
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/input_from_previous_box"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_caption" />
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:src="@drawable/ic_up"
+                            android:padding="8dp"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray"
+                        android:layout_marginTop="12dp"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rv_input_from_parent_box"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
                 </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/gray"
-                    android:layout_marginTop="12dp"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/rv_input_from_parent_box"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -287,7 +294,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_caption" />
                     <Spinner
-                        android:id="@+id/spinner_input_type"
+                        android:id="@+id/spinner_input_source"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_space10dp"
@@ -300,55 +307,75 @@
                         android:layout_height="1dp"
                         android:background="@color/gray"
                         android:layout_marginTop="24dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_screen_small"
-                        android:text="@string/compared_input"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_caption" />
-
-                    <Spinner
-                        android:id="@+id/spinner_compared_value"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_space10dp"
-                        android:background="@drawable/bg_text_input_gray"
-                        android:paddingHorizontal="13dp"
-                        android:paddingVertical="14dp" />
+                        android:orientation="vertical"
+                        android:id="@+id/ln_config_compared_value">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_screen_small"
+                            android:text="@string/compared_input"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_caption" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_screen_small"
-                        android:text="@string/comparision_type"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_caption" />
+                        <Spinner
+                            android:id="@+id/spinner_compared_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_space10dp"
+                            android:background="@drawable/bg_text_input_gray"
+                            android:paddingHorizontal="13dp"
+                            android:paddingVertical="14dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ln_config_comparision_type"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_screen_small"
+                                android:text="@string/comparision_type"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/text_caption" />
 
-                    <Spinner
-                        android:id="@+id/spinner_comparision_type"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_space10dp"
-                        android:background="@drawable/bg_text_input_gray"
-                        android:paddingHorizontal="13dp"
-                        android:paddingVertical="14dp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_screen_small"
-                        android:text="@string/compared_value"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_caption" />
+                            <Spinner
+                                android:id="@+id/spinner_comparision_type"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_space10dp"
+                                android:background="@drawable/bg_text_input_gray"
+                                android:paddingHorizontal="13dp"
+                                android:paddingVertical="14dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ln_config_comparing_value"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/space_screen_small"
+                                    android:text="@string/compared_value"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/text_caption" />
 
-                    <Spinner
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_space10dp"
-                        android:background="@drawable/bg_text_input_gray"
-                        android:paddingHorizontal="13dp"
-                        android:paddingVertical="14dp" />
+                                <Spinner
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/spinner_comparing_value"
+                                    android:layout_marginTop="@dimen/_space10dp"
+                                    android:background="@drawable/bg_text_input_gray"
+                                    android:paddingHorizontal="13dp"
+                                    android:paddingVertical="14dp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -377,49 +404,35 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/ln_output"
                 android:paddingHorizontal="16dp"
                 android:orientation="vertical"
                 android:visibility="gone">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/all_of_output_can_be_used_in_the_next_box"
-                    android:textColor="@color/text_hint_color"
-                    android:textSize="@dimen/text_caption"
-                    android:fontFamily="@font/roboto_regular"
-                    android:layout_marginTop="12dp"/>
-                <View
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/space_screen_small"
-                    android:background="@color/gray" />
-                <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="40dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/output_will_be_available_after_being_configed"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_body2"
-                    android:fontFamily="@font/roboto_medium"
-                    android:layout_marginTop="18dp"
-                    android:layout_gravity="center_horizontal"/>
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_output_config"
-                    android:text="@string/config_device"
-                    android:textAllCaps="false"
-                    android:textSize="@dimen/text_button"
-                    android:textColor="@color/white"
-                    android:background="@color/emerald"
-                    android:paddingVertical="4dp"
-                    android:layout_marginTop="@dimen/_space48dp" />
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginTop="100dp">
+                    <ImageView
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="40dp"
+                        android:src="@drawable/ic_empty_box"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/this_kind_of_boxes_dont_have_output"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_body2"
+                        android:fontFamily="@font/roboto_medium"
+                        android:layout_marginTop="18dp"
+                        android:layout_gravity="center_horizontal"/>
+                </LinearLayout>
+
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -430,7 +443,8 @@
                     android:textColor="@color/white"
                     android:background="@drawable/btn_gray"
                     android:paddingVertical="4dp"
-                    android:layout_marginTop="16dp"/>
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="20dp"/>
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

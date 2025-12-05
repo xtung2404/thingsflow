@@ -7,6 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentSelectZigbeeGatewayBinding
 import com.example.thingsflow.module.viewmodel.VMConfigZigbee
@@ -107,6 +108,9 @@ class FragmentSelectZigbeeGateway : FragmentBase<FragmentSelectZigbeeGatewayBind
                 ) {
                     vmLocation.setDefaultLocation(selectedLocation.uuid)
                 }
+                ILogR.D(TAG, "selectZigbeeGateway:defaultLocation", vmLocation.getDefaultLocation(),
+                    FlowSdk.locationHandler().get(vmLocation.getDefaultLocation()).label
+                )
                 selectedGateway?.let {
                     vmConfigZigbee.isGatewayAvailable(
                         it,

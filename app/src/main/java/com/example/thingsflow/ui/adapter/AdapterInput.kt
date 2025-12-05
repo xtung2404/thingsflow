@@ -10,10 +10,9 @@ import com.example.thingsflow.databinding.LayoutItemInputBinding
 import com.example.thingsflow.module.define.TFInputType
 import com.example.thingsflow.utils.getAttrLabel
 import com.example.thingsflow.utils.getDeviceTypeLabel
+import com.example.thingsflow.utils.getInputLabel
 
-class AdapterInput(
-    private val onItemClicked: (Int) -> Unit
-): ListAdapter<Pair<TFInputType, Int> , AdapterInput.InputViewHolder>(
+class AdapterInput: ListAdapter<Pair<TFInputType, Int> , AdapterInput.InputViewHolder>(
     object : DiffUtil.ItemCallback<Pair<TFInputType, Int>>() {
         override fun areItemsTheSame(
             oldItem: Pair<TFInputType, Int>,
@@ -56,17 +55,7 @@ class AdapterInput(
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(inputEntry: Pair<TFInputType, Int>) {
             binding.apply {
-                when(inputEntry.first) {
-                    TFInputType.DEVICE_TYPE -> {
-                        txtInput.text = getDeviceTypeLabel(root.context, inputEntry.second)
-                    }
-                    TFInputType.ATTRIBUTE -> {
-                        txtInput.text = getAttrLabel(root.context, inputEntry.second)
-                    }
-                    TFInputType.PAYLOAD -> {
-                        txtInput.text = getAttrLabel(root.context, inputEntry.second)
-                    }
-                }
+                txtInput.text = getInputLabel(root.context, inputEntry)
             }
         }
     }

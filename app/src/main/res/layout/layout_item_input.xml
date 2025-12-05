@@ -20,10 +20,11 @@
             android:paddingVertical="8dp"
             android:paddingHorizontal="8dp"
             android:ellipsize="end"
-            android:background="@color/gray"
+            android:background="@drawable/bg_gray"
             android:textSize="@dimen/text_caption"
-            android:textColor="@color/black"
+            android:textColor="@color/text_input"
             android:saveEnabled="false"
+            android:fontFamily="@font/roboto_regular"
             android:textColorHint="@color/black"/>
 
 
@@ -32,7 +33,7 @@
             android:layout_height="40dp"
             android:id="@+id/btn_info"
             android:src="@drawable/ic_info"
-            android:padding="8dp"/>
+            android:padding="10dp"/>
     </LinearLayout>
 
 </layout>

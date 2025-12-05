@@ -8,10 +8,12 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.thingflowsdk.core.define.TFMethodHttp
 import com.example.thingsflow.R
-class AdapterSpinnerMethodCallHttpType(
+import com.example.thingsflow.module.define.TFBodyHttpFormat
+
+class AdapterSpinnerBodyHttpFormat(
     context: Context,
-    private val items: List<TFMethodHttp>
-): ArrayAdapter<TFMethodHttp>(context, R.layout.layout_spinner_item_location, items) {
+    private val items: List<TFBodyHttpFormat>
+): ArrayAdapter<TFBodyHttpFormat>(context, R.layout.layout_spinner_item_location, items) {
     init {
         setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
@@ -21,7 +23,7 @@ class AdapterSpinnerMethodCallHttpType(
             .inflate(R.layout.layout_spinner_item_method_http, parent, false)
 
         val textView = view.findViewById<TextView>(R.id.txt_label)
-        textView.text = getMethodHttpLabel(items[position])
+        textView.text = getBodyHttpFormatLabel(items[position])
 
 
         return view
@@ -32,17 +34,14 @@ class AdapterSpinnerMethodCallHttpType(
         if (items[position] == null) {
             view.text = context.resources.getString(R.string.undefined)
         } else {
-            view.text = getMethodHttpLabel(items[position])
+            view.text = getBodyHttpFormatLabel(items[position])
         }
         return view
     }
 
-    fun getMethodHttpLabel(method: TFMethodHttp): String {
-        return when (method) {
-            TFMethodHttp.GET -> context.getString(R.string.get)
-            TFMethodHttp.POST ->  context.getString(R.string.post)
-            TFMethodHttp.DELETE -> context.getString(R.string.delete)
-            else -> ""
+    fun getBodyHttpFormatLabel(format: TFBodyHttpFormat): String {
+        return when (format) {
+            TFBodyHttpFormat.JSON_FORMAT -> context.getString(R.string.json_format)
         }
     }
 }

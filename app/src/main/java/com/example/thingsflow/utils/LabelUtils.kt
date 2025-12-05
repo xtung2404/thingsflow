@@ -2,6 +2,7 @@ package com.example.thingsflow.utils
 
 import android.content.Context
 import com.example.thingsflow.R
+import com.example.thingsflow.module.define.TFInputType
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.platform.define.IoTCmdConst
@@ -39,7 +40,7 @@ fun getDeviceTypeLabel(context: Context, type: Int): String? =
 //        IoTDeviceType.MOTION_SENSOR -> context.resources.getString(R.string.motion_sensor)
 //        IoTDeviceType.LUX_SENSOR -> context.resources.getString(R.string.lux_sensor)
 //        IoTDeviceType.PRESENSCE_SENSOR -> context.resources.getString(R.string.presence_sensor)
-        else -> null
+        else -> ""
     }
 
 fun getAttrLabel(context: Context, attr: Int): String =
@@ -58,12 +59,15 @@ fun getAttrLabel(context: Context, attr: Int): String =
         else -> ""
     }
 
+fun getStateLabel(context: Context, attr: Int): String =
+    "Trạng thái " + getAttrLabel(context, attr)
+
 fun getCmdLabel(context: Context, attr: Int?, cmd: Int?): String =
     when(attr) {
         IoTAttribute.ACT_ONOFF -> {
             when (cmd) {
-                IoTCmdConst.POWER_ON -> context.resources.getString(R.string.on)
-                else -> context.resources.getString(R.string.off)
+                IoTCmdConst.POWER_ON -> "Trạng thái " + context.resources.getString(R.string.on)
+                else -> "Trạng thái " + context.resources.getString(R.string.off)
             }
         }
         IoTAttribute.ACT_OPEN_CLOSE -> context.resources.getString(R.string.open_splash_close)
@@ -78,3 +82,18 @@ fun getCmdLabel(context: Context, attr: Int?, cmd: Int?): String =
         IoTAttribute.EVT_WALL_MOUNTED -> context.resources.getString(R.string.wall_mounted)
         else -> ""
     }
+
+
+fun getInputLabel(context: Context, input: Pair<TFInputType, Int>): String? =
+    when(input.first) {
+        TFInputType.ATTRIBUTE -> {
+            getAttrLabel(context, input.second)
+        }
+        TFInputType.DEVICE_TYPE -> {
+            getDeviceTypeLabel(context, input.second)
+        }
+        TFInputType.PAYLOAD -> {
+            getStateLabel(context, input.second)
+        }
+        else -> ""
+}

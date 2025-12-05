@@ -17,4 +17,6 @@
     <color name="bg_flow_scenario">#FFFBFBFB</color>
     <color name="warning">#FFDF7401</color>
     <color name="text_hint_color">#FF979797</color>
+    <color name="text_input">#FF646464</color>
+    <color name="bg_edit_text">#FFA5A5A5</color>
 </resources>

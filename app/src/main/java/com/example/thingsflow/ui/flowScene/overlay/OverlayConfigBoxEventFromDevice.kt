@@ -33,7 +33,7 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 class OverlayConfigBoxEventFromDevice(
     context: Context,
     container: ViewGroup,
-    private val onSelectDevice: (devType: Int?, attrs: IntArray?) -> Unit,
+    private val onSelectDevice: (devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>?) -> Unit,
     private val onBoxEventCreated: (FBoxEventDevice) -> Unit,
     private val onClose: (Boolean) -> Unit
 ) : OverlayBase<LayoutOverlayConfigBoxEventFromDeviceBinding>(
@@ -174,9 +174,11 @@ class OverlayConfigBoxEventFromDevice(
 
 
             btnSelectDevice.setOnClickListener {
+                ILogR.D(TAG, "btnSelectDevice:onClick", selectedDeviceMap.size)
                 onSelectDevice.invoke(
                     spinnerDeviceType.selectedItem as Int,
-                    getSelectedAttrs()
+                    getSelectedAttrs(),
+                    selectedDeviceMap
                 )
             }
 
@@ -218,6 +220,7 @@ class OverlayConfigBoxEventFromDevice(
                 }
             }
 
+
             cbSelectDevice.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     cbLater.isChecked = false
@@ -225,7 +228,8 @@ class OverlayConfigBoxEventFromDevice(
                     if (selectedDeviceMap.isEmpty()) {
                         onSelectDevice.invoke(
                             spinnerDeviceType.selectedItem as Int,
-                            getSelectedAttrs()
+                            getSelectedAttrs(),
+                            selectedDeviceMap
                         )
                     }
                 } else {
@@ -235,6 +239,9 @@ class OverlayConfigBoxEventFromDevice(
         }
     }
 
+    override fun show() {
+        super.show()
+    }
     fun show(fBox: FBox?) {
         super.show()
         binding.apply {

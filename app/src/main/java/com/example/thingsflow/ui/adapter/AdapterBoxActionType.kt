@@ -7,12 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemBoxActionTypeBinding
-import com.example.thingsflow.databinding.LayoutItemBoxEventTypeBinding
-import com.example.thingsflow.databinding.LayoutItemBoxTypeBinding
 import com.example.thingsflow.ui.adapter.AdapterBoxActionType.BoxActionTypeViewHolder
 import rogo.iot.module.flowcommon.type.FBoxType
-import rogo.iot.module.flowcommon.type.FTypeAction
-import rogo.iot.module.flowcommon.type.FTypeEvent
 
 class AdapterBoxActionType(
     private val onItemClicked: (Int) -> Unit

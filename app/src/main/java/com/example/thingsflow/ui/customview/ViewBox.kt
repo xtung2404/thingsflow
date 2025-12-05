@@ -10,14 +10,12 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.example.thingsflow.R
 import com.example.thingsflow.utils.getDeviceTypeLabel
+import rogo.iot.module.base.ILogR
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGemini
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 import rogo.iot.module.flowcommon.box.action.FBoxActionCodeFunction
-import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
-import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
-import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionTime
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
 import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDLearn
 import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRecognize
@@ -25,6 +23,9 @@ import rogo.iot.module.flowcommon.box.action.FBoxActionFaceIDRemove
 import rogo.iot.module.flowcommon.box.action.FBoxActionHandlerAnotherBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionPublishMqtt
 import rogo.iot.module.flowcommon.box.action.FBoxActionSendWebSocket
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionTime
 import rogo.iot.module.flowcommon.box.event.FBoxEventCameraStreaming
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.box.event.FBoxEventFaceID
@@ -38,7 +39,6 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventTimerInterval
 import rogo.iot.module.flowcommon.box.event.FBoxEventTouchID
 import rogo.iot.module.flowcommon.box.event.FBoxEventVoiceRecognize
 import rogo.iot.module.flowcommon.box.event.FBoxEventWeather
-import rogo.iot.module.base.ILogR
 import java.util.Arrays
 
 class ViewBox @JvmOverloads constructor(

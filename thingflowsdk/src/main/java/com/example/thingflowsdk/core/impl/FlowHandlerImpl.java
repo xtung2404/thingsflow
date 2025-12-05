@@ -11,8 +11,6 @@ import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice;
 import rogo.iot.module.flowcommon.box.event.FBoxEvent;
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice;
 import rogo.iot.module.flowcommon.type.FBoxType;
-import rogo.iot.module.flowcommon.type.FTypeAction;
-import rogo.iot.module.flowcommon.type.FTypeEvent;
 import rogo.iot.module.platform.feature.IoTFeature;
 import rogo.iot.module.platform.invoking.IoTInvokingProperty;
 import rogo.iot.module.rogocore.sdk.SmartSdk;

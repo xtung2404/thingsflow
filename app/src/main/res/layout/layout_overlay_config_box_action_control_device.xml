@@ -100,7 +100,8 @@
                 android:orientation="vertical"
                 android:id="@+id/ln_input"
                 android:paddingHorizontal="16dp"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:layout_marginTop="30dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -127,7 +128,7 @@
                 android:id="@+id/ln_config"
                 android:orientation="vertical"
                 android:paddingHorizontal="@dimen/_space16dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -135,7 +136,8 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingHorizontal="@dimen/_space16dp"
-                    android:visibility="visible">
+                    android:visibility="visible"
+                    android:layout_marginTop="12dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -186,36 +188,37 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginTop="12dp">
 
-                        <CheckBox
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:padding="8dp"
+                        <com.example.thingsflow.ui.customview.CheckBoxCustom
                             android:id="@+id/cb_later"
-                            android:button="@drawable/custom_checkbox_emerald"/>
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="8dp"/>
+
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/later"
                             android:textColor="@color/black"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_caption"
                             android:textStyle="bold"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_screen_super_small"
+                        android:layout_marginTop="16dp"
                         android:orientation="horizontal">
 
-                        <CheckBox
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:padding="8dp"
+                        <com.example.thingsflow.ui.customview.CheckBoxCustom
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:id="@+id/cb_select_device"
-                            android:button="@drawable/custom_checkbox_emerald"/>
+                            android:button="@drawable/custom_checkbox_emerald"
+                            android:layout_marginEnd="8dp"/>
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
@@ -226,16 +229,22 @@
                                 android:visibility="gone"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
-                                android:background="@color/background_color">
+                                android:background="@color/light_gray">
                                 <TextView
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:text="@string/choose_device_from_list"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/gray"
+                                    android:textSize="@dimen/text_caption"
+                                    android:fontFamily="@font/roboto_bold"
+                                    android:textColor="@color/black"
                                     android:paddingStart="@dimen/space_screen_super_small"
-                                    android:paddingVertical="16dp"/>
+                                    android:paddingVertical="10dp"/>
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/ic_note"
+                                    android:padding="8dp"/>
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -261,7 +270,7 @@
                                     <androidx.appcompat.widget.AppCompatImageView
                                         android:layout_width="40dp"
                                         android:layout_height="40dp"
-                                        android:padding="8dp"
+                                        android:padding="10dp"
                                         android:id="@+id/btn_select_device"
                                         android:src="@drawable/ic_add_circle"/>
                                 </LinearLayout>

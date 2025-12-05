@@ -194,9 +194,10 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxEventFromDevice() {
     overlayConfigBoxEventFromDevice = OverlayConfigBoxEventFromDevice(
         requireActivity(),
         binding.overlayContainer,
-        onSelectDevice = { devType, attrs ->
+        onSelectDevice = { devType, attrs, devMap ->
+            ILogR.D(TAG, "onSelectDevice:size", devMap?.size)
             currentBoxType = FBoxType.EVT_FROM_DEVICE
-            overlaySelectDevice.show(currentBoxType, devType, attrs)
+            overlaySelectDevice.show(currentBoxType, devType, attrs, devMap)
         },
         onBoxEventCreated = {
             overlayConfigBoxEventFromDevice.hide()
@@ -335,6 +336,7 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionConditionDeviceStat
             },
             onClose = {
                 overlayConfigInputBoxActionConditionDeviceState.hide()
+                overlayConfigBoxActionConditionDeviceState.show()
             }
         )
 }

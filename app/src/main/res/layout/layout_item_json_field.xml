@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginTop="4dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_up"
+                android:padding="10dp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/txt_label"
+                android:textSize="@dimen/text_overline"
+                android:textColor="@color/black"
+                android:text="lat"
+                android:fontFamily="@font/roboto_regular"
+                android:layout_marginEnd="4dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_type"
+                android:textSize="@dimen/text_overline"
+                android:textColor="@color/black"
+                android:text="lat"
+                android:textAllCaps="true"
+                android:fontFamily="@font/roboto_medium"
+                android:layout_marginEnd="4dp"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/btn_menu"
+                android:src="@drawable/ic_3_dot"
+                android:padding="4dp"/>
+        </LinearLayout>
+       <androidx.recyclerview.widget.RecyclerView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/rv_field"/>
+    </LinearLayout>
+
+</layout>

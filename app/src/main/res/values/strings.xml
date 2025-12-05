@@ -115,6 +115,7 @@
     <string name="forward_json">Forward JSON</string>
     <string name="table">Bảng</string>
     <string name="json">JSON</string>
+    <string name="json_format">Json Format</string>
     <string name="export_value_form">Export Value form</string>
     <string name="required_output">Thiết lập Giá trị cần lấy</string>
     <string name="device_list">Danh sách thiết bị</string>
@@ -147,6 +148,7 @@
     <string name="receive_event_from_selected_device">Nhận sự kiện từ thiết bị được chọn</string>
     <string name="all_of_output_can_be_used_in_the_next_box">Toàn bộ giá trị đầu ra sẽ được chuyển cho box sau</string>
     <string name="output_will_be_available_after_being_configed">Đầu ra sẽ có khi thiết bị được thiết lập</string>
+    <string name="this_kind_of_boxes_dont_have_output">Loại box này không có giá trị đầu ra</string>
     <string name="event_from_mqtt">Sự kiện từ MQTT</string>
     <string name="light">Đèn</string>
     <string name="switch_device_type">Công tắc</string>
@@ -244,6 +246,10 @@
     <string name="compare_less_equal">Nhỏ hơn hoặc bằng</string>
     <string name="compare_greater_than">Lớn hơn</string>
     <string name="compare_greater_equal">Lớn hơn hoặc bằng</string>
+    <string name="int_type">Int</string>
+    <string name="long_type">Long</string>
+    <string name="string_type">String</string>
+    <string name="object_type">Object</string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>
