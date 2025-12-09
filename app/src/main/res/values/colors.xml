@@ -19,4 +19,6 @@
     <color name="text_hint_color">#FF979797</color>
     <color name="text_input">#FF646464</color>
     <color name="bg_edit_text">#FFA5A5A5</color>
+    <color name="green">#FF04C866</color>
+    <color name="liga">#FF04BBC8</color>
 </resources>

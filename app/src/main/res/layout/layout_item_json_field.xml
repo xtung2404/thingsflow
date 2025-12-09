@@ -10,15 +10,19 @@
         android:orientation="vertical"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="8dp"
+        android:paddingStart="8dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:background="@color/background_color"
+            android:paddingVertical="6dp">
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
+                android:id="@+id/btn_expand"
                 android:src="@drawable/ic_up"
                 android:padding="10dp"/>
             <TextView
@@ -26,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/txt_label"
-                android:textSize="@dimen/text_overline"
+                android:textSize="@dimen/text_caption"
                 android:textColor="@color/black"
                 android:text="lat"
                 android:fontFamily="@font/roboto_regular"
@@ -35,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_type"
-                android:textSize="@dimen/text_overline"
+                android:textSize="@dimen/text_caption"
                 android:textColor="@color/black"
                 android:text="lat"
                 android:textAllCaps="true"
@@ -51,7 +55,8 @@
        <androidx.recyclerview.widget.RecyclerView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:id="@+id/rv_field"/>
+           android:id="@+id/rv_field"
+           android:paddingStart="8dp"/>
     </LinearLayout>
 
 </layout>

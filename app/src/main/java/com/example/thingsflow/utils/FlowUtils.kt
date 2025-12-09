@@ -2,13 +2,9 @@ package com.example.thingsflow.utils
 
 import android.content.Context
 import android.view.View
-import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
-import com.example.thingsflow.module.define.TFInputType
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.base.define.IoTDeviceType
-import rogo.iot.module.flowcommon.box.FBox
-import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.type.FBoxType
 
 

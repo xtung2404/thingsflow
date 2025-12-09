@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rogo.iot.module.base.ILogR
 import rogo.iot.module.base.callback.RequestResultCallback
+import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 import rogo.iot.module.rogocore.sdk.entity.IoTLocation
@@ -24,26 +25,26 @@ import rogo.iot.module.rogocore.sdk.entity.IoTLocation
 class DialogFlowNodeList(
     context: Context,
     private val onConnectNewNode: () -> Unit,
-    private val onDevicesSelected: (List<IoTDevice>) -> Unit
-): DialogBase<DialogFlowNodeListBinding>(
+    private val onDevicesSelected: (selectedDevices: HashMap<String?, IntArray>) -> Unit
+) : DialogBase<DialogFlowNodeListBinding>(
     context,
     R.layout.dialog_flow_node_list
-)  {
+) {
     private val TAG = "DialogFlowNodeList"
     private val vmDevice: VMDevice? by lazy {
         viewModelOwner?.let {
             ViewModelProvider(it)[VMDevice::class.java]
         }
     }
-    private var flowNodeMap: MutableMap<IoTDevice, Boolean> = mutableMapOf()
-    private val adapterFlowNode: AdapterFlowNode by lazy {
-        AdapterFlowNode(
-            onItemClick = {
-                flowNodeMap[it] = !flowNodeMap[it]!!
-                adapterFlowNode.notifyDataSetChanged()
-                binding.btnContinue.isEnabled = flowNodeMap.filter {
-                    !it.value
-                }.isNotEmpty()
+
+    private val selectedDevices: HashMap<String?, IntArray> = hashMapOf()
+
+    private val adapterDevices: AdapterDevices by lazy {
+        AdapterDevices(
+            false,
+            onDevicesSelected = { devices ->
+                selectedDevices.clear()
+                selectedDevices.putAll(devices)
             }
         )
     }
@@ -60,14 +61,10 @@ class DialogFlowNodeList(
     override fun onDialogShown() {
         super.onDialogShown()
         binding.apply {
-            btnContinue.isEnabled = false
             cbSelectAll.isChecked = false
 
             cbSelectAll.setOnCheckedChangeListener { buttonView, isChecked ->
-                flowNodeMap.keys.forEach {
-                    flowNodeMap[it] = isChecked
-                }
-                adapterFlowNode.notifyDataSetChanged()
+
             }
 
             btnAddNode.setOnClickListener {
@@ -75,19 +72,17 @@ class DialogFlowNodeList(
                 onConnectNewNode.invoke()
             }
 
-            rvFlowNode.adapter = adapterFlowNode
-            val deviceList = vmDevice?.getUserDevices()
-             deviceList?.associateWith {
-                false
-            }?.toMutableMap()?.let {
-                 flowNodeMap = it
+            rvFlowNode.adapter = adapterDevices
+            val deviceList = vmDevice?.getUserDevices()?.filter {
+                it.devType == IoTDeviceType.GATEWAY ||
+                        it.devType == IoTDeviceType.MEDIA_BOX ||
+                        it.devType == IoTDeviceType.IR_UNIVERSAL
             }
-            adapterFlowNode.submitList(flowNodeMap.entries.toList())
+            adapterDevices.submitList(deviceList)
 
             btnContinue.setOnClickListener {
                 dismiss()
-                val selectedNodes: List<IoTDevice> = flowNodeMap.filter { it.value }.keys.toList()
-                onDevicesSelected.invoke(selectedNodes)
+                onDevicesSelected.invoke(selectedDevices)
             }
         }
     }

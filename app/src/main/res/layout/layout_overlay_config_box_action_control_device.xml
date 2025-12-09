@@ -76,7 +76,7 @@
                 <com.google.android.material.tabs.TabLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tab_layout_evt_device"
+                    android:id="@+id/tab_layout"
                     android:background="@color/background_color"
                     app:tabTextColor="@color/emerald"
                     android:textSize="@dimen/text_body2">

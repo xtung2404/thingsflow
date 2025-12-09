@@ -60,7 +60,6 @@ class FragmentFlowScenarioInfo : FragmentBase<FragmentFlowScenarioInfoBinding>()
 
             btnExecuteFlow.setOnClickListener {
                 dialogFlowNodeList.show()
-//                findNavController().navigate(R.id.fragmentFlowBinding)
             }
         }
     }

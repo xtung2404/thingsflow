@@ -1,6 +1,6 @@
 package com.example.thingsflow.module.define
 
-enum class TFInputType {
+enum class TFInOutType {
     ATTRIBUTE,
     DEVICE_TYPE,
     PAYLOAD

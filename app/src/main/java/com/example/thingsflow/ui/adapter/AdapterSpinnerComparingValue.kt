@@ -6,17 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.example.thingflowsdk.core.define.TFMethodHttp
 import com.example.thingsflow.R
-import com.example.thingsflow.module.define.TFInputType
+import com.example.thingsflow.module.define.TFInOutType
 import com.example.thingsflow.utils.getCmdLabel
-import com.example.thingsflow.utils.getInputLabel
 import rogo.iot.module.base.define.IoTAttribute
 
 class AdapterSpinnerComparingValue(
     context: Context,
-    private val items: List<Pair<TFInputType, IntArray>>
-): ArrayAdapter<Pair<TFInputType, IntArray>>(context, R.layout.layout_spinner_item_location, items) {
+    private val items: List<Pair<TFInOutType, IntArray>>
+): ArrayAdapter<Pair<TFInOutType, IntArray>>(context, R.layout.layout_spinner_item_location, items) {
     init {
         setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
@@ -31,7 +29,7 @@ class AdapterSpinnerComparingValue(
         comparingValue.let {
             if (comparingValue.isNotEmpty() && comparingValue.size >= 2) {
                 when(comparingValueType) {
-                    TFInputType.PAYLOAD -> {
+                    TFInOutType.PAYLOAD -> {
                         when(comparingValue[0]) {
                             IoTAttribute.ACT_ONOFF -> {
                                 textView.text = getCmdLabel(context, comparingValue[0], comparingValue[1])
@@ -55,7 +53,7 @@ class AdapterSpinnerComparingValue(
         comparingValue.let {
             if (comparingValue.isNotEmpty() && comparingValue.size >= 2) {
                 when(comparingValueType) {
-                    TFInputType.PAYLOAD -> {
+                    TFInOutType.PAYLOAD -> {
                         when(comparingValue[0]) {
                             IoTAttribute.ACT_ONOFF -> {
                                 view.text = getCmdLabel(context, comparingValue[0], comparingValue[1])

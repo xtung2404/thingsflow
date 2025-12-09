@@ -19,10 +19,10 @@ import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback;
 
 public class FlowHandlerImpl implements FlowHandler {
     private String TAG = "FlowHandlerImpl";
-    @Override
-    public void createFlowScenario() {
-
-    }
+//    @Override
+//    public void createFlowScenario() {
+//
+//    }
 
     @Override
     public void createFlowBinding(

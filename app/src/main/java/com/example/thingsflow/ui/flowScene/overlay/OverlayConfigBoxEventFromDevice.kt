@@ -9,6 +9,7 @@ import com.example.thingsflow.databinding.LayoutOverlayConfigBoxEventFromDeviceB
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterAttributes
+import com.example.thingsflow.ui.adapter.AdapterInOutput
 import com.example.thingsflow.ui.adapter.AdapterSelectedDevice
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.utils.getAttrLabel
@@ -57,9 +58,16 @@ class OverlayConfigBoxEventFromDevice(
     // key: uuid of device, value: selected elements of device
     private var selectedDeviceMap: HashMap<String?, IntArray> = hashMapOf()
 
+    private var fBox: FBoxEventDevice? = null
+
+
     //adapter for selected devices
     private val adapterSelectedDevices: AdapterSelectedDevice by lazy {
         AdapterSelectedDevice()
+    }
+
+    private val adapterOutput: AdapterInOutput by lazy {
+        AdapterInOutput()
     }
 
     // adapter for select device type
@@ -105,23 +113,9 @@ class OverlayConfigBoxEventFromDevice(
 
     override fun initUI() {
         super.initUI()
+        setUpTabs()
+        setUIDevicesSelected(isSelected = false)
         binding.apply {
-            setUIDevicesSelected(isSelected = false)
-            tabLayoutEvtDevice.getTabAt(0)?.select()
-
-            // set up adapters
-            spinnerDeviceType.adapter = adapterSpinnerDeviceType
-            rvAttr.adapter = adapterAttributes
-            rvDevices.adapter = adapterSelectedDevices
-            adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
-
-            // map every attribute to its label and set it to false(or unselected)
-            attrMap =
-                getSupportedAttribue().associate {
-                    (it to getAttrLabel(context, it)) to false
-                }.toMutableMap()
-            adapterAttributes.submitList(attrMap.entries.toList())
-
 
             btnBack.setOnClickListener {
                 onClose.invoke(true)
@@ -130,51 +124,68 @@ class OverlayConfigBoxEventFromDevice(
             btnClose.setOnClickListener {
                 onClose.invoke(false)
             }
+        }
+        setUpConfigLayout()
+        setUpOutputLayout()
+    }
 
-            btnOutputClose.setOnClickListener {
-                onClose.invoke(true)
-            }
 
-            btnOutputConfig.setOnClickListener {
-                tabLayoutEvtDevice.getTabAt(0)?.select()
-            }
-
-            tabLayoutEvtDevice.addOnTabSelectedListener(
+    private fun setUpTabs() {
+        binding.apply {
+            tabLayout.addOnTabSelectedListener(
                 object : TabLayout.OnTabSelectedListener {
                     override fun onTabSelected(tab: TabLayout.Tab?) {
                         tab?.let {
-                            if (tab.position == 0) {
-                                lnConfig.show()
-                                lnOutput.gone()
-                            } else if (tab.position == 1) {
-                                lnConfig.gone()
-                                lnOutput.show()
-                            }
+                            if (tab.position == 0) showTab(config = true)
+                            else showTab(output = true)
                         }
                     }
-
                     override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
                     override fun onTabReselected(tab: TabLayout.Tab?) {}
                 }
             )
         }
     }
 
-    override fun initAction() {
+    private fun showTab(config: Boolean = false, output: Boolean = false) {
         binding.apply {
+            if (config) lnConfig.show() else lnConfig.gone()
+            if (output) lnOutput.show() else lnOutput.gone()
+        }
+    }
+
+    private fun setUpConfigLayout() {
+        binding.apply {
+            spinnerDeviceType.adapter = adapterSpinnerDeviceType
+            rvAttr.adapter = adapterAttributes
+
+            rvDevices.adapter = adapterSelectedDevices
+            adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
+
+
+            attrMap =
+                getSupportedAttribue().associate {
+                    (it to getAttrLabel(context, it)) to false
+                }.toMutableMap()
+            adapterAttributes.submitList(attrMap.entries.toList())
+
             btnCreateBox.setOnClickListener {
-                val fBox = FBoxEventDevice().apply {
-                    devId = if (selectedDeviceMap.isNotEmpty()) selectedDeviceMap.keys.first() else ""
-                    devType = spinnerDeviceType.selectedItem as Int
-                    attrTypes = getSelectedAttrs()
+                if (fBox == null) {
+                    fBox = FBoxEventDevice().apply {
+                        devId = if (selectedDeviceMap.isNotEmpty()) selectedDeviceMap.keys.first() else ""
+                        devType = spinnerDeviceType.selectedItem as Int
+                        attrTypes = getSelectedAttrs()
+                    }
+                } else {
+                    fBox?.devId = if (selectedDeviceMap.isNotEmpty()) selectedDeviceMap.keys.first() else ""
+                    fBox?.devType = spinnerDeviceType.selectedItem as Int
+                    fBox?.attrTypes = getSelectedAttrs()
                 }
-                onBoxEventCreated.invoke(fBox)
+                onBoxEventCreated.invoke(fBox!!)
             }
 
 
             btnSelectDevice.setOnClickListener {
-                ILogR.D(TAG, "btnSelectDevice:onClick", selectedDeviceMap.size)
                 onSelectDevice.invoke(
                     spinnerDeviceType.selectedItem as Int,
                     getSelectedAttrs(),
@@ -239,20 +250,40 @@ class OverlayConfigBoxEventFromDevice(
         }
     }
 
+    private fun setUpOutputLayout() {
+        binding.apply {
+            rvOutput.adapter = adapterOutput
+            btnOutputClose.setOnClickListener {
+                onClose.invoke(true)
+            }
+
+            btnOutputConfig.setOnClickListener {
+                tabLayout.getTabAt(0)?.select()
+            }
+        }
+    }
+
     override fun show() {
         super.show()
+        binding.apply {
+            fBox = null
+            showOutput(isBoxCreated = false)
+        }
     }
-    fun show(fBox: FBox?) {
+
+    fun show(selectedBox: FBox?) {
         super.show()
         binding.apply {
             btnBack.gone()
-            fBox?.let {
-                if (it is FBoxEventDevice) {
+            selectedBox?.let {
+                if (selectedBox is FBoxEventDevice) {
+                    fBox = selectedBox
                     selectedDeviceMap.clear()
-                    if (it.devId.isNotEmpty()) {
-                        selectedDeviceMap[it.devId] = it.elms
+                    if (selectedBox.devId.isNotEmpty()) {
+                        selectedDeviceMap[selectedBox.devId] = selectedBox.elms
                     }
-                    initialize(it.devType, it.attrTypes, selectedDeviceMap)
+                    initialize(selectedBox.devType, selectedBox.attrTypes, selectedDeviceMap)
+                    showOutput(isBoxCreated = true)
                 }
             }
         }
@@ -299,5 +330,22 @@ class OverlayConfigBoxEventFromDevice(
                 }
             }
         }
+    }
+
+    private fun showOutput(isBoxCreated: Boolean) {
+        binding.apply {
+            when(isBoxCreated) {
+                true -> {
+                    lnOutputEmpty.gone()
+                    lnOutputList.show()
+                    adapterOutput.submitList(vmFlowScenario?.generateOutputs(fBox))
+                }
+                false -> {
+                    lnOutputEmpty.show()
+                    lnOutputList.gone()
+                }
+            }
+        }
+
     }
 }

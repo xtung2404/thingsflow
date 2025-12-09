@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/root"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/space_screen_super_small"
+        android:paddingVertical="6dp"
+        android:layout_marginBottom="@dimen/_space12dp"
+        android:background="@color/light_gray">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_label"
+                android:text="dasgjdsngjsd"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_body2"
+                android:fontFamily="@font/roboto_medium"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_location"
+                android:text="dasgjdsngjsd"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_caption"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_spot"
+            android:textColor="@color/emerald"
+            android:textSize="@dimen/text_body1"
+            android:fontFamily="@font/roboto_regular"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginEnd="12dp"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/_space16dp"
+            android:layout_height="@dimen/_space16dp"
+            android:src="@drawable/ic_up"/>
+    </LinearLayout>
+</layout>

@@ -4,17 +4,20 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.define.TFMethodHttp
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionCallHttpBinding
 import com.example.thingsflow.module.define.TFBodyHttpFormat
 import com.example.thingsflow.module.define.TFItemHeader
+import com.example.thingsflow.module.define.TFJsonField
+import com.example.thingsflow.module.define.TFPrimitiveType
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
-import com.example.thingsflow.ui.adapter.AdapterInput
+import com.example.thingsflow.ui.adapter.AdapterInOutput
+import com.example.thingsflow.ui.adapter.AdapterJsonField
 import com.example.thingsflow.ui.adapter.AdapterSpinnerBodyHttpFormat
 import com.example.thingsflow.ui.adapter.AdapterSpinnerMethodCallHttpType
+import com.example.thingsflow.ui.adapter.AdapterTableJsonField
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
@@ -37,6 +40,7 @@ class OverlayConfigBoxActionCallHttp(
     context: Context,
     container: ViewGroup,
     private val onConfigHeader: () -> Unit,
+    private val onConfigJsonOutput: () -> Unit,
     private val onBoxActionCallHttpCreated: (FBoxActionCallHttp) -> Unit,
     private val onClose: () -> Unit
 ): OverlayBase<LayoutOverlayConfigBoxActionCallHttpBinding>(
@@ -51,11 +55,25 @@ class OverlayConfigBoxActionCallHttp(
         }
     }
 
-    private val adapterInput: AdapterInput by lazy {
-        AdapterInput()
+    val map = hashMapOf<String, TFPrimitiveType>()
+    private val adapterInOutput: AdapterInOutput by lazy {
+        AdapterInOutput()
+    }
+
+    private val adapterJsonField: AdapterJsonField by lazy {
+        AdapterJsonField(
+            onMenuClick = { parentField, returnToChild ->
+
+            },
+            onNotifyParent = {
+
+            }
+        )
     }
     // hashmap to store headers that user insert
     private val requiredHeaders: HashMap<String, String> = hashMapOf()
+
+    private val jsonFields: ArrayList<TFJsonField> = arrayListOf()
 
     // adapter of method http spinner
     private val adapterSpinnerMethodCallHttpType: AdapterSpinnerMethodCallHttpType by lazy {
@@ -78,65 +96,53 @@ class OverlayConfigBoxActionCallHttp(
         )
     }
 
+    private val adapterTableJsonField: AdapterTableJsonField by lazy {
+        AdapterTableJsonField()
+    }
+
     override fun onViewCreated(binding: LayoutOverlayConfigBoxActionCallHttpBinding) {
         binding.apply {
 
         }
     }
 
-    override fun initVariable() {
-        super.initVariable()
-
-    }
-
     override fun initUI() {
         super.initUI()
+        setUpTabs()
         binding.apply {
-            spinnerMethodType.adapter = adapterSpinnerMethodCallHttpType
-            spinnerBodyFormat.adapter = adapterSpinnerBodyHttpFormat
-            rvInputFromParentBox.adapter = adapterInput
-
-
             btnBack.setOnClickListener {
                 onClose.invoke()
             }
+        }
+
+        setUpInputLayout()
+        setUpConfigLayout()
+        setUpOutputLayout()
+    }
+
+    private fun setUpInputLayout() {
+        binding.apply {
+            rvInputFromParentBox.adapter = adapterInOutput
+        }
+    }
+
+    private fun setUpConfigLayout() {
+        binding.apply {
+            spinnerMethodType.adapter = adapterSpinnerMethodCallHttpType
+            spinnerBodyFormat.adapter = adapterSpinnerBodyHttpFormat
 
             btnConfigHeader.setOnClickListener {
                 onConfigHeader.invoke()
             }
 
-            btnOutputClose.setOnClickListener {
-                onClose.invoke()
-            }
-
-            tabLayout.addOnTabSelectedListener(
-                object : TabLayout.OnTabSelectedListener {
-                    override fun onTabSelected(tab: TabLayout.Tab?) {
-                        tab?.let {
-                            if (tab.position == 0) {
-                                lnInput.show()
-                                lnConfig.gone()
-                                lnOutput.gone()
-                            }
-                            else if (tab.position == 1) {
-                                lnInput.gone()
-                                lnConfig.show()
-                                lnOutput.gone()
-                            }
-                            else {
-                                lnInput.gone()
-                                lnConfig.gone()
-                                lnOutput.show()
-                            }
-
-                        }
-                    }
-
-                    override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-                    override fun onTabReselected(tab: TabLayout.Tab?) {}
+            btnCreateBox.setOnClickListener {
+                val fBox = FBoxActionCallHttp().apply {
+                    url = edtUrl.text.toString()
+                    headers = requiredHeaders
+                    timeoutMs = edtTimeout.text.toString().toInt()
                 }
-            )
+                onBoxActionCallHttpCreated.invoke(fBox)
+            }
 
             spinnerMethodType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -177,25 +183,67 @@ class OverlayConfigBoxActionCallHttp(
                     }
                 }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-
-                }
-
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
         }
     }
 
-    override fun initAction() {
-        super.initAction()
+    private fun setUpOutputLayout() {
         binding.apply {
-            btnCreateBox.setOnClickListener {
-                val fBox = FBoxActionCallHttp().apply {
-                    url = edtUrl.text.toString()
-                    headers = requiredHeaders
-                    timeoutMs = edtTimeout.text.toString().toInt()
-                }
-                onBoxActionCallHttpCreated.invoke(fBox)
+            rvJson.adapter = adapterJsonField
+            rvTable.adapter = adapterTableJsonField
+
+            btnConfigOutput.setOnClickListener {
+                onConfigJsonOutput.invoke()
             }
+
+            btnOutputClose.setOnClickListener {
+                onClose.invoke()
+            }
+
+            cbForwardJson.setOnCheckedChangeListener { _, isChecked ->
+                cbExportValue.isChecked = !isChecked
+            }
+
+            cbExportValue.setOnCheckedChangeListener { _, isChecked ->
+                cbForwardJson.isChecked = !isChecked
+            }
+
+            btnTable.setOnClickListener {
+                lnOutputTable.show()
+                lnOutputJson.gone()
+            }
+
+            btnJson.setOnClickListener {
+                lnOutputTable.gone()
+                lnOutputJson.show()
+            }
+        }
+    }
+
+    private fun setUpTabs() {
+        binding.apply {
+            tabLayout.addOnTabSelectedListener(
+                object : TabLayout.OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        tab?.let {
+                            if (tab.position == 0) showTab(input = true)
+                            else if (tab.position == 1) showTab(config = true)
+                            else showTab(output = true)
+                        }
+                    }
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {}
+                    override fun onTabReselected(tab: TabLayout.Tab?) {}
+                }
+            )
+        }
+    }
+
+    private fun showTab(input: Boolean = false, config: Boolean = false, output: Boolean = false) {
+        binding.apply {
+            if (input) lnInput.show() else lnInput.gone()
+            if (config) lnConfig.show() else lnConfig.gone()
+            if (output) lnOutput.show() else lnOutput.gone()
         }
     }
 
@@ -219,7 +267,29 @@ class OverlayConfigBoxActionCallHttp(
         binding.apply {
             tabLayout.getTabAt(1)?.select()
         }
+    }
 
+    fun show(fieldList: List<TFJsonField>) {
+        super.show()
+        jsonFields.clear()
+        jsonFields.addAll(fieldList)
+        adapterJsonField.submitList(jsonFields)
+        mapJsonTable(jsonFields)
+
+        adapterTableJsonField.submitList(map.entries.toList())
+    }
+
+    private fun mapJsonTable(fields: List<TFJsonField>) {
+        fields.forEach { field ->
+            when(field.type) {
+                TFPrimitiveType.OBJECT -> {
+                    mapJsonTable(field.fields)
+                }
+                else -> {
+                    map[field.jsonPath] = field.type
+                }
+            }
+        }
     }
 
     private fun showInputFromPreviousBox() {
@@ -227,7 +297,7 @@ class OverlayConfigBoxActionCallHttp(
             val parentBoxId = vmFlowScenario?.getRootBoxId()
             val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
             parentBox?.let {
-                adapterInput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
+                adapterInOutput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
             }
         }
     }

@@ -6,25 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import com.example.thingflowsdk.core.define.TFMethodHttp
 import com.example.thingsflow.R
-import com.example.thingsflow.module.define.TFInOutType
-import com.example.thingsflow.utils.getInputLabel
+import com.example.thingsflow.module.define.TFPrimitiveType
 
-class AdapterSpinnerInput(
+class AdapterSpinnerPrimitiveType(
     context: Context,
-    private val items: List<Pair<TFInOutType, Int>>
-): ArrayAdapter<Pair<TFInOutType, Int>>(context, R.layout.layout_spinner_item_location, items) {
+    private val items: List<TFPrimitiveType>
+): ArrayAdapter<TFPrimitiveType>(context, R.layout.layout_spinner_item_location, items) {
     init {
         setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: LayoutInflater.from(context)
-            .inflate(R.layout.layout_spinner_item_location, parent, false)
+            .inflate(R.layout.layout_spinner_item_method_http, parent, false)
 
         val textView = view.findViewById<TextView>(R.id.txt_label)
-        textView.text = getInputLabel(context, items[position])
-
+        textView.text = getPrimitiveTypeLabel(items[position])
 
         return view
     }
@@ -34,8 +33,12 @@ class AdapterSpinnerInput(
         if (items[position] == null) {
             view.text = context.resources.getString(R.string.undefined)
         } else {
-            view.text = getInputLabel(context, items[position])
+            view.text = getPrimitiveTypeLabel(items[position])
         }
         return view
+    }
+
+    fun getPrimitiveTypeLabel(type: TFPrimitiveType): String {
+        return TFPrimitiveType.getFieldTypeLabel(context, type)
     }
 }

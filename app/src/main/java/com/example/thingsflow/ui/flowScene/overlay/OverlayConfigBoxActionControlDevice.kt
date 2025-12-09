@@ -10,7 +10,7 @@ import com.example.thingsflow.module.define.TFElementCmd
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterConfigedDeviceAction
-import com.example.thingsflow.ui.adapter.AdapterInput
+import com.example.thingsflow.ui.adapter.AdapterInOutput
 import com.example.thingsflow.ui.adapter.AdapterSpinnerControlAction
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.utils.getControlableDeviceType
@@ -34,8 +34,8 @@ class OverlayConfigBoxActionControlDevice(
     container: ViewGroup,
     private val onSelectDevice: (devType: Int?, attrs: IntArray?) -> Unit,
     private val onBoxActionControlDeviceCreated: (FBoxActionControlDevice) -> Unit,
-    private val onClose: () -> Unit
-): OverlayBase<LayoutOverlayConfigBoxActionControlDeviceBinding>(
+    private val onClose: (isBackable: Boolean) -> Unit
+) : OverlayBase<LayoutOverlayConfigBoxActionControlDeviceBinding>(
     context,
     container,
     LayoutOverlayConfigBoxActionControlDeviceBinding::inflate
@@ -48,7 +48,9 @@ class OverlayConfigBoxActionControlDevice(
         }
     }
 
-    private var parentBoxId: String?= null
+    private var fBoxActionControlDevice: FBoxActionControlDevice?= null
+
+    private var parentBoxId: String? = null
     private var deviceActionMap: HashMap<String?, ArrayList<TFElementCmd>> = hashMapOf()
 
     //adapter for select type of device
@@ -66,8 +68,8 @@ class OverlayConfigBoxActionControlDevice(
         )
     }
 
-    private val adapterInput: AdapterInput by lazy {
-        AdapterInput()
+    private val adapterInputFromPreviousBox: AdapterInOutput by lazy {
+        AdapterInOutput()
     }
 
     private val adapterConfigedDeviceAction: AdapterConfigedDeviceAction by lazy {
@@ -81,119 +83,55 @@ class OverlayConfigBoxActionControlDevice(
         }
     }
 
-    override fun initVariable() {
-        super.initVariable()
-
-    }
-
     override fun initUI() {
         super.initUI()
+        setUpTabs()
+        setUIDevicesSelected(isSelected = false)
+
         binding.apply {
-            setUIDevicesSelected(isSelected = false)
-
-            spinnerControlAction.adapter = adapterSpinnerControlAction
-            rvInputFromPreviousBox.adapter = adapterInput
-            rvDevices.adapter = adapterConfigedDeviceAction
-
             btnBack.setOnClickListener {
-                onClose.invoke()
+                onClose.invoke(true)
             }
 
             btnClose.setOnClickListener {
-                onClose.invoke()
+                onClose.invoke(btnBack.isShown)
             }
-
-            btnOutputConfig.setOnClickListener {
-                tabLayoutEvtDevice.getTabAt(0)?.select()
-            }
-
-            btnOutputClose.setOnClickListener {
-                onClose.invoke()
-            }
-
-            spinnerControlAction.onItemSelectedListener = object :
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val action = spinnerControlAction.selectedItem as Int
-                    adapterSpinnerDeviceType = AdapterSpinnerDeviceType(
-                        context, getControlableDeviceType(action)
-                    )
-                    spinnerDeviceType.adapter = adapterSpinnerDeviceType
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-
-                }
-
-            }
-
-            tabLayoutEvtDevice.addOnTabSelectedListener(
-                object : TabLayout.OnTabSelectedListener {
-                    override fun onTabSelected(tab: TabLayout.Tab?) {
-                        tab?.let {
-                            if (tab.position == 0) {
-                                lnInput.show()
-                                lnConfig.gone()
-                                lnOutput.gone()
-                            }
-                            else if (tab.position == 1) {
-                                lnInput.gone()
-                                lnConfig.show()
-                                lnOutput.gone()
-                            } else {
-                                lnInput.gone()
-                                lnConfig.gone()
-                                lnOutput.show()
-                            }
-
-                        }
-                    }
-
-                    override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-                    }
-
-                    override fun onTabReselected(tab: TabLayout.Tab?) {
-
-                    }
-                }
-            )
         }
+        setUpInputLayout()
+        setUpConfigLayout()
+        setUpOutputLayout()
     }
-    override fun initAction() {
+
+    private fun setUpInputLayout() {
         binding.apply {
+            rvInputFromPreviousBox.adapter = adapterInputFromPreviousBox
+            rvDevices.adapter = adapterConfigedDeviceAction
+
             btnSelectDevice.setOnClickListener {
                 onSelectDevice.invoke(
                     spinnerDeviceType.selectedItem as Int,
                     intArrayOf(
                         spinnerControlAction.selectedItem as Int
                     ),
-
                 )
             }
+        }
+    }
+
+    private fun setUpConfigLayout() {
+        binding.apply {
+            spinnerControlAction.adapter = adapterSpinnerControlAction
 
             btnCreateBox.setOnClickListener {
                 val selectedDevType = spinnerDeviceType.selectedItem as Int
-                var selectedDevice: Map.Entry<String?, ArrayList<TFElementCmd>>?= null
-                if (deviceActionMap.isNotEmpty()) {
-                    selectedDevice = deviceActionMap.entries.first()
-                }
-//                val selectedElm = selectedDevice?.value?.first()
-//                val action = selectedDevice?.value?.drop(1)?.toIntArray()
+                val action = spinnerControlAction.selectedItem as Int
+
                 val fBox = FBoxActionControlDevice().apply {
                     devType = selectedDevType
-                    devId = selectedDevice?.key
-//                    selectedElm?.let { elms = intArrayOf(it) }
-//                    attrValue = action
+                    attrType = action
                 }
                 onBoxActionControlDeviceCreated.invoke(fBox)
             }
-
 
             cbLater.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -215,32 +153,86 @@ class OverlayConfigBoxActionControlDevice(
                 }
             }
 
-        }
-    }
+            spinnerControlAction.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val action = spinnerControlAction.selectedItem as Int
+                    adapterSpinnerDeviceType = AdapterSpinnerDeviceType(
+                        context, getControlableDeviceType(action)
+                    )
+                    spinnerDeviceType.adapter = adapterSpinnerDeviceType
+                }
 
-    override fun show() {
-        super.show()
-        binding.apply {
-            deviceActionMap.clear()
-            adapterConfigedDeviceAction.submitList(deviceActionMap.entries.toList())
-            setUIDevicesSelected(isSelected = false)
-            tabLayoutEvtDevice.getTabAt(0)?.select()
-            parentBoxId = vmFlowScenario?.getRootBoxId()
-            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
-            parentBox?.let {
-                adapterInput.submitList(vmFlowScenario?.getInputsFromParentBox(it))
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                }
             }
         }
     }
 
-    fun show(box: FBox?) {
+    private fun setUpOutputLayout() {
         binding.apply {
-            if (box is FBoxActionControlDevice) {
-                parentBoxId = box.id
-                val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
-                parentBox?.let {
-                    adapterInput.submitList(vmFlowScenario?.getInputsFromParentBox(it))
+            btnOutputClose.setOnClickListener {
+                onClose.invoke(btnBack.isShown)
+            }
+        }
+    }
+
+    private fun setUpTabs() {
+        binding.apply {
+            tabLayout.addOnTabSelectedListener(
+                object : TabLayout.OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        tab?.let {
+                            if (tab.position == 0) showTab(input = true)
+                            else if (tab.position == 1) showTab(config = true)
+                            else showTab(output = true)
+                        }
+                    }
+
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {}
+                    override fun onTabReselected(tab: TabLayout.Tab?) {}
                 }
+            )
+        }
+    }
+
+    private fun showTab(input: Boolean = false, config: Boolean = false, output: Boolean = false) {
+        binding.apply {
+            if (input) lnInput.show() else lnInput.gone()
+            if (config) lnConfig.show() else lnConfig.gone()
+            if (output) lnOutput.show() else lnOutput.keepScreenOn
+        }
+    }
+
+
+    override fun show() {
+        super.show()
+        binding.apply {
+            fBoxActionControlDevice = null
+            tabLayout.getTabAt(0)?.select()
+            btnBack.show()
+            setUIDevicesSelected(isSelected = false)
+            showInputsFromPreviousBox()
+        }
+    }
+
+    fun show(fBox: FBox?) {
+        super.show()
+        binding.apply {
+            if (fBox is FBoxActionControlDevice) {
+                btnBack.gone()
+                fBoxActionControlDevice = fBox
+                initialize(
+                    fBoxActionControlDevice?.devType,
+                    if (fBoxActionControlDevice?.attrType != null) intArrayOf(fBoxActionControlDevice?.attrType!!) else intArrayOf()
+                )
+                showInputsFromPreviousBox()
             }
         }
     }
@@ -249,20 +241,33 @@ class OverlayConfigBoxActionControlDevice(
         super.show()
         binding.apply {
             deviceActionMap = cmdMap
-            tabLayoutEvtDevice.getTabAt(1)?.select()
-            parentBoxId = vmFlowScenario?.getRootBoxId()
-            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
-            parentBox?.let {
-                adapterInput.submitList(vmFlowScenario?.getInputsFromParentBox(it))
-            }
+            tabLayout.getTabAt(1)?.select()
             this@OverlayConfigBoxActionControlDevice.deviceActionMap = cmdMap
+            initialize(devType, attrs)
+            setUIDevicesSelected(deviceActionMap.isNotEmpty())
+            showInputsFromPreviousBox()
+        }
+    }
+
+    private fun initialize(
+        devType: Int?,
+        attrs: IntArray?
+    ) {
+        binding.apply {
             devType?.let {
                 val devTypePos = adapterSpinnerDeviceType.getPosition(it)
                 if (devTypePos != -1) {
                     spinnerDeviceType.setSelection(devTypePos)
                 }
             }
-            setUIDevicesSelected(deviceActionMap.isNotEmpty())
+            attrs?.let {
+                if(attrs.isNotEmpty()) {
+                    val attrPos = adapterSpinnerControlAction.getPosition(attrs.first())
+                    if (attrPos != -1) {
+                        spinnerControlAction.setSelection(attrPos)
+                    }
+                }
+            }
         }
     }
 
@@ -270,17 +275,32 @@ class OverlayConfigBoxActionControlDevice(
         binding.apply {
             cbLater.isChecked = !isSelected
             btnSelectDevice.isEnabled = isSelected
-            when(isSelected) {
+            when (isSelected) {
                 true -> {
                     lnEmptyDevices.gone()
                     lnDevices.show()
                     txtNumberOfDevices.text = "${deviceActionMap.size} thiết bị"
                     adapterConfigedDeviceAction.submitList(deviceActionMap.entries.toList())
                 }
+
                 false -> {
                     lnEmptyDevices.show()
                     lnDevices.gone()
                 }
+            }
+        }
+    }
+
+    private fun showInputsFromPreviousBox() {
+        binding.apply {
+            parentBoxId = if (fBoxActionControlDevice == null) {
+                vmFlowScenario?.getRootBoxId()
+            } else {
+                fBoxActionControlDevice?.rootId
+            }
+            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
+            parentBox?.let {
+                adapterInputFromPreviousBox.submitList(vmFlowScenario?.getInputsFromParentBox(it))
             }
         }
     }

@@ -44,9 +44,9 @@ class AdapterSelectedDevice() :
     inner class SelectedDeviceViewHolder(
         private val binding: LayoutItemSelectedDeviceBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun onBind(selectedDevice: Map.Entry<String?, IntArray>) {
+        fun onBind(deviceEntry: Map.Entry<String?, IntArray>) {
             binding.apply {
-                val device = FlowSdk.deviceHandler().get(selectedDevice.key)
+                val device = FlowSdk.deviceHandler().get(deviceEntry.key)
                 val selectedElements = hashMapOf<Int, IoTElementInfo>()
                 device?.let {
                     txtLabel.text = device.label
@@ -58,7 +58,7 @@ class AdapterSelectedDevice() :
                         rvElm.visibility = View.VISIBLE
                         rvElm.adapter = adapterSelectedElement
                         device.elementInfos.forEach {
-                            if (selectedDevice.value.contains(it.key)) {
+                            if (deviceEntry.value.contains(it.key)) {
                                 selectedElements[it.key] = it.value
                             }
                         }

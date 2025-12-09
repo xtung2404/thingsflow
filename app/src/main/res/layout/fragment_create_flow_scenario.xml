@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="24dp">
 
     <include
         android:id="@+id/toolbar"
@@ -26,10 +27,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/create_flow_scenario"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_headline6" />
+                android:textSize="@dimen/text_headline6"
+                android:fontFamily="@font/roboto_regular"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,7 +44,7 @@
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="@dimen/_space18dp">
 
-                <CheckBox
+                <com.example.thingsflow.ui.customview.CheckBoxCustom
                     android:layout_width="@dimen/_space24dp"
                     android:layout_height="@dimen/_space24dp"
                     android:id="@+id/cb_create_blank"
@@ -55,7 +57,7 @@
                     android:text="@string/create_blank_flow_scenario"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_button"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/roboto_medium" />
             </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
@@ -63,7 +65,8 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/or_duplicate_from_existed_flow_scenario"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_caption" />
+                android:textSize="@dimen/text_caption"
+                android:fontFamily="@font/roboto_regular"/>
 
             <EditText
                 android:id="@+id/edt_flow_scene"
@@ -71,10 +74,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_space16dp"
                 android:paddingHorizontal="@dimen/_space8dp"
-                android:paddingVertical="@dimen/_space16dp"
+                android:paddingVertical="12dp"
                 android:hint="@string/insert_attribute_value"
+                android:fontFamily="@font/roboto_regular"
                 android:textSize="@dimen/text_caption"
-                android:background="@drawable/bg_white_stroke_gray"/>
+                android:background="@drawable/bg_edit_text"
+                android:textColorHint="@color/black"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -99,7 +104,8 @@
                 android:text="@string/to_continue"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_button"
-                android:textAllCaps="false"/>
+                android:textAllCaps="false"
+                android:layout_marginTop="20dp"/>
         </LinearLayout>
     </LinearLayout>
 

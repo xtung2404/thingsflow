@@ -27,8 +27,10 @@
     <string name="please_select_a_location_to_continue">Hãy chọn 1 địa điểm để tiếp tục</string>
     <string name="create_a_new_location">Tạo địa điểm mới</string>
     <string name="edit_location">Chỉnh sửa địa điểm</string>
+    <string name="add_new_input">Thêm đầu vào mới</string>
     <string name="confirm_to_delete">Xác nhận xóa</string>
     <string name="name_location_after">Bạn nên đặt tên ví dụ như: nhà xưởng, vườn, ... </string>
+    <string name="insert_key_and_type_to_add_input">Nhập key và kiểu để tạo đầu vào</string>
     <string name="sorting_out_helps_easier_to_manage">Phân loại giúp bạn dễ quản lý hơn khi có nhiều địa điểm</string>
     <string name="you_can_change_later">Bạn vẫn có thể chỉnh sửa về sau</string>
     <string name="save_location">Lưu địa điểm</string>
@@ -47,6 +49,7 @@
     <string name="save">Lưu</string>
     <string name="output">Đầu ra</string>
     <string name="output_value">Giá trị đầu ra</string>
+    <string name="table_type">Bảng</string>
     <string name="scan_gateway">Quét thiết bị trung tâm</string>
     <string name="scan_sub_device">Quét thiết bị đầu cuối</string>
     <string name="gateway_info">Thông tin thiết bị trung tâm</string>
@@ -99,6 +102,7 @@
     <string name="state_from_device">Trạng thái từ thiết bị</string>
     <string name="config_new_input">Thiết lập đầu vào mới</string>
     <string name="device_type">Loại thiết bị</string>
+    <string name="type">Kiểu</string>
     <string name="control_action">Hành động điều khiển</string>
     <string name="attribute_of_device">Thuộc tính thiết bị</string>
     <string name="compared_value">Giá trị cần so sánh</string>
@@ -141,6 +145,7 @@
     <string name="create_box_and_config">Tạo box và lưu thiết lập</string>
     <string name="config_header">Chỉnh sửa header</string>
     <string name="insert_key">Nhập Key</string>
+    <string name="key">Key</string>
     <string name="insert_value">Nhập Value</string>
     <string name="body">Body</string>
     <string name="timeout_time">Thời gian timeout mỗi lượt (ms)</string>
@@ -149,6 +154,8 @@
     <string name="all_of_output_can_be_used_in_the_next_box">Toàn bộ giá trị đầu ra sẽ được chuyển cho box sau</string>
     <string name="output_will_be_available_after_being_configed">Đầu ra sẽ có khi thiết bị được thiết lập</string>
     <string name="this_kind_of_boxes_dont_have_output">Loại box này không có giá trị đầu ra</string>
+    <string name="you_dont_have_any_value">Bạn chưa có giá trị nào</string>
+    <string name="add_value">Thêm giá trị</string>
     <string name="event_from_mqtt">Sự kiện từ MQTT</string>
     <string name="light">Đèn</string>
     <string name="switch_device_type">Công tắc</string>
@@ -193,7 +200,9 @@
     <string name="config_control_one_device_or_a_group">Thiết lập điều khiển đơn hoặc nhóm</string>
     <string name="config_connection_through_api">Thiết lập hành động kết nối với API</string>
     <string name="execute_flow">Triển khai Flow Scenario</string>
+    <string name="execute_and_continue">Triển khai và tiếp tục</string>
     <string name="show_flow">Xem Flow Scenario</string>
+    <string name="save_and_return">Lưu và trở lại</string>
     <string name="or_duplicate_from_existed_flow_scenario">Hoặc nhân đôi từ các Flow Scenario đã có</string>
     <string name="execute_flow_on_gateway">Triển khai Flow lên thiết bị trung tâm</string>
     <string name="list_of_functioning_node">Danh sách các Node đang hoạt động</string>
@@ -201,6 +210,7 @@
     <string name="add_new_node">Thêm Node mới</string>
     <string name="add_header">Thêm header</string>
     <string name="list_of_device">Danh sách thiết bị</string>
+    <string name="list_of_gateways">Danh sách thiết bị trung tâm</string>
     <string name="list_of_value">Danh sách giá trị</string>
     <string name="to_break">Bỏ qua</string>
     <string name="select_a_gateway">Chọn thiết bị trung tâm</string>

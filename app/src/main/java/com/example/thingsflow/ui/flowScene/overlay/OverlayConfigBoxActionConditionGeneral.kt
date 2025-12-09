@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionGeneralBinding
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
-import com.example.thingsflow.ui.adapter.AdapterInput
+import com.example.thingsflow.ui.adapter.AdapterInOutput
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
@@ -38,8 +38,8 @@ class OverlayConfigBoxActionConditionGeneral(
         }
     }
 
-    private val adapterInput: AdapterInput by lazy {
-        AdapterInput()
+    private val adapterInOutput: AdapterInOutput by lazy {
+        AdapterInOutput()
     }
 
     override fun onViewCreated(binding: LayoutOverlayConfigBoxActionConditionGeneralBinding) {
@@ -56,7 +56,7 @@ class OverlayConfigBoxActionConditionGeneral(
     override fun initUI() {
         super.initUI()
         binding.apply {
-            rvInputFromParentBox.adapter = adapterInput
+            rvInputFromParentBox.adapter = adapterInOutput
 
             btnBack.setOnClickListener {
                 onClose.invoke(true)
@@ -128,7 +128,7 @@ class OverlayConfigBoxActionConditionGeneral(
             val parentBoxId = vmFlowScenario?.getRootBoxId()
             val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
             parentBox?.let {
-                adapterInput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
+                adapterInOutput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
             }
         }
     }

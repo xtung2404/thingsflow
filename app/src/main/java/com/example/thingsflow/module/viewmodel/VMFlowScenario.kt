@@ -3,19 +3,16 @@ package com.example.thingsflow.module.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.thingflowsdk.core.FlowSdk
-import com.example.thingsflow.module.define.TFInputType
+import androidx.lifecycle.viewModelScope
+import com.example.thingsflow.module.define.TFInOutType
 import com.example.thingsflow.module.repository.RepoFlowScenario
 import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import rogo.iot.module.flowcommon.box.FBox
-import rogo.iot.module.flowcommon.box.action.FBoxAction
-import rogo.iot.module.flowcommon.box.event.FBoxEvent
-import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
+import kotlinx.coroutines.launch
 import rogo.iot.module.base.ILogR
-import rogo.iot.module.base.define.IoTDeviceType
-import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
+import rogo.iot.module.flowcommon.box.FBox
+import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,135 +53,58 @@ class VMFlowScenario
      * It calculate the next available 'id' and 'segId' based on existing boxes
      * and links FBoxAction boxes to their parent box.
      */
-    fun configBox(fBox: FBox, newSegType: LayoutZoomPan.OnBoxActionListener.NewSegType?) {
-        val currentBoxes = _boxes.value ?: arrayListOf()
-        var highestBoxId: Int = 0
-        var highestSegId: Int = 0
-        // Iterate through existing boxes to find the maximum 'id' and 'segId'
-        currentBoxes.forEach { currentBox ->
-            val id = currentBox.id.toInt()
-            if (id > highestBoxId) {
-                highestBoxId = id
+    fun configBox(
+        fBox: FBox,
+        newSegType: LayoutZoomPan.OnBoxActionListener.NewSegType?
+    ) {
+        viewModelScope.launch {
+            val currentBoxes = _boxes.value ?: arrayListOf()
+            _boxes.value = ArrayList(
+                repo.generateBoxInfo(
+                    rootBoxId = rootBoxId,
+                    fBox = fBox,
+                    newSegType = newSegType,
+                    rootBoxes = currentBoxes
+            ))
+            _boxes.value?.forEach {
+                ILogR.D(TAG, "configBox:boxInfo", Gson().toJson(it))
             }
-            if (currentBox is FBoxAction) {
-                val segId: Int = currentBox.segId.toInt()
-                if (segId > highestSegId) {
-                    highestSegId = segId
-                }
-            }
-        }
-
-        when (fBox) {
-            is FBoxEvent -> {
-                // set ID for box event
-                fBox.id = (highestBoxId + 1).toString()
-            }
-
-            is FBoxAction -> {
-                //set the id of next segment for the first event box
-                if (currentBoxes.size == 1) {
-                    if (currentBoxes[0] is FBoxEvent) {
-                        (currentBoxes[0] as FBoxEvent).targetSegId = (highestSegId + 1).toString()
-                    }
-                }
-                // set ID for the current box action
-                fBox.id = (highestBoxId + 1).toString()
-                // set segmentID for the current box action
-                fBox.segId = (highestSegId + 1).toString()
-                // set the id of the parent box for the current box
-                fBox.rootId = rootBoxId
-                fBox.positiveSegId = ""
-                fBox.negativeSegId = ""
-                val rootBox = currentBoxes.find { it.id == rootBoxId }
-                // determine if the current box belongs to positive segment or negative segment of the parent box
-                if (rootBox != null && rootBox is FBoxAction) {
-                    when (newSegType) {
-                        LayoutZoomPan.OnBoxActionListener.NewSegType.DEFAULT,
-                        LayoutZoomPan.OnBoxActionListener.NewSegType.POSITIVE -> {
-                            rootBox.positiveSegId = fBox.segId
-                        }
-
-                        LayoutZoomPan.OnBoxActionListener.NewSegType.NEGATIVE -> {
-                            rootBox.negativeSegId = fBox.segId
-                        }
-
-                        else -> {
-
-                        }
-                    }
-                }
-            }
-        }
-        currentBoxes.add(fBox)
-        _boxes.value = currentBoxes
-        _boxes.value?.forEach {
-            ILogR.D(TAG, "configBox:boxInfo", Gson().toJson(it))
         }
     }
 
-    fun getInputsFromParentBox(box: FBox?): ArrayList<Pair<TFInputType, Int>> {
-        val availableInputs: ArrayList<Pair<TFInputType, Int>> = arrayListOf()
-        when(box) {
-            is FBoxEventDevice -> {
-                if (box.devType != IoTDeviceType.ALL) {
-                    availableInputs.add(Pair(TFInputType.DEVICE_TYPE, box.devType))
-                }
+    fun updateBox(updatedBox: FBox?) {
+        if (updatedBox == null) return
 
-                if (box.attrTypes.isNotEmpty()) {
-                    box.attrTypes.forEach {
-                        availableInputs.add(Pair(TFInputType.ATTRIBUTE, it))
-                    }
-                }
+        val currentBoxes = _boxes.value ?: return
 
-                if (!box.devId.isNullOrEmpty()) {
-                    val device = FlowSdk.deviceHandler().get(box.devId)
-                    device?.let {
-                        it.features.forEach { feature ->
-                            availableInputs.add(Pair(TFInputType.PAYLOAD, feature))
-                        }
-                    }
-                }
-            }
-
-            is FBoxActionControlDevice -> {
-                if (box.devType != IoTDeviceType.ALL) {
-                    availableInputs.add(Pair(TFInputType.DEVICE_TYPE, box.devType))
-                }
+        val newBoxes = currentBoxes.map { existingBox ->
+            if (existingBox.id == updatedBox.id) {
+                updatedBox // Thay thế bằng box đã được cập nhật
+            } else {
+                existingBox // Giữ nguyên box cũ
             }
         }
-        return availableInputs
+
+        _boxes.value = ArrayList(newBoxes)
     }
 
-    fun getInputFromOtherBox(devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>?): ArrayList<Pair<TFInputType, Int>> {
-        val availableInputs: ArrayList<Pair<TFInputType, Int>> = arrayListOf()
-        if (devType != null && devType != IoTDeviceType.ALL) {
-            availableInputs.add(Pair(TFInputType.DEVICE_TYPE, devType))
-        }
-
-        attrs?.let {
-            if (attrs.isNotEmpty()) {
-                attrs.forEach {
-                    availableInputs.add(Pair(TFInputType.ATTRIBUTE, it))
-                }
-            }
-        }
-
-
-        devMap?.let {
-            if (!devMap.isEmpty()) {
-                devMap.forEach { deviceEntry ->
-                    val device = FlowSdk.deviceHandler().get(deviceEntry.key)
-                    device?.let {
-                        it.features.forEach { feature ->
-                            availableInputs.add(Pair(TFInputType.PAYLOAD, feature))
-                        }
-                    }
-                }
-
-            }
-        }
-
-        return availableInputs
+    fun getInputsFromParentBox(box: FBox?): ArrayList<Pair<TFInOutType, Int>> {
+        return repo.generateInputsFromPreviousBox(box)
     }
 
+    fun generateInputsFromSpecificDevices(
+        devType: Int?,
+        attrs: IntArray?,
+        devMap: HashMap<String?, IntArray>?
+    ): ArrayList<Pair<TFInOutType, Int>> {
+        return repo.generateInputsFromSpecificDevices(
+            devType,
+            attrs,
+            devMap
+        )
+    }
+
+    fun generateOutputs(fBox: FBox?): List<Pair<TFInOutType, Int>> {
+        return repo.generateOutputs(fBox)
+    }
 }

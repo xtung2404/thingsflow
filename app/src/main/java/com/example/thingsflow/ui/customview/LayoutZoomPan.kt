@@ -578,7 +578,7 @@ class LayoutZoomPan @JvmOverloads constructor(
 
                 // ✅ Xử lý FBoxEvent (Có 1 nút +)
                 if (box is FBoxEvent) {
-                    if (box.targetSegId.isNullOrEmpty()) {
+                    if (box.id != null && box.targetSegId.isNullOrEmpty()) {
                         // Check nút "+"
                         val distToRight = (touchX - rightCx) * (touchX - rightCx) +
                                 (touchY - centerY) * (touchY - centerY)

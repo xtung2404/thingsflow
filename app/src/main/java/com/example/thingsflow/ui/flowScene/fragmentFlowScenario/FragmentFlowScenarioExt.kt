@@ -7,6 +7,7 @@ import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionConditi
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionControlDevice
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxEventFromDevice
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigInputBoxActionConditionDeviceState
+import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigOutputJson
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxActionType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxConditionType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxEventType
@@ -199,10 +200,14 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxEventFromDevice() {
             currentBoxType = FBoxType.EVT_FROM_DEVICE
             overlaySelectDevice.show(currentBoxType, devType, attrs, devMap)
         },
-        onBoxEventCreated = {
+        onBoxEventCreated = { fBoxEventDevice ->
             overlayConfigBoxEventFromDevice.hide()
-            vmFlowScenario.boxes.value?.clear()
-            vmFlowScenario.configBox(it, null)
+            if (fBoxEventDevice.id.isNullOrEmpty()) {
+                vmFlowScenario.boxes.value?.clear()
+                vmFlowScenario.configBox(fBoxEventDevice, null)
+            } else {
+                vmFlowScenario.updateBox(fBoxEventDevice)
+            }
         },
         onClose = { isBackable ->
             overlayConfigBoxEventFromDevice.hide()
@@ -226,12 +231,28 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionCallHttp() {
             overlayConfigBoxActionCallHttp.hide()
             dialogConfigHeaderHttp.show()
         },
+        onConfigJsonOutput = {
+            overlayConfigBoxActionCallHttp.hide()
+            overlayConfigOutputJson.show()
+        },
         onBoxActionCallHttpCreated = {
             overlayConfigBoxActionCallHttp.hide()
             vmFlowScenario.configBox(it, newSegType)
         },
         onClose = {
             overlayConfigBoxActionCallHttp.hide()
+        }
+    )
+
+    overlayConfigOutputJson = OverlayConfigOutputJson(
+        requireActivity(),
+        binding.overlayContainer,
+        onOutputConfigured = { fieldList->
+            overlayConfigOutputJson.hide()
+            overlayConfigBoxActionCallHttp.show(fieldList)
+        },
+        onClose = {
+            overlayConfigOutputJson.hide()
         }
     )
 }
@@ -253,8 +274,11 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionControlDevice() {
             overlayConfigBoxActionControlDevice.hide()
             vmFlowScenario.configBox(it, newSegType)
         },
-        onClose = {
+        onClose = { isBackable ->
             overlayConfigBoxActionControlDevice.hide()
+            if (isBackable) {
+                overlaySelectBoxActionType.show()
+            }
         }
     )
 

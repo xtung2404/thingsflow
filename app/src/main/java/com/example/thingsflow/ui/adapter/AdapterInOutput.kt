@@ -5,25 +5,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemInputBinding
-import com.example.thingsflow.module.define.TFInputType
-import com.example.thingsflow.utils.getAttrLabel
-import com.example.thingsflow.utils.getDeviceTypeLabel
+import com.example.thingsflow.module.define.TFInOutType
 import com.example.thingsflow.utils.getInputLabel
 
-class AdapterInput: ListAdapter<Pair<TFInputType, Int> , AdapterInput.InputViewHolder>(
-    object : DiffUtil.ItemCallback<Pair<TFInputType, Int>>() {
+class AdapterInOutput: ListAdapter<Pair<TFInOutType, Int> , AdapterInOutput.InputViewHolder>(
+    object : DiffUtil.ItemCallback<Pair<TFInOutType, Int>>() {
         override fun areItemsTheSame(
-            oldItem: Pair<TFInputType, Int>,
-            newItem: Pair<TFInputType, Int>
+            oldItem: Pair<TFInOutType, Int>,
+            newItem: Pair<TFInOutType, Int>
         ): Boolean {
             return oldItem.first == newItem.first && oldItem.second == newItem.second
         }
 
         override fun areContentsTheSame(
-            oldItem: Pair<TFInputType, Int>,
-            newItem: Pair<TFInputType, Int>
+            oldItem: Pair<TFInOutType, Int>,
+            newItem: Pair<TFInOutType, Int>
         ): Boolean {
             return oldItem.first == newItem.first && oldItem.second == newItem.second
         }
@@ -53,7 +50,7 @@ class AdapterInput: ListAdapter<Pair<TFInputType, Int> , AdapterInput.InputViewH
 
     inner class InputViewHolder(private val binding: LayoutItemInputBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(inputEntry: Pair<TFInputType, Int>) {
+        fun bindData(inputEntry: Pair<TFInOutType, Int>) {
             binding.apply {
                 txtInput.text = getInputLabel(root.context, inputEntry)
             }

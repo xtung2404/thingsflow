@@ -5,6 +5,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowScenarioBinding
+import com.example.thingsflow.module.define.TFItemHeader
+import com.example.thingsflow.module.viewmodel.VMFlowBinding
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.customview.LayoutZoomPan
@@ -17,6 +19,7 @@ import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionConditi
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionControlDevice
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxEventFromDevice
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigInputBoxActionConditionDeviceState
+import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigOutputJson
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxActionType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxConditionType
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectBoxEventType
@@ -73,6 +76,8 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     internal val TAG = "FragmentFlowScenario"
 
     internal val vmFlowScenario: VMFlowScenario by activityViewModels<VMFlowScenario>()
+
+    private val vmFlowBinding: VMFlowBinding by activityViewModels<VMFlowBinding>()
     internal var currentBoxType: Int = -1
 
     // Determine if the next box belongs to positive segment or negative segment of the current box
@@ -87,6 +92,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     internal lateinit var overlayConfigBoxActionConditionDeviceState: OverlayConfigBoxActionConditionDeviceState // use when config box action condition device state
     internal lateinit var overlayConfigInputBoxActionConditionDeviceState: OverlayConfigInputBoxActionConditionDeviceState //use when create an input from a device for box action condition device state
     internal lateinit var overlayConfigBoxActionCallHttp: OverlayConfigBoxActionCallHttp // use when config box action call http
+    internal lateinit var overlayConfigOutputJson: OverlayConfigOutputJson
     internal lateinit var overlayConfigBoxActionControlDevice: OverlayConfigBoxActionControlDevice // user when config box action control device
     internal lateinit var overlaySetControlDevice: OverlaySetControlDevice
     internal lateinit var overlaySelectDevice: OverlaySelectDevice // use when select device for boxes
@@ -104,7 +110,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             },
             onClose = {
                 dialogConfigHeaderHttp.dismiss()
-                overlayConfigBoxActionCallHttp.show(arrayListOf())
+                overlayConfigBoxActionCallHttp.show(arrayListOf<TFItemHeader>())
             }
         )
     }
@@ -138,7 +144,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     } else {
                         btnEditScene.show()
                         boxLayout.isEditMode = false
-                        btnEditScene.setImageDrawable(context?.getDrawable(R.drawable.ic_edit))
+                        btnEditScene.setImageDrawable(requireContext().getDrawable(R.drawable.ic_edit))
                     }
                 }
             }
@@ -172,6 +178,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 } else {
                     btnEditScene.setImageDrawable(context?.getDrawable(R.drawable.ic_edit))
                 }
+                vmFlowBinding.setBoxes(vmFlowScenario.boxes.value)
             }
         }
     }
@@ -186,6 +193,10 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 } else {
                     overlayConfigBoxEventFromDevice.show(box)
                 }
+            }
+
+            is FBoxActionControlDevice -> {
+                overlayConfigBoxActionControlDevice.show(box)
             }
 
             is FBoxEventMqtt,
@@ -207,14 +218,6 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             is FBoxActionConditionTime,
             is FBoxActionConditionDeviceState -> {
 
-            }
-
-            is FBoxActionControlDevice -> {
-                if (box.id == null) {
-                    overlaySelectBoxActionType.show()
-                } else {
-                    overlayConfigBoxActionControlDevice.show()
-                }
             }
             is FBoxActionAIGPT,
             is FBoxActionAIGemini,

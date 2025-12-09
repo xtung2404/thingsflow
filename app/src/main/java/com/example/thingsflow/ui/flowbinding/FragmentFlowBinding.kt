@@ -7,6 +7,7 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowBindingBinding
 import com.example.thingsflow.module.viewmodel.VMFlowBinding
 import com.example.thingsflow.ui.FragmentBase
+import com.example.thingsflow.ui.adapter.AdapterSpinnerGatewayBinding
 import com.example.thingsflow.ui.customview.ViewBox
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
 import com.example.thingsflow.ui.flowbinding.overlayBinding.OverlayBindingBoxEventFromDevice
@@ -58,13 +59,14 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
         )
     }
 
+    private lateinit var adapterSpinnerGatewayBinding: AdapterSpinnerGatewayBinding
     private lateinit var overlayBindingBoxEventFromDevice: OverlayBindingBoxEventFromDevice
-
 
 
     override fun initVariable() {
         super.initVariable()
         binding.apply {
+            binding.boxLayout.onBoxClickListener = this@FragmentFlowBinding
 
         }
     }
@@ -72,62 +74,15 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
     override fun initView() {
         super.initView()
         binding.apply {
-            // Khởi tạo một danh sách FBox mới
-            boxes.clear()
-            btnEditScene.visibility = View.VISIBLE
-            val boxEvt = FBoxEventDevice()
-            boxEvt.apply {
-                targetSegId = "1"
+            toolbar.txtTitle.text = "Danh sách các thiết bị đang triển khai"
+            adapterSpinnerGatewayBinding = AdapterSpinnerGatewayBinding(requireContext(), vmFlowBinding.getSelectedGateways().entries.toList())
+            spinnerGateway.adapter = adapterSpinnerGatewayBinding
+
+            vmFlowBinding.boxes.observe(this@FragmentFlowBinding) {
+                boxLayout.boxList = ArrayList(it)
             }
-            boxes.clear()
-            boxes.add(boxEvt)
-            val fActionBox = FBoxActionControlDevice()
-            fActionBox.devId = "1222"
-            fActionBox.segId = "1"
-            boxes.add(fActionBox)
 
-            val fActionBox1 = FBoxActionControlDevice()
-            fActionBox1.devId = "1"
-            fActionBox1.segId = "1"
-            fActionBox1.positiveSegId = "2"
-            fActionBox1.negativeSegId = "3"
-            boxes.add(fActionBox1)
 
-            val fActionBox2 = FBoxActionControlDevice()
-            fActionBox2.devId = "2"
-            fActionBox2.segId = "2"
-            fActionBox2.positiveSegId = "6"
-            fActionBox2.negativeSegId = "7"
-            boxes.add(fActionBox2)
-
-            val fActionBox3 = FBoxActionControlDevice()
-            fActionBox3.devId = "3"
-            fActionBox3.segId = "3"
-            fActionBox3.negativeSegId = "4"
-            fActionBox3.positiveSegId = "5"
-            boxes.add(fActionBox3)
-
-            val fActionBox4 = FBoxActionControlDevice()
-            fActionBox4.devId = "4"
-            fActionBox4.segId = "4"
-            boxes.add(fActionBox4)
-//
-            val fActionBox5 = FBoxActionControlDevice()
-            fActionBox5.devId = "5"
-            fActionBox5.segId = "5"
-            boxes.add(fActionBox5)
-
-            val fActionBox6 = FBoxActionControlDevice()
-            fActionBox6.devId = "6"
-            fActionBox6.segId = "6"
-            boxes.add(fActionBox6)
-
-            val fActionBox7 = FBoxActionControlDevice()
-            fActionBox7.devId = "7"
-            fActionBox7.segId = "7"
-            boxes.add(fActionBox7)
-            boxLayout.boxList = boxes
-            binding.boxLayout.onBoxClickListener = this@FragmentFlowBinding
         }
     }
 
@@ -141,64 +96,28 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
                 dialogLabelFlowScenario.show()
             }
 
-            btnEditScene.setOnClickListener {
-                boxLayout.isEditMode = !boxLayout.isEditMode
-                val devices = vmFlowBinding.getSelectedDevices()
-                val sceneId = vmFlowBinding.getSelectedFlowSceneId()
-                val label = txtSceneLabel.text.toString()
-                if (!sceneId.isNullOrEmpty() && devices.isNotEmpty()) {
-                    vmFlowBinding.createFlowBinding(
-                        devices[0].uuid,
-                        sceneId,
-                        label,
-                        object : SuccessStatusCallback {
-                            override fun onSuccess() {
-                                ILogR.D(TAG, "onCreateFlowBinding:onSuccess")
-                            }
 
-                            override fun onFailure(p0: Int, p1: String?) {
-                                ILogR.D(TAG, "onCreateFlowBinding:onFailure", p0, p1)
-                            }
-
-                        }
-                    )
-
-                    vmFlowBinding.bindBoxes(
-                        devices[0].uuid,
-                        sceneId,
-                        boxes,
-                        object : SuccessStatusCallback {
-                            override fun onSuccess() {
-
-                            }
-
-                            override fun onFailure(p0: Int, p1: String?) {
-
-                            }
-                        }
-                    )
+            overlayBindingBoxEventFromDevice = OverlayBindingBoxEventFromDevice(
+                requireActivity(),
+                binding.overlayBindingContainer,
+                onSave = { fBox ->
+                    overlayBindingBoxEventFromDevice.hide()
+                    vmFlowBinding.updateBox(fBox)
+                },
+                onClose = {
+                    overlayBindingBoxEventFromDevice.hide()
                 }
-            }
+            )
         }
-
-        overlayBindingBoxEventFromDevice = OverlayBindingBoxEventFromDevice(
-            requireActivity(),
-            binding.overlayBindingContainer,
-            onSave = {
-
-            },
-            onClose = {
-                overlayBindingBoxEventFromDevice.hide()
-            }
-        )
     }
 
     override fun onBoxClick(box: FBox?) {
-        ILogR.D(TAG, "onBoxClick")
+        ILogR.D(TAG, "onBoxClick", box?.id)
         when (box) {
             is FBoxEventDevice -> {
-                overlayBindingBoxEventFromDevice.show()
+                overlayBindingBoxEventFromDevice.show(box)
             }
+
             is FBoxEventMqtt,
             is FBoxEventWeather,
             is FBoxEventSchedule,
@@ -211,14 +130,14 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
             is FBoxEventVoiceRecognize,
             is FBoxEventTimerInterval,
             is FBoxEventStatistic
-            -> {
+                -> {
 
             }
 
             is FBoxActionConditionGeneral,
             is FBoxActionConditionTime,
             is FBoxActionConditionDeviceState
-            -> {
+                -> {
 
             }
 
@@ -233,7 +152,7 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
             is FBoxActionHandlerAnotherBox,
             is FBoxActionPublishMqtt,
             is FBoxActionSendWebSocket
-            -> {
+                -> {
 
             }
 

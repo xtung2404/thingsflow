@@ -1,5 +1,7 @@
 package com.example.thingsflow.module.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thingsflow.module.repository.RepoFlowBinding
@@ -16,9 +18,14 @@ class VMFlowBinding
 {
     private val TAG = "VMFlowBinding"
     private var selectedFlowScene: String?= null
-    private val selectedGateways: ArrayList<IoTDevice> = arrayListOf()
+    private val selectedGateways: HashMap<String?, IntArray> = hashMapOf()
 
+    private val _boxes = MutableLiveData<ArrayList<FBox>>(arrayListOf<FBox>())
+    val boxes: LiveData<ArrayList<FBox>> = _boxes
 
+    fun setBoxes(boxes: ArrayList<FBox>) {
+        _boxes.value = boxes
+    }
     fun setSelectedFlowScene(sceneId: String) {
         selectedFlowScene = sceneId
     }
@@ -27,16 +34,33 @@ class VMFlowBinding
         return selectedFlowScene
     }
 
-    fun setSelectedGateways(nodes: List<IoTDevice>) {
+    fun setSelectedGateways(devices: HashMap<String?, IntArray>) {
         viewModelScope.launch {
             selectedGateways.clear()
-            selectedGateways.addAll(nodes)
+            selectedGateways.putAll(devices)
         }
     }
 
-    fun getSelectedDevices(): ArrayList<IoTDevice> {
+    fun getSelectedGateways(): HashMap<String?, IntArray> {
         return selectedGateways
     }
+
+    fun updateBox(updatedBox: FBox?) {
+        if (updatedBox == null) return
+
+        val currentBoxes = _boxes.value ?: return
+
+        val newBoxes = currentBoxes.map { existingBox ->
+            if (existingBox.id == updatedBox.id) {
+                updatedBox // Thay thế bằng box đã được cập nhật
+            } else {
+                existingBox // Giữ nguyên box cũ
+            }
+        }
+
+        _boxes.value = ArrayList(newBoxes)
+    }
+
     fun createFlowBinding(
         devId: String,
         sceneId: String,
@@ -56,14 +80,14 @@ class VMFlowBinding
     fun bindBoxes(
         devId: String,
         bindingId: String,
-        eventBoxes: ArrayList<FBox?>,
+        boxes: ArrayList<FBox?>,
         callback: SuccessStatusCallback
     ) {
         viewModelScope.launch {
             repo.bindBoxes(
                 devId,
                 bindingId,
-                eventBoxes,
+                boxes,
                 callback
             )
         }

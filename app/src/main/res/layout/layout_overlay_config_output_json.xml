@@ -2,9 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-    </data>
+    <data></data>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -25,21 +23,19 @@
             android:layout_gravity="end"
             android:background="@android:color/white"
             android:elevation="8dp"
-            android:orientation="vertical"
-
-            android:visibility="visible">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingHorizontal="@dimen/_space16dp"
+                android:paddingHorizontal="16dp"
                 android:gravity="center_vertical"
                 android:layout_marginTop="40dp">
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:id="@id/btn_back"
+                    android:id="@+id/btn_back"
                     android:src="@drawable/ic_back"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -47,41 +43,126 @@
                     android:fontFamily="@font/roboto_medium"
                     android:text="@string/list_of_value"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_headline6" />
+                    android:textSize="20sp" />
             </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_screen_super_small"
+                android:layout_marginTop="8dp"
                 android:text="@string/you_can_add_and_delete_value"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_caption"
+                android:textSize="12sp"
                 android:paddingHorizontal="16dp"/>
+
             <LinearLayout
+                android:id="@+id/ln_json"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:paddingHorizontal="16dp">
+                android:paddingHorizontal="16dp"
+                android:visibility="visible">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_json"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="12dp"
+                            android:background="@color/gray"
+                            android:paddingVertical="6dp">
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_up"
+                                android:padding="10dp"/>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Object Root"
+                                android:textColor="@color/black"/>
+                            <TextView
+                                android:id="@+id/txt_type"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/text_caption"
+                                android:text="OBJECT"
+                                android:fontFamily="@font/roboto_medium"/>
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/btn_menu"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_3_dot"
+                                android:padding="4dp"/>
+                        </LinearLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_json"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            android:paddingStart="8dp"/>
+
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:text="@string/save"
+                    android:background="@drawable/btn_emerald"
+                    android:textColor="@color/white"/>
             </LinearLayout>
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_save"
+
+            <LinearLayout
+                android:id="@+id/ln_empty"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:text="@string/save"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:background="@drawable/btn_emerald"
-                android:textSize="@dimen/text_body2"
-                android:layout_marginBottom="20dp"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="100dp"
+                    android:src="@drawable/ic_empty_box"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/you_dont_have_any_value"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="18dp"/>
+                <LinearLayout
+                    android:id="@+id/btn_add_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/btn_emerald"
+                    android:layout_marginTop="20dp"
+                    android:padding="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_value"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 </layout>
