@@ -59,13 +59,17 @@ class OverlaySelectDevice(
         }
     }
 
-    override fun initVariable() {
-        super.initVariable()
-
-    }
-
     override fun initUI() {
         super.initUI()
+        binding.apply {
+            edtLabel.doOnTextChanged { text, _, _, _ ->
+                filterAndDisplayDevices(text?.toString().orEmpty())
+            }
+        }
+    }
+
+    override fun initAction() {
+        super.initAction()
         binding.apply {
             btnBack.setOnClickListener {
                 onClose.invoke()
@@ -78,16 +82,7 @@ class OverlaySelectDevice(
                     selectedDeviceMap
                 )
             }
-
-            edtLabel.doOnTextChanged { text, _, _, _ ->
-                filterAndDisplayDevices(text?.toString().orEmpty())
-            }
         }
-    }
-
-    override fun initAction() {
-        super.initAction()
-
     }
 
 
@@ -118,49 +113,8 @@ class OverlaySelectDevice(
 
         super.show()
         binding.apply {
-            when (currentBoxType) {
-                FBoxType.ACT_CONTROL_DEVICE -> {
-                    adapterDevices = AdapterDevices(
-                        isAllowedToSelectOneDevice = false,
-                        onDevicesSelected = { devMap ->
-                            selectedDeviceMap = devMap
-                        }
-                    )
-                }
-                else -> {
-                    adapterDevices = AdapterDevices(
-                        isAllowedToSelectOneDevice = true,
-                        onDevicesSelected = { devMap ->
-                            selectedDeviceMap = devMap
-                        }
-                    )
-                }
-            }
-            rvDevice.adapter = adapterDevices
-            selectedDevType = devType ?: IoTDeviceType.ALL
-            selectedAttrs = attrs ?: intArrayOf()
-
-            txtDevType.text = getDeviceTypeLabel(context, selectedDevType)
-            txtAttr.text =
-                if (selectedAttrs.isNotEmpty()) getAttrLabel(context, selectedAttrs[0]) else ""
-            if (selectedAttrs.isNotEmpty()) {
-                txtAttr.text = getAttrLabel(context, selectedAttrs[0])
-            }
-            val filteredDevices = vmDevice?.getUserDevices()
-                ?.asSequence() // Use sequence for better performance on large lists
-                ?.filter { dev ->
-                    if (selectedDevType != IoTDeviceType.ALL) {
-                        dev.devType == selectedDevType
-                    } else {
-                        true
-                    }
-                }
-                ?.distinct() // Ensure unique devices if they match multiple attributes
-                ?.toList() ?: emptyList()
-
-            originalDevList.addAll(filteredDevices)
-            adapterDevices.submitList(originalDevList)
-            adapterDevices.setSelectedDeviceMap(selectedDeviceMap)
+            initialize(devType, attrs)
+            showUIDevices(currentBoxType == FBoxType.ACT_CONTROL_DEVICE)
         }
     }
 
@@ -173,41 +127,38 @@ class OverlaySelectDevice(
         super.show()
 
         selectedDeviceMap = devMap?: hashMapOf()
-        ILogR.D(TAG, "selectedDevices:size", selectedDeviceMap.size, devMap?.size)
-        selectedDeviceMap.forEach {
-            ILogR.D(TAG, "selectedDevice:info ", it.key, it.value.toString())
-        }
         originalDevList.clear()
-
         binding.apply {
-            when (currentBoxType) {
-                FBoxType.ACT_CONTROL_DEVICE -> {
-                    adapterDevices = AdapterDevices(
-                        isAllowedToSelectOneDevice = false,
-                        onDevicesSelected = { devMap ->
-                            selectedDeviceMap = devMap
-                        }
-                    )
-                }
-                else -> {
-                    adapterDevices = AdapterDevices(
-                        isAllowedToSelectOneDevice = true,
-                        onDevicesSelected = { devMap ->
-                            selectedDeviceMap = devMap
-                        }
-                    )
-                }
-            }
-            rvDevice.adapter = adapterDevices
+            initialize(devType, attrs)
+            showUIDevices(currentBoxType == FBoxType.ACT_CONTROL_DEVICE)
+        }
+    }
+
+    private fun initialize(devType: Int?, attrs: IntArray?) {
+        binding.apply {
             selectedDevType = devType ?: IoTDeviceType.ALL
             selectedAttrs = attrs ?: intArrayOf()
 
             txtDevType.text = getDeviceTypeLabel(context, selectedDevType)
+
             txtAttr.text =
                 if (selectedAttrs.isNotEmpty()) getAttrLabel(context, selectedAttrs[0]) else ""
+
             if (selectedAttrs.isNotEmpty()) {
                 txtAttr.text = getAttrLabel(context, selectedAttrs[0])
             }
+        }
+    }
+
+    private fun showUIDevices(isAllowedToSelectMultipleDevices: Boolean) {
+        binding.apply {
+            adapterDevices = AdapterDevices(
+                isAllowedToSelectMultipleDevices = isAllowedToSelectMultipleDevices,
+                onDevicesSelected = { devMap ->
+                    selectedDeviceMap = devMap
+                }
+            )
+            rvDevice.adapter = adapterDevices
             val filteredDevices = vmDevice?.getUserDevices()
                 ?.asSequence() // Use sequence for better performance on large lists
                 ?.filter { dev ->

@@ -6,10 +6,9 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionControlDeviceBinding
-import com.example.thingsflow.module.define.TFElementCmd
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
-import com.example.thingsflow.ui.adapter.AdapterConfigedDeviceAction
+import com.example.thingsflow.ui.adapter.AdapterConfiguredDeviceAction
 import com.example.thingsflow.ui.adapter.AdapterInOutput
 import com.example.thingsflow.ui.adapter.AdapterSpinnerControlAction
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
@@ -17,9 +16,11 @@ import com.example.thingsflow.utils.getControlableDeviceType
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
+import rogo.iot.module.base.ILogR
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
+import rogo.iot.module.flowcommon.value.FControlValue
 
 /**
  * @file: This overlay is used to configure a box action control device(FBoxActionControlDevice)
@@ -40,6 +41,7 @@ class OverlayConfigBoxActionControlDevice(
     container,
     LayoutOverlayConfigBoxActionControlDeviceBinding::inflate
 ) {
+    private val TAG = "OverlayConfigBoxActionControlDevice"
     //selectedDeviceMap is to store selected devices
 
     private val vmFlowScenario: VMFlowScenario? by lazy {
@@ -49,9 +51,7 @@ class OverlayConfigBoxActionControlDevice(
     }
 
     private var fBoxActionControlDevice: FBoxActionControlDevice?= null
-
-    private var parentBoxId: String? = null
-    private var deviceActionMap: HashMap<String?, ArrayList<TFElementCmd>> = hashMapOf()
+    private var deviceActionMap: HashMap<String?, Array<FControlValue>> = hashMapOf()
 
     //adapter for select type of device
     private lateinit var adapterSpinnerDeviceType: AdapterSpinnerDeviceType
@@ -72,8 +72,8 @@ class OverlayConfigBoxActionControlDevice(
         AdapterInOutput()
     }
 
-    private val adapterConfigedDeviceAction: AdapterConfigedDeviceAction by lazy {
-        AdapterConfigedDeviceAction()
+    private val adapterConfiguredDeviceAction: AdapterConfiguredDeviceAction by lazy {
+        AdapterConfiguredDeviceAction()
     }
 
 
@@ -104,8 +104,9 @@ class OverlayConfigBoxActionControlDevice(
 
     private fun setUpInputLayout() {
         binding.apply {
+            //set up adapters
             rvInputFromPreviousBox.adapter = adapterInputFromPreviousBox
-            rvDevices.adapter = adapterConfigedDeviceAction
+            rvDevices.adapter = adapterConfiguredDeviceAction
 
             btnSelectDevice.setOnClickListener {
                 onSelectDevice.invoke(
@@ -126,11 +127,13 @@ class OverlayConfigBoxActionControlDevice(
                 val selectedDevType = spinnerDeviceType.selectedItem as Int
                 val action = spinnerControlAction.selectedItem as Int
 
-                val fBox = FBoxActionControlDevice().apply {
-                    devType = selectedDevType
-                    attrType = action
-                }
-                onBoxActionControlDeviceCreated.invoke(fBox)
+                if (fBoxActionControlDevice == null)
+                    fBoxActionControlDevice = FBoxActionControlDevice()
+
+                fBoxActionControlDevice!!.devType = selectedDevType
+                fBoxActionControlDevice!!.attrType = action
+                fBoxActionControlDevice!!.targetControls = deviceActionMap
+                onBoxActionControlDeviceCreated.invoke(fBoxActionControlDevice!!)
             }
 
             cbLater.setOnCheckedChangeListener { _, isChecked ->
@@ -214,6 +217,7 @@ class OverlayConfigBoxActionControlDevice(
     override fun show() {
         super.show()
         binding.apply {
+            this@OverlayConfigBoxActionControlDevice.deviceActionMap = hashMapOf()
             fBoxActionControlDevice = null
             tabLayout.getTabAt(0)?.select()
             btnBack.show()
@@ -228,16 +232,19 @@ class OverlayConfigBoxActionControlDevice(
             if (fBox is FBoxActionControlDevice) {
                 btnBack.gone()
                 fBoxActionControlDevice = fBox
+                deviceActionMap = HashMap(fBox.targetControls)
                 initialize(
                     fBoxActionControlDevice?.devType,
                     if (fBoxActionControlDevice?.attrType != null) intArrayOf(fBoxActionControlDevice?.attrType!!) else intArrayOf()
                 )
                 showInputsFromPreviousBox()
+                ILogR.D(TAG,"show:deviceActionMap", deviceActionMap.size)
+                setUIDevicesSelected(deviceActionMap.isNotEmpty())
             }
         }
     }
 
-    fun show(devType: Int?, attrs: IntArray?, cmdMap: HashMap<String?, ArrayList<TFElementCmd>>) {
+    fun show(devType: Int?, attrs: IntArray?, cmdMap: HashMap<String?, Array<FControlValue>>) {
         super.show()
         binding.apply {
             deviceActionMap = cmdMap
@@ -274,13 +281,14 @@ class OverlayConfigBoxActionControlDevice(
     private fun setUIDevicesSelected(isSelected: Boolean) {
         binding.apply {
             cbLater.isChecked = !isSelected
+            cbSelectDevice.isChecked = isSelected
             btnSelectDevice.isEnabled = isSelected
             when (isSelected) {
                 true -> {
                     lnEmptyDevices.gone()
                     lnDevices.show()
                     txtNumberOfDevices.text = "${deviceActionMap.size} thiết bị"
-                    adapterConfigedDeviceAction.submitList(deviceActionMap.entries.toList())
+                    adapterConfiguredDeviceAction.submitList(deviceActionMap.entries.toList())
                 }
 
                 false -> {
@@ -293,16 +301,15 @@ class OverlayConfigBoxActionControlDevice(
 
     private fun showInputsFromPreviousBox() {
         binding.apply {
-            parentBoxId = if (fBoxActionControlDevice == null) {
+            val previousBoxId = if (fBoxActionControlDevice == null) {
                 vmFlowScenario?.getRootBoxId()
             } else {
                 fBoxActionControlDevice?.rootId
             }
-            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
-            parentBox?.let {
-                adapterInputFromPreviousBox.submitList(vmFlowScenario?.getInputsFromParentBox(it))
+            val previousBox = vmFlowScenario?.boxes?.value?.find { it.id == previousBoxId }
+            previousBox?.let {
+                adapterInputFromPreviousBox.submitList(vmFlowScenario?.getInputsFromParentBox(previousBox))
             }
         }
     }
-
 }

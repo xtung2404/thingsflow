@@ -3,11 +3,11 @@ package com.example.thingsflow.ui.flowScene.overlay
 import android.content.Context
 import android.view.ViewGroup
 import com.example.thingsflow.databinding.LayoutOverlaySetControlDeviceBinding
-import com.example.thingsflow.module.define.TFElementCmd
 import com.example.thingsflow.ui.OverlayBase
-import com.example.thingsflow.ui.adapter.AdapterConfigControlCommand
+import com.example.thingsflow.ui.adapter.AdapterConfiguredControlCmd
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.base.define.IoTDeviceType
+import rogo.iot.module.flowcommon.value.FControlValue
 
 /**
  * @file: This overlay is used to select type of box(action or condition)
@@ -20,7 +20,7 @@ import rogo.iot.module.base.define.IoTDeviceType
 class OverlaySetControlDevice(
     context: Context,
     container: ViewGroup,
-    private val onCommandSetted: (devType: Int?, attrs: IntArray?, HashMap<String?, ArrayList<TFElementCmd>>) -> Unit,
+    private val onCommandSetted: (devType: Int?, attrs: IntArray?, HashMap<String?, Array<FControlValue>>) -> Unit,
     private val onClose: () -> Unit
 ) : OverlayBase<LayoutOverlaySetControlDeviceBinding>(
     context,
@@ -29,7 +29,7 @@ class OverlaySetControlDevice(
 ) {
     private var action: Int = IoTAttribute.ACT_ONOFF
     private var selectedDeviceType: Int = IoTDeviceType.ALL
-    private lateinit var adapterConfigControlCommand: AdapterConfigControlCommand
+    private lateinit var adapterConfigControlCommand: AdapterConfiguredControlCmd
 
     // adapter for select type of box
 
@@ -54,7 +54,7 @@ class OverlaySetControlDevice(
                 onCommandSetted.invoke(
                     selectedDeviceType,
                     intArrayOf(action),
-                    adapterConfigControlCommand.getDeviceActionMap()
+                    adapterConfigControlCommand.getDeviceControlCmdMap()
                 )
             }
         }
@@ -68,7 +68,7 @@ class OverlaySetControlDevice(
             }
             actions?.let {
                 this@OverlaySetControlDevice.action = actions.first()
-                adapterConfigControlCommand = AdapterConfigControlCommand(
+                adapterConfigControlCommand = AdapterConfiguredControlCmd(
                     context,
                     action
                 )

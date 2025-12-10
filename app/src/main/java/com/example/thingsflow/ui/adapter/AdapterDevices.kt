@@ -17,11 +17,11 @@ import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 
 /**
  * @file: This adapter is used to display devices
- * @param isAllowedToSelectOneDevice: how many devices can be selected at one time
+ * @param isAllowedToSelectMultipleDevices: how many devices can be selected at one time
  * @param onDevicesSelected: triggered when devices are selected successfully
  */
 class AdapterDevices(
-    private val isAllowedToSelectOneDevice: Boolean = true,
+    private val isAllowedToSelectMultipleDevices: Boolean = false,
     private val onDevicesSelected: (HashMap<String?, IntArray>) -> Unit
 ) :
     ListAdapter<IoTDevice, RecyclerView.ViewHolder>(DeviceDiffCallback) {
@@ -52,7 +52,7 @@ class AdapterDevices(
     private fun handleElementClick(deviceUuid: String, elementKey: Int) {
         val currentSelections = selectedDeviceMap[deviceUuid]?.toMutableList() ?: mutableListOf()
 
-        if (isAllowedToSelectOneDevice) {
+        if (!isAllowedToSelectMultipleDevices) {
             selectedDeviceMap.clear()
             selectedDeviceMap[deviceUuid] = intArrayOf(elementKey)
         } else {
@@ -81,7 +81,7 @@ class AdapterDevices(
                 if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
                 val device = getItem(adapterPosition)
 
-                if (isAllowedToSelectOneDevice) {
+                if (!isAllowedToSelectMultipleDevices) {
                     handleSingleDeviceClick(device, adapterPosition)
                 } else {
                     handleMultiDeviceClick(device, adapterPosition)
@@ -221,5 +221,5 @@ private object ElementDiffCallback :
     override fun areContentsTheSame(
         oldItem: MutableMap.MutableEntry<Int, IoTElementInfo>,
         newItem: MutableMap.MutableEntry<Int, IoTElementInfo>
-    ): Boolean = oldItem.value == newItem.value
+    ): Boolean = oldItem.key == newItem.key && oldItem.value.label == newItem.value.label
 }

@@ -9,8 +9,8 @@ import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingflowsdk.core.define.TFComparision
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionDeviceStateBinding
 import com.example.thingsflow.module.define.TFCommand
-import com.example.thingsflow.module.define.TFInputSource
 import com.example.thingsflow.module.define.TFInOutType
+import com.example.thingsflow.module.define.TFInputSource
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterInOutput
@@ -25,8 +25,6 @@ import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
-import rogo.iot.module.flowcommon.box.io.InputSource
-import rogo.iot.module.flowcommon.box.io.InputSourceType
 
 /**
  * @file: This overlay is used to configure a box action condition device state(FBoxActionConditionDeviceState)
@@ -350,14 +348,14 @@ class OverlayConfigBoxActionConditionDeviceState(
                                     if (parentBox is FBoxEventDevice) {
                                         attrType = selectedComparedValue.second
                                         condition = comparisionType
-                                        if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
-                                            comparingValue = arrayOf<InputSource>(
-                                                InputSource(
-                                                    InputSourceType.INTEGER,
-                                                    selectedComparingValue.second[1]
-                                                )
-                                            )
-                                        }
+//                                        if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
+//                                            comparingValue = arrayOf<InputSource>(
+//                                                InputSource(
+//                                                    InputSourceType.INTEGER,
+//                                                    selectedComparingValue.second[1]
+//                                                )
+//                                            )
+//                                        }
 
                                         val device = FlowSdk.deviceHandler().get(parentBox.devId)
                                         device?.let {
@@ -383,14 +381,14 @@ class OverlayConfigBoxActionConditionDeviceState(
                                         attrType = selectedComparedValue.second
                                         isInputFromPreviousBox = false
                                         condition = comparisionType
-                                        if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
-                                            comparingValue = arrayOf<InputSource>(
-                                                InputSource(
-                                                    InputSourceType.INTEGER,
-                                                    selectedComparingValue.second[1]
-                                                )
-                                            )
-                                        }
+//                                        if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
+//                                            comparingValue = arrayOf<InputSource>(
+//                                                InputSource(
+//                                                    InputSourceType.INTEGER,
+//                                                    selectedComparingValue.second[1]
+//                                                )
+//                                            )
+//                                        }
                                     }
 
                                 }
@@ -418,12 +416,12 @@ class OverlayConfigBoxActionConditionDeviceState(
                                         isInputFromPreviousBox = false
                                         condition = comparisionType
                                         if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
-                                            comparingValue = arrayOf<InputSource>(
-                                                InputSource(
-                                                    InputSourceType.INTEGER,
-                                                    selectedComparingValue.second[1]
-                                                )
-                                            )
+//                                            comparingValue = arrayOf<InputSource>(
+//                                                InputSource(
+//                                                    InputSourceType.INTEGER,
+//                                                    selectedComparingValue.second[1]
+//                                                )
+//                                            )
                                         }
                                     }
 

@@ -270,9 +270,13 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionControlDevice() {
             overlayConfigBoxActionControlDevice.hide()
             overlaySelectDevice.show(currentBoxType, devType, attrs)
         },
-        onBoxActionControlDeviceCreated = {
-            overlayConfigBoxActionControlDevice.hide()
-            vmFlowScenario.configBox(it, newSegType)
+        onBoxActionControlDeviceCreated = { fBoxActionControlDevice ->
+            if (fBoxActionControlDevice.id.isNullOrEmpty()) {
+                overlayConfigBoxActionControlDevice.hide()
+                vmFlowScenario.configBox(fBoxActionControlDevice, newSegType)
+            } else {
+                vmFlowScenario.updateBox(fBoxActionControlDevice)
+            }
         },
         onClose = { isBackable ->
             overlayConfigBoxActionControlDevice.hide()

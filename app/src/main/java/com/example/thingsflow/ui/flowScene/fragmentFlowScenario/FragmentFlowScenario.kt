@@ -97,7 +97,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     internal lateinit var overlaySetControlDevice: OverlaySetControlDevice
     internal lateinit var overlaySelectDevice: OverlaySelectDevice // use when select device for boxes
 
-    /*
+    /**
     * DialogConfigHeaderHttp: is for configuring HTTP headers for box action call http
     * - onHeadersConfiged: triggered when user save the headers successfully
     */

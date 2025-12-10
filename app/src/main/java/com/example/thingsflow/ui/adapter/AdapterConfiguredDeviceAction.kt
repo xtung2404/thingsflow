@@ -9,24 +9,24 @@ import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.databinding.LayoutItemDeviceActionGridBinding
 import com.example.thingsflow.databinding.LayoutItemDeviceActionSingleBinding
 import com.example.thingsflow.databinding.LayoutItemElementCmdBinding
-import com.example.thingsflow.module.define.TFElementCmd
 import com.example.thingsflow.module.define.TFViewHolderType.Companion.TYPE_GRID
 import com.example.thingsflow.module.define.TFViewHolderType.Companion.TYPE_SINGLE
 import com.example.thingsflow.utils.getCmdLabel
+import rogo.iot.module.flowcommon.value.FControlValue
 
-class AdapterConfigedDeviceAction
-    : ListAdapter<Map.Entry<String?, ArrayList<TFElementCmd>>, RecyclerView.ViewHolder>(
-    object : DiffUtil.ItemCallback<Map.Entry<String?, ArrayList<TFElementCmd>>>() {
+class AdapterConfiguredDeviceAction
+    : ListAdapter<Map.Entry<String?, Array<FControlValue>>, RecyclerView.ViewHolder>(
+    object : DiffUtil.ItemCallback<Map.Entry<String?, Array<FControlValue>>>() {
         override fun areItemsTheSame(
-            oldItem: Map.Entry<String?, ArrayList<TFElementCmd>>,
-            newItem: Map.Entry<String?, ArrayList<TFElementCmd>>
+            oldItem: Map.Entry<String?, Array<FControlValue>>,
+            newItem: Map.Entry<String?, Array<FControlValue>>
         ): Boolean {
             return oldItem.key.contentEquals(newItem.key) && oldItem.value == newItem.value
         }
 
         override fun areContentsTheSame(
-            oldItem: Map.Entry<String?, ArrayList<TFElementCmd>>,
-            newItem: Map.Entry<String?, ArrayList<TFElementCmd>>
+            oldItem: Map.Entry<String?, Array<FControlValue>>,
+            newItem: Map.Entry<String?, Array<FControlValue>>
         ): Boolean {
             return oldItem.key.contentEquals(newItem.key) && oldItem.value == newItem.value
         }
@@ -34,7 +34,7 @@ class AdapterConfigedDeviceAction
 ) {
     inner class SingleViewHolder(private val binding: LayoutItemDeviceActionSingleBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun onBind(deviceActionEntry: Map.Entry<String?, ArrayList<TFElementCmd>>) {
+        fun onBind(deviceActionEntry: Map.Entry<String?, Array<FControlValue>>) {
             binding.apply {
                 val devId = deviceActionEntry.key
                 val configuredActions = deviceActionEntry.value
@@ -52,8 +52,8 @@ class AdapterConfigedDeviceAction
                 action.let { act ->
                     txtAction.text = getCmdLabel(
                         root.context,
-                        act?.cmd?.get(0), // Lệnh
-                        act?.cmd?.get(1) // Giá trị của lệnh (nếu có)
+                        act?.attrValue?.get(0), // Lệnh
+                        act?.attrValue?.get(1) // Giá trị của lệnh (nếu có)
                     )
                 }
             }
@@ -62,7 +62,7 @@ class AdapterConfigedDeviceAction
 
     inner class GridViewHolder(private val binding: LayoutItemDeviceActionGridBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun onBind(item: Map.Entry<String?, ArrayList<TFElementCmd>>) {
+        fun onBind(item: Map.Entry<String?, Array<FControlValue>>) {
             binding.apply {
                 val device = FlowSdk.deviceHandler().get(item.key)
                 device?.let { dev ->
@@ -72,7 +72,7 @@ class AdapterConfigedDeviceAction
 
                     val adapterElementCmd = AdapterElementCmd(dev.uuid)
                     rvElms.adapter = adapterElementCmd
-                    adapterElementCmd.submitList(item.value)
+                    adapterElementCmd.submitList(item.value.toList())
                 }
             }
         }
@@ -125,33 +125,33 @@ class AdapterConfigedDeviceAction
     inner class AdapterElementCmd(
         private val devId: String?= null
     ) :
-        ListAdapter<TFElementCmd, AdapterElementCmd.ElementCmdViewHolder>(
-            object : DiffUtil.ItemCallback<TFElementCmd>() {
+        ListAdapter<FControlValue, AdapterElementCmd.ElementCmdViewHolder>(
+            object : DiffUtil.ItemCallback<FControlValue>() {
                 override fun areItemsTheSame(
-                    oldItem: TFElementCmd,
-                    newItem: TFElementCmd
+                    oldItem: FControlValue,
+                    newItem: FControlValue
                 ): Boolean {
-                    return oldItem.elmId == newItem.elmId && oldItem.cmd.contentEquals(newItem.cmd)
+                    return oldItem.elm == newItem.elm && oldItem.attrValue.contentEquals(newItem.attrValue)
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: TFElementCmd,
-                    newItem: TFElementCmd
+                    oldItem: FControlValue,
+                    newItem: FControlValue
                 ): Boolean {
-                    return oldItem.elmId == newItem.elmId && oldItem.cmd.contentEquals(newItem.cmd)
+                    return oldItem.elm == newItem.elm && oldItem.attrValue.contentEquals(newItem.attrValue)
                 }
             }
         ) {
         inner class ElementCmdViewHolder(private val binding: LayoutItemElementCmdBinding) :
             RecyclerView.ViewHolder(binding.root) {
-            fun onBind(elmCmd: TFElementCmd) {
+            fun onBind(elmCmd: FControlValue) {
                 binding.apply {
                     val device = FlowSdk.deviceHandler().get(devId)
                     device?.let { dev->
-                        val elmInfo = dev.elementInfos?.toList()?.find { it.first == elmCmd.elmId }
+                        val elmInfo = dev.elementInfos?.toList()?.find { it.first == elmCmd.elm }
 
                         txtElm.text = elmInfo?.second?.label ?: "Nuts ${elmInfo?.first}"
-                        txtDesc.text = getCmdLabel(root.context, elmCmd.cmd[0], elmCmd.cmd[1])
+                        txtDesc.text = getCmdLabel(root.context, elmCmd.attrValue[0], elmCmd.attrValue[1])
                     }
                 }
             }

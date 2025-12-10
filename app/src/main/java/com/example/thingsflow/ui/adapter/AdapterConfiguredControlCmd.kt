@@ -10,15 +10,16 @@ import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.databinding.LayoutItemSetControlActionElmBinding
 import com.example.thingsflow.databinding.LayoutItemSetControlActionGridBinding
 import com.example.thingsflow.databinding.LayoutItemSetControlActionSingleBinding
-import com.example.thingsflow.module.define.TFElementCmd
 import com.example.thingsflow.module.define.TFViewHolderType.Companion.TYPE_GRID
 import com.example.thingsflow.module.define.TFViewHolderType.Companion.TYPE_SINGLE
 import com.example.thingsflow.utils.show
 import rogo.iot.module.base.ILogR
 import rogo.iot.module.base.define.IoTAttribute
+import rogo.iot.module.flowcommon.value.FControlValue
 import rogo.iot.module.platform.entity.IoTElementInfo
+import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 
-class AdapterConfigControlCommand(
+class AdapterConfiguredControlCmd(
     context: Context,
     private  val action: Int,
 ) : ListAdapter<Map.Entry<String?, IntArray>, RecyclerView.ViewHolder>(
@@ -40,59 +41,66 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
 }
 ) {
     private val TAG = "AdapterConfigControlCommand"
-    private var deviceActionMap: HashMap<String?, ArrayList<TFElementCmd>> = hashMapOf()
+    private var deviceControlCmdMap: HashMap<String?, Array<FControlValue>> = hashMapOf()
 
-    fun getDeviceActionMap(): HashMap<String?, ArrayList<TFElementCmd>> {
-        return deviceActionMap
+    fun getDeviceControlCmdMap(): HashMap<String?, Array<FControlValue>> {
+        return deviceControlCmdMap
     }
     private lateinit var adapterControlElement: AdapterControlElement
+    private fun handleAddAndRemoveAction(
+        device: IoTDevice,
+        newCmd: FControlValue
+    ) {
+        var cmds: Array<FControlValue>? = deviceControlCmdMap[device.uuid] // Giữ nguyên kiểu Array?
+        if (cmds != null) {
+            val cmd = cmds.firstOrNull {
+                it.elm == newCmd.elm
+            }
+            cmds = if (cmd != null) {
+                if (cmd.attrValue.contentEquals(newCmd.attrValue)) {
+                    cmds.filterNot { it == cmd }.toTypedArray()
+                } else {
+                    cmds.filterNot { it == cmd }.plus(newCmd).toTypedArray()
+                }
+            } else {
+                cmds.plus(newCmd)
+            }
+        } else {
+            cmds = arrayOf(newCmd)
+        }
+        if (cmds.isNotEmpty()) {
+            deviceControlCmdMap[device.uuid] = cmds
+        } else {
+            deviceControlCmdMap.remove(device.uuid)
+        }
+    }
     inner class SingleViewHolder(private val binding: LayoutItemSetControlActionSingleBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(deviceEntry: Map.Entry<String?, IntArray>) {
             binding.apply {
                 val device = FlowSdk.deviceHandler().get(deviceEntry.key)
                 device?.let {
-                    txtLabel.text = it.label
-                    val location = FlowSdk.locationHandler().get(it.locationId)
-                    location?.let { loc ->
-                        txtLocation.text = loc.label
-                    }
+                    txtLabel.text = device.label
+
+                    val location = FlowSdk.locationHandler().get(device.locationId)
+                    txtLocation.text = location?.label?: ""
 
                     lnControlOnOff.initView(onOnOffSelected = { newActionValue ->
                         val elm = device.elementIds.first()
-                        var commands = deviceActionMap[device.uuid]
-                        val newCmd = TFElementCmd(elm, newActionValue)
-                        if (commands != null) {
-                            val cmd = commands.firstOrNull {
-                                it.elmId == elm
-                            }
-                            if (cmd != null) {
-                                if (cmd.cmd.contentEquals(newActionValue)) {
-                                    commands.remove(cmd)
-                                } else {
-                                    commands.remove(cmd)
-                                    commands.add(newCmd)
-                                }
-                            } else {
-                                commands.add(newCmd)
-                            }
-                        } else {
-                            commands = arrayListOf<TFElementCmd>(newCmd)
-                        }
-                        if (commands.isNotEmpty()) {
-                            deviceActionMap[device.uuid] = commands
-                        } else {
-                            deviceActionMap.remove(device.uuid)
-                        }
-                        cbConfiged.isChecked = deviceActionMap[device.uuid]?.isEmpty() == false
-                        ILogR.D(TAG, "onOnOffSelected:actionSize ", deviceActionMap.size)
-                        deviceActionMap.entries.forEach { entry ->
-                            ILogR.D(TAG, "onOnOffSelected:device ", device.uuid, entry.value.size)
-                            entry.value.forEach { value ->
-                                ILogR.D(TAG, "onOnOffSelected:elmAction ", value.elmId, value.cmd.contentToString())
-                            }
-                        }
-                        lnControlOnOff.updateButtonState(deviceActionMap[device.uuid]?.find { it == newCmd }?.cmd)
+
+                        val newCtlValue = FControlValue(
+                            device.eid,
+                            elm,
+                            newActionValue
+                        )
+
+                        handleAddAndRemoveAction(
+                            device,
+                            newCtlValue
+                        )
+                        cbConfiged.isChecked = deviceControlCmdMap[device.uuid]?.isEmpty() == false
+
+                        lnControlOnOff.updateButtonState(deviceControlCmdMap[device.uuid]?.find { it == newCtlValue }?.attrValue)
                     })
                 }
             }
@@ -107,7 +115,7 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
                     deviceEntry.key,
                     action,
                     onCmdSelected = {
-                        cbConfiged.isChecked = deviceActionMap[deviceEntry.key]?.isEmpty() == false
+                        cbConfiged.isChecked = deviceControlCmdMap[deviceEntry.key]?.isEmpty() == false
                     }
                 )
 
@@ -206,41 +214,19 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
                     lnControlOnOff.initView(onOnOffSelected = { newActionValue ->
                         val device = FlowSdk.deviceHandler().get(devId)
                         device?.let {
-                            var commands = deviceActionMap[device.uuid]
-                            val newCmd = TFElementCmd(elmInfo.key, newActionValue)
-                            if (commands != null) {
-                                val cmd = commands.firstOrNull {
-                                    it.elmId == elmInfo.key
-                                }
-                                if (cmd != null) {
-                                    if (cmd.cmd.contentEquals(newActionValue)) {
-                                        commands.remove(cmd)
-                                    } else {
-                                        commands.remove(cmd)
-                                        commands.add(newCmd)
-                                    }
-                                } else {
-                                    commands.add(newCmd)
-                                }
-                            } else {
-                                commands = arrayListOf<TFElementCmd>(newCmd)
-                            }
-                            if (commands.isNotEmpty()) {
-                                deviceActionMap[device.uuid] = commands
-                            } else {
-                                deviceActionMap.remove(device.uuid)
-                            }
+                            val newCtlValue = FControlValue(
+                                device.eid,
+                                elmInfo.key,
+                                newActionValue
+                            )
 
-                            ILogR.D(TAG, "onOnOffSelected:actionSize ", deviceActionMap.size)
-                            deviceActionMap.entries.forEach { entry ->
-                                ILogR.D(TAG, "onOnOffSelected:device ", device.uuid, entry.value.size)
-                                entry.value.forEach { value ->
-                                    ILogR.D(TAG, "onOnOffSelected:elmAction ", value.elmId, value.cmd.contentToString())
-                                }
-                            }
+                            handleAddAndRemoveAction(
+                                device,
+                                newCtlValue
+                            )
 
                             onCmdSelected.invoke()
-                            lnControlOnOff.updateButtonState(deviceActionMap[device.uuid]?.find { it == newCmd }?.cmd)
+                            lnControlOnOff.updateButtonState(deviceControlCmdMap[device.uuid]?.find { it == newCtlValue }?.attrValue)
                         }
                     })
                 }
