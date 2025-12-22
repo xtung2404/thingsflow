@@ -38,6 +38,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation ("com.google.code.gson:gson:2.10.1")
+
+
     implementation(group = "", name = "rogocore", ext = "jar")
     implementation(group = "", name = "flowcommon", ext = "jar")
     implementation(group = "", name = "rogocloudapi", ext = "jar")

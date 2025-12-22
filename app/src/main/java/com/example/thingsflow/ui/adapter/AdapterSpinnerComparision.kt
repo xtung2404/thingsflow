@@ -6,10 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.example.thingflowsdk.core.define.TFComparision
-import com.example.thingflowsdk.core.define.TFMethodHttp
+import com.example.thingflowsdk.core.base.define.TFComparision
 import com.example.thingsflow.R
-import rogo.iot.module.platform.define.IoTCondition
 
 class AdapterSpinnerComparision(
     context: Context,

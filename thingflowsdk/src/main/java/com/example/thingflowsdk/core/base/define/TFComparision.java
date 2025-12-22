@@ -1,4 +1,4 @@
-package com.example.thingflowsdk.core.define;
+package com.example.thingflowsdk.core.base.define;
 
 import rogo.iot.module.platform.define.IoTCondition;
 

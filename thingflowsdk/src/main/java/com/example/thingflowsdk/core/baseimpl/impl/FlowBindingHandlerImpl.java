@@ -1,8 +1,10 @@
-package com.example.thingflowsdk.core.impl;
+package com.example.thingflowsdk.core.baseimpl.impl;
 
-import com.example.thingflowsdk.core.handler.FlowHandler;
+import com.example.thingflowsdk.core.base.handler.FlowBindingHandler;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import rogo.iot.module.base.ILogR;
 import rogo.iot.module.flowcommon.box.FBox;
@@ -17,13 +19,10 @@ import rogo.iot.module.rogocore.sdk.SmartSdk;
 import rogo.iot.module.rogocore.sdk.callback.FeatureRequestCallback;
 import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback;
 
-public class FlowHandlerImpl implements FlowHandler {
-    private String TAG = "FlowHandlerImpl";
-//    @Override
-//    public void createFlowScenario() {
-//
-//    }
+public class FlowBindingHandlerImpl implements FlowBindingHandler {
+    private String TAG = "FlowBindingHandlerImpl";
 
+    private final Gson gson = new Gson();
     @Override
     public void createFlowBinding(
             String devId,
@@ -33,7 +32,7 @@ public class FlowHandlerImpl implements FlowHandler {
             SuccessStatusCallback callback) {
         ILogR.D(TAG, "createFlowBinding:devId", devId, label);
         SmartSdk.featureHandler().runFeatureMethod(
-            false,
+                false,
                 devId,
                 IoTFeature.BUILTIN_SERVICE_FLOW,
                 "createFlowBinding",
@@ -47,34 +46,38 @@ public class FlowHandlerImpl implements FlowHandler {
                 30000,
                 new FeatureRequestCallback() {
 
-
                     @Override
                     public void onRequestDelivered(int i, String s) {
-
+                        ILogR.D(TAG, "onRequestDelivered", i, s);
                     }
 
                     @Override
                     public void onRequestRepliedSuccess(int i, String s) {
-
+                        ILogR.D(TAG, "onRequestRepliedSuccess", i, s);
                     }
 
                     @Override
                     public void onRequestFailure(int i, String s) {
-
+                        ILogR.D(TAG, "onRequestFailure", i, s);
                     }
                 }
         );
     }
 
     @Override
-    public void bindBoxes(String devId, String bindingId, ArrayList<FBox> boxes, SuccessStatusCallback callback) {
+    public void bindBoxesBinding(
+            String devId,
+            String bindingId,
+            ArrayList<FBox> boxes,
+            SuccessStatusCallback callback
+    ) {
         ArrayList<FBox> eventBoxes = new ArrayList<>();
         ArrayList<FBox> actionBoxes = new ArrayList<>();
-        for (int i = 0; i < boxes.size(); i++) {
-            if (boxes.get(i) instanceof FBoxEvent) {
-                eventBoxes.add(boxes.get(i));
+        for(FBox box: boxes) {
+            if (box instanceof FBoxEvent) {
+                eventBoxes.add(box);
             } else {
-                actionBoxes.add(boxes.get(i));
+                actionBoxes.add(box);
             }
         }
         bindBoxEvent(
@@ -91,12 +94,12 @@ public class FlowHandlerImpl implements FlowHandler {
                                 new SuccessStatusCallback() {
                                     @Override
                                     public void onSuccess() {
-
+                                        callback.onSuccess();
                                     }
 
                                     @Override
-                                    public void onFailure(int i, String s) {
-
+                                    public void onFailure(int errorCode, String msg) {
+                                        callback.onFailure(errorCode, msg);
                                     }
                                 }
                         );
@@ -111,27 +114,28 @@ public class FlowHandlerImpl implements FlowHandler {
     }
 
 
-    public void bindBoxEvent(
+    private void bindBoxEvent(
             String devId,
             String bindingId,
             ArrayList<FBox> eventBoxes,
             SuccessStatusCallback callback
     ) {
-        ArrayList<Integer> evtTypes = new ArrayList<>();
-        ArrayList<String> boxIds = new ArrayList<>();
-        ArrayList<String> targetId = new ArrayList<>();
-        ArrayList<String> eventDatas = new ArrayList<>();
-        for (int i = 0; i < eventBoxes.size(); i++) {
-            boxIds.add(i, eventBoxes.get(i).getId());
-            eventDatas.add(i, null);
-            if (eventBoxes.get(i) instanceof FBoxEvent) {
-                String boxTargetId = ((FBoxEventDevice) eventBoxes.get(i)).getTargetSegId();
-                targetId.add(i, boxTargetId);
-            }
-            if (eventBoxes.get(i) instanceof FBoxEventDevice) {
-                evtTypes.add(i, FBoxType.EVT_FROM_DEVICE);
-            }
+        int size = eventBoxes.size();
+
+        String[] evtBoxIds = new String[size];
+        Integer[] evtEventTypes = new Integer[size];
+        String[] evtTargetIds = new String[size];
+        String[] evtEventDatas = new String[size];
+
+        for (int i = 0; i < size; i++) {
+            FBox eventBox = eventBoxes.get(i);
+            evtBoxIds[i] = eventBox.getId();
+            evtEventTypes[i] = getTypeOfBox(eventBox);
+            evtTargetIds[i] = (eventBox instanceof FBoxEvent) ? ((FBoxEventDevice) eventBox).getTargetSegId() : null;
+            evtEventDatas[i] = generatedBoxEventData(eventBox);
         }
+
+        ILogR.D(TAG, "onBindBoxEvent", new Gson().toJson(evtEventDatas));
         SmartSdk.featureHandler().runFeatureMethod(
                 false,
                 devId,
@@ -141,59 +145,60 @@ public class FlowHandlerImpl implements FlowHandler {
                     @IoTInvokingProperty("flowBindingId")
                     private String flowBindingId = bindingId;
                     @IoTInvokingProperty("eventBoxIds")
-                    private String[] eventBoxIds = boxIds.toArray(new String[eventBoxes.size()]);
+                    private String[] eventBoxIds = evtBoxIds;
                     @IoTInvokingProperty("eventType")
-                    private Integer[] eventType = evtTypes.toArray(new Integer[eventBoxes.size()]);
+                    private Integer[] eventType = evtEventTypes;
                     @IoTInvokingProperty("targetSegId")
-                    private String[] targetSegId = targetId.toArray(new String[eventBoxes.size()]);
+                    private String[] targetSegId = evtTargetIds;
                     @IoTInvokingProperty("eventData")
-                    private String[] eventData = eventDatas.toArray(new String[eventBoxes.size()]);
-
-
+                    private String[] eventData = evtEventDatas;
                 },
                 30000,
                 new FeatureRequestCallback() {
 
                     @Override
                     public void onRequestDelivered(int i, String s) {
-
+                        ILogR.D(TAG, "onBindBoxEvent:onRequestDelivered", i, s);
                     }
 
                     @Override
                     public void onRequestRepliedSuccess(int i, String s) {
+                        ILogR.D(TAG, "onBindBoxEvent:onRequestRepliedSuccess", i, s);
                         callback.onSuccess();
                     }
 
                     @Override
                     public void onRequestFailure(int i, String s) {
+                        ILogR.D(TAG, "onBindBoxEvent:onRequestFailure", i, s);
                         callback.onFailure(i, s);
                     }
                 }
         );
     }
-    public void bindOtherBoxes(
+
+    private void bindOtherBoxes(
             String devId,
             String bindingId,
             ArrayList<FBox> boxes,
             SuccessStatusCallback callback
     ) {
-        ArrayList<Integer> actTypes = new ArrayList<>();
-        ArrayList<String> actBoxIds = new ArrayList<>();
-        ArrayList<String> actSegIds = new ArrayList<>();
-        ArrayList<String> actPosSegIds = new ArrayList<>();
-        ArrayList<String> actNegSegIds = new ArrayList<>();
-        ArrayList<String> actDatas = new ArrayList<>();
-        for (int i = 0; i < boxes.size(); i++) {
-            actBoxIds.add(i, boxes.get(i).getId());
-            actSegIds.add(i, (((FBoxAction) boxes.get(i)).getSegId()));
-            actPosSegIds.add(i, (((FBoxAction) boxes.get(i)).getPositiveSegId()));
-            actNegSegIds.add(i, (((FBoxAction) boxes.get(i)).getNegativeSegId()));
-            if (boxes.get(i) instanceof FBoxActionControlDevice) {
-                actTypes.add(i, FBoxType.ACT_CONTROL_DEVICE);
-                actDatas.add(i, null);
-            }
-        }
         int size = boxes.size();
+        String[] actBoxIds = new String[size];
+        Integer[] actTypes = new Integer[size];
+        String[] actSegIds = new String[size];
+        String[] actPosSegIds = new String[size];
+        String[] actNegSegIds = new String[size];
+        String[] actDatas = new String[size];
+
+        for (int i = 0; i < size; i++) {
+            FBoxAction actionBox = (FBoxAction) boxes.get(i);
+            actBoxIds[i] = actionBox.getId();
+            actTypes[i] = getTypeOfBox(actionBox);
+            actSegIds[i] = actionBox.getSegId();
+            actPosSegIds[i] = actionBox.getPositiveSegId();
+            actNegSegIds[i] = actionBox.getNegativeSegId();
+            actDatas[i] = generatedBoxActionData(actionBox);
+        }
         SmartSdk.featureHandler().runFeatureMethod(
                 false,
                 devId,
@@ -203,41 +208,72 @@ public class FlowHandlerImpl implements FlowHandler {
                     @IoTInvokingProperty("flowBindingId")
                     private String flowBindingId = bindingId;
                     @IoTInvokingProperty("boxIds")
-                    private String[] boxIds = actBoxIds.toArray(new String[size]);
+                    private String[] boxIds = actBoxIds;
 
                     @IoTInvokingProperty("actionTypes")
-                    private Integer[] actionTypes = actTypes.toArray(new Integer[size]);
+                    private Integer[] actionTypes = actTypes;
                     @IoTInvokingProperty("segIds")
-                    private String[] segIds = actSegIds.toArray(new String[size]);
+                    private String[] segIds = actSegIds;
                     @IoTInvokingProperty("positiveSegId")
-                    private String[] positiveSegId = actPosSegIds.toArray(new String[size]);
+                    private String[] positiveSegId = actPosSegIds;
 
                     @IoTInvokingProperty("negativeSegId")
-                    private String[] negativeSegId = actNegSegIds.toArray(new String[size]);
+                    private String[] negativeSegId = actNegSegIds;
 
                     @IoTInvokingProperty("boxData")
-                    private String[] boxData = actDatas.toArray(new String[size]);
+                    private String[] boxData = actDatas;
 
                 },
                 30000,
                 new FeatureRequestCallback() {
-
-
                     @Override
                     public void onRequestDelivered(int i, String s) {
-
+                        ILogR.D(TAG, "onBindBoxAction:onRequestDelivered", i, s);
                     }
-
                     @Override
                     public void onRequestRepliedSuccess(int i, String s) {
-
+                        ILogR.D(TAG, "onBindBoxAction:onRequestRepliedSuccess", i, s);
+                        callback.onSuccess();
                     }
-
                     @Override
-                    public void onRequestFailure(int i, String s) {
-
+                    public void onRequestFailure(int errorCode, String msg) {
+                        ILogR.D(TAG, "onBindBoxAction:onRequestFailure", errorCode, msg);
+                        callback.onFailure(errorCode, msg);
                     }
                 }
         );
+    }
+
+    private int getTypeOfBox(FBox fBox) {
+        if (fBox instanceof FBoxEventDevice) return FBoxType.EVT_FROM_DEVICE;
+        if (fBox instanceof FBoxActionControlDevice) return FBoxType.ACT_CONTROL_DEVICE;
+        return 0;
+    }
+
+    private String generatedBoxEventData(FBox fBox) {
+        HashMap<String, Object> data = new HashMap<>();
+        if (fBox instanceof FBoxEventDevice) {
+            FBoxEventDevice eventDevice = (FBoxEventDevice) fBox;
+            data.put("eventTypes", getTypeOfBox(fBox));
+            data.put("devType", eventDevice.getDevType());
+            data.put("devId", eventDevice.getDevId());
+            data.put("elms", eventDevice.getElms());
+            data.put("eid", eventDevice.getEid());
+            data.put("attrTypes", eventDevice.getElms());
+            return gson.toJson(data);
+        }
+        return "{}";
+    }
+
+    private String generatedBoxActionData(FBox fBox) {
+        HashMap<String, Object> data = new HashMap<>();
+        if (fBox instanceof FBoxActionControlDevice) {
+            FBoxActionControlDevice actionControlDevice = (FBoxActionControlDevice) fBox;
+            data.put("devType", actionControlDevice.getDevType());
+            data.put("attrType", actionControlDevice.getAttrType());
+            data.put("targetControls", actionControlDevice.getTargetControls());
+            return gson.toJson(data);
+        }
+        return "{}";
     }
 }

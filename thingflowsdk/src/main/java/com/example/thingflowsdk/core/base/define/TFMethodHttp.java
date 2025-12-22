@@ -1,4 +1,4 @@
-package com.example.thingflowsdk.core.define;
+package com.example.thingflowsdk.core.base.define;
 
 public enum TFMethodHttp {
     GET,

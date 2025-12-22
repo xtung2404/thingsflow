@@ -14,7 +14,7 @@ import javax.inject.Inject
 class RepoFlowScenario @Inject constructor() {
     private val TAG = "RepoFlowScenario"
 
-    val handler = FlowSdk.flowHandler()
+    val handler = FlowSdk.flowScenarioHandler()
 
     fun generateBoxInfo(
         rootBoxId: String?,

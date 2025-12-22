@@ -7,13 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.FlowSdk
+import com.example.thingsflow.databinding.LayoutOverlayBindingBoxActionControlDeviceBinding
 import com.example.thingsflow.databinding.LayoutOverlayBindingBoxEventFromDeviceBinding
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionGeneralBinding
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxEventFromDeviceBinding
 import com.example.thingsflow.module.viewmodel.VMFlowBinding
-import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterAttributes
+import com.example.thingsflow.ui.adapter.AdapterConfiguredDeviceAction
 import com.example.thingsflow.ui.adapter.AdapterDevices
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.ui.dialog.DialogDeviceList
@@ -23,44 +24,48 @@ import com.example.thingsflow.utils.getSupportedAttribue
 import com.example.thingsflow.utils.getSupportedDeviceType
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
+import com.example.thingsflow.utils.toElmIntArrayMap
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
+import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
 import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
+import rogo.iot.module.flowcommon.value.FControlValue
 import rogo.iot.module.rogocore.sdk.SmartSdk
 import kotlin.collections.get
 import kotlin.text.set
 
-class OverlayBindingBoxEventFromDevice(
+class OverlayBindingBoxActionControlDevice(
     context: Context,
     container: ViewGroup,
-    private val onSave: (FBoxEventDevice) -> Unit,
+    private val onSelectDevice: (devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>) -> Unit,
+    private val onSave: (FBoxActionControlDevice) -> Unit,
     private val onClose: () -> Unit
-): OverlayBase<LayoutOverlayBindingBoxEventFromDeviceBinding>(
+): OverlayBase<LayoutOverlayBindingBoxActionControlDeviceBinding>(
     context,
     container,
-    LayoutOverlayBindingBoxEventFromDeviceBinding::inflate
+    LayoutOverlayBindingBoxActionControlDeviceBinding::inflate
 ) {
-
     private val vmFlowBinding: VMFlowBinding? by lazy {
         viewModelOwner?.let {
             ViewModelProvider(it)[VMFlowBinding::class.java]
         }
     }
-    private var selectedDevices: HashMap<String?, IntArray> = hashMapOf()
-    private var fBoxEventDevice: FBoxEventDevice?= null
+    private var fBoxActionControlDevice: FBoxActionControlDevice?= null
     private var devType: Int = IoTDeviceType.ALL
-    private val adapterDevices: AdapterDevices by lazy {
-        AdapterDevices(
-            onDevicesSelected = {devices->
-                selectedDevices.clear()
-                selectedDevices.putAll(devices)
-            }
+
+    private var attrs: IntArray = intArrayOf()
+
+    private var deviceActionMap: HashMap<String?, Array<FControlValue>> = hashMapOf()
+
+    private val adapterConfiguredDeviceAction: AdapterConfiguredDeviceAction by lazy {
+        AdapterConfiguredDeviceAction(
+
         )
     }
-    override fun onViewCreated(binding: LayoutOverlayBindingBoxEventFromDeviceBinding) {
+    override fun onViewCreated(binding: LayoutOverlayBindingBoxActionControlDeviceBinding) {
         binding.apply {
 
         }
@@ -105,15 +110,25 @@ class OverlayBindingBoxEventFromDevice(
 
     private fun setUpConfigLayout() {
         binding.apply {
-            rvDevice.adapter = adapterDevices
+            rvDevice.adapter = adapterConfiguredDeviceAction
 
+            btnSelectDevice.setOnClickListener {
+                onSelectDevice.invoke(
+                    devType,
+                    attrs,
+                    deviceActionMap.toElmIntArrayMap()
+                )
+            }
+
+            lnEmptyDevices.setOnClickListener {
+                onSelectDevice.invoke(
+                    devType,
+                    attrs,
+                    deviceActionMap.toElmIntArrayMap()
+                )
+            }
             btnCreateBox.setOnClickListener {
-                val devId = selectedDevices.keys.firstOrNull()
-                val elms = selectedDevices.values.firstOrNull()
-                fBoxEventDevice?.devType = devType
-                fBoxEventDevice?.elms = elms
-                fBoxEventDevice?.devId = devId
-                onSave.invoke(fBoxEventDevice!!)
+
             }
         }
     }
@@ -129,39 +144,48 @@ class OverlayBindingBoxEventFromDevice(
 
     override fun show() {
         super.show()
-        if (vmFlowBinding?.getSelectedBox() != null && vmFlowBinding?.getSelectedBox() is FBoxEventDevice) {
-            fBoxEventDevice = vmFlowBinding!!.getSelectedBox() as FBoxEventDevice
+        if (vmFlowBinding?.getSelectedBox() != null && vmFlowBinding?.getSelectedBox() is FBoxActionControlDevice) {
+            fBoxActionControlDevice = vmFlowBinding!!.getSelectedBox() as FBoxActionControlDevice
         }
 
         binding.apply {
-            fBoxEventDevice.let {
-                devType = fBoxEventDevice!!.devType
-                selectedDevices = hashMapOf()
-                selectedDevices[fBoxEventDevice!!.devId] = fBoxEventDevice!!.elms
+            fBoxActionControlDevice?.let {
+                fBoxActionControlDevice!!.devType.let {
+                    devType = fBoxActionControlDevice!!.devType
+                }
+
+                fBoxActionControlDevice!!.attrType.let {
+                    attrs = intArrayOf(fBoxActionControlDevice!!.attrType)
+                }
+                deviceActionMap = fBoxActionControlDevice!!.targetControls
                 initialize()
             }
         }
     }
 
-    fun show(devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>?) {
-        if (vmFlowBinding?.getSelectedBox() != null && vmFlowBinding?.getSelectedBox() is FBoxEventDevice) {
-            fBoxEventDevice = vmFlowBinding!!.getSelectedBox() as FBoxEventDevice
-        }
+    fun show(devType: Int?, attrs: IntArray?, devActionMap: HashMap<String?, Array<FControlValue>>) {
 
-        this.devType = (devType ?: IoTDeviceType.ALL)
-        this.selectedDevices = (devMap?: hashMapOf())
-        initialize()
     }
 
     fun initialize() {
         binding.apply {
             txtDeviceType.text = getDeviceTypeLabel(context, devType)
-            adapterDevices.setSelectedDeviceMap(selectedDevices)
-            adapterDevices.submitList(
-                FlowSdk.deviceHandler().userDevices.filter {
-                    if (devType == IoTDeviceType.ALL) true else it.devType == devType
-                }
-            )
+            showUIDevicesSelected(deviceActionMap.isNotEmpty())
+        }
+    }
+
+
+    private fun showUIDevicesSelected(isSelected: Boolean) {
+        binding.apply {
+            if (isSelected) {
+                lnDevices.show()
+                lnEmptyDevices.gone()
+                txtNumberOfDevices.text = "${deviceActionMap.size} thiết bị"
+                adapterConfiguredDeviceAction.submitList(deviceActionMap.entries.toList())
+            } else {
+                lnDevices.gone()
+                lnEmptyDevices.show()
+            }
         }
     }
 }

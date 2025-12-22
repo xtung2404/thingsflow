@@ -194,6 +194,7 @@
     <string name="wall_mounted">Gắn tường</string>
     <string name="choose_device_from_list">Chọn thiết bị từ danh sách</string>
     <string name="label_flow_scenario">Đặt tên Flow Scenario</string>
+    <string name="label_of_flow_scenario">Tên Flow Scenario</string>
     <string name="action">Hành động</string>
     <string name="control_device">Điều khiển thiết bị</string>
     <string name="call_http">Call HTTP</string>

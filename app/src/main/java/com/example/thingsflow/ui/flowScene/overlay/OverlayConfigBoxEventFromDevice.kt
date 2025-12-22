@@ -19,7 +19,6 @@ import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.base.ILogR
 import rogo.iot.module.base.define.IoTDeviceType
-import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 
 /**
@@ -42,12 +41,14 @@ class OverlayConfigBoxEventFromDevice(
     container,
     LayoutOverlayConfigBoxEventFromDeviceBinding::inflate
 ) {
+    private val TAG = "OverlayConfigBoxEventFromDevice"
     private val vmFlowScenario: VMFlowScenario? by lazy {
         viewModelOwner?.let {
             ViewModelProvider(it)[VMFlowScenario::class.java]
         }
     }
-    private val TAG = "OverlayConfigBoxEventFromDevice"
+
+    private var selectedDeviceType: Int = IoTDeviceType.ALL
 
     // hashmap to check whether attributes is selected or not
     //key: information of attribure. first: attribure, second: label of attribute
@@ -58,7 +59,7 @@ class OverlayConfigBoxEventFromDevice(
     // key: uuid of device, value: selected elements of device
     private var selectedDeviceMap: HashMap<String?, IntArray> = hashMapOf()
 
-    private var fBox: FBoxEventDevice? = null
+    private var fBoxEventDevice: FBoxEventDevice? = null
 
 
     //adapter for selected devices
@@ -108,7 +109,7 @@ class OverlayConfigBoxEventFromDevice(
 
     override fun initVariable() {
         super.initVariable()
-        selectedDeviceMap.clear()
+        selectedDeviceMap = hashMapOf()
     }
 
     override fun initUI() {
@@ -162,7 +163,6 @@ class OverlayConfigBoxEventFromDevice(
             rvDevices.adapter = adapterSelectedDevices
             adapterSelectedDevices.submitList(selectedDeviceMap.entries.toList())
 
-
             attrMap =
                 getSupportedAttribue().associate {
                     (it to getAttrLabel(context, it)) to false
@@ -170,20 +170,18 @@ class OverlayConfigBoxEventFromDevice(
             adapterAttributes.submitList(attrMap.entries.toList())
 
             btnCreateBox.setOnClickListener {
-                if (fBox == null) {
-                    fBox = FBoxEventDevice().apply {
-                        devId = if (selectedDeviceMap.isNotEmpty()) selectedDeviceMap.keys.first() else ""
-                        devType = spinnerDeviceType.selectedItem as Int
-                        attrTypes = getSelectedAttrs()
-                    }
-                } else {
-                    fBox?.devId = if (selectedDeviceMap.isNotEmpty()) selectedDeviceMap.keys.first() else ""
-                    fBox?.devType = spinnerDeviceType.selectedItem as Int
-                    fBox?.attrTypes = getSelectedAttrs()
+                val selectedDeviceType = spinnerDeviceType.selectedItem as Int
+                val devId = selectedDeviceMap.keys.firstOrNull()
+                if (fBoxEventDevice == null) {
+                    fBoxEventDevice = FBoxEventDevice()
                 }
-                onBoxEventCreated.invoke(fBox!!)
-            }
+                fBoxEventDevice?.devId = devId?: ""
+                fBoxEventDevice?.devType = selectedDeviceType
+                fBoxEventDevice?.attrTypes = getSelectedAttrs()
+                fBoxEventDevice?.elms = selectedDeviceMap[devId]?: intArrayOf()
 
+                onBoxEventCreated.invoke(fBoxEventDevice!!)
+            }
 
             btnSelectDevice.setOnClickListener {
                 onSelectDevice.invoke(
@@ -266,46 +264,44 @@ class OverlayConfigBoxEventFromDevice(
     override fun show() {
         super.show()
         binding.apply {
-            fBox = null
+            fBoxEventDevice = null
+            selectedDeviceType = IoTDeviceType.ALL
             showOutput(isBoxCreated = false)
         }
     }
 
-    fun show(selectedBox: FBox?) {
+    fun show(selectedBox: FBoxEventDevice?) {
         super.show()
         binding.apply {
             btnBack.gone()
             selectedBox?.let {
-                if (selectedBox is FBoxEventDevice) {
-                    fBox = selectedBox
-                    selectedDeviceMap.clear()
-                    if (selectedBox.devId.isNotEmpty()) {
-                        selectedDeviceMap[selectedBox.devId] = selectedBox.elms
-                    }
-                    initialize(selectedBox.devType, selectedBox.attrTypes, selectedDeviceMap)
-                    showOutput(isBoxCreated = true)
+                fBoxEventDevice = selectedBox
+                selectedDeviceMap = hashMapOf()
+                if (selectedBox.devId.isNotEmpty()) {
+                    selectedDeviceMap[selectedBox.devId] = selectedBox.elms
                 }
+                selectedDeviceType = selectedBox.devType
+                initialize( selectedBox.attrTypes)
+                showOutput(isBoxCreated = true)
             }
         }
     }
 
     fun show(devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>) {
         binding.apply {
+            devType?.let { selectedDeviceType = devType }
             selectedDeviceMap = devMap
-            initialize(devType, attrs, devMap)
+            initialize(attrs)
         }
     }
 
-    private fun initialize(devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>) {
+    private fun initialize(attrs: IntArray?) {
         binding.apply {
-            ILogR.D(TAG, "initialize:size ", devMap.size)
-            devType?.let {
-                val devTypePos = adapterSpinnerDeviceType.getPosition(it)
-                if (devTypePos != -1) {
-                    spinnerDeviceType.setSelection(devTypePos)
-                }
+            ILogR.D(TAG, "initialize:size ", selectedDeviceMap.size)
+            val devTypePos = adapterSpinnerDeviceType.getPosition(selectedDeviceType)
+            if (devTypePos != -1) {
+                spinnerDeviceType.setSelection(devTypePos)
             }
-            selectedDeviceMap = devMap
             setUIDevicesSelected(selectedDeviceMap.isNotEmpty())
         }
     }
@@ -338,7 +334,7 @@ class OverlayConfigBoxEventFromDevice(
                 true -> {
                     lnOutputEmpty.gone()
                     lnOutputList.show()
-                    adapterOutput.submitList(vmFlowScenario?.generateOutputs(fBox))
+                    adapterOutput.submitList(vmFlowScenario?.generateOutputs(fBoxEventDevice))
                 }
                 false -> {
                     lnOutputEmpty.show()

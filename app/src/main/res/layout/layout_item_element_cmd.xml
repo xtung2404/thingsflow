@@ -12,9 +12,8 @@
         android:id="@+id/root"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingVertical="@dimen/_space10dp"
         android:paddingHorizontal="@dimen/space_screen_super_small"
-        android:layout_marginBottom="@dimen/_space12dp"
+        android:layout_marginBottom="6dp"
         android:background="@color/background_color">
 
         <TextView
@@ -23,8 +22,16 @@
             android:id="@+id/txt_elm"
             android:textColor="@color/black"
             android:textSize="@dimen/text_body2"
-            android:textStyle="bold"
-            android:layout_marginEnd="@dimen/space_screen_super_small"
+            android:layout_marginEnd="4dp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_body2"
+            android:layout_marginEnd="4dp"
             android:maxLines="1"
             android:ellipsize="end"/>
         <TextView

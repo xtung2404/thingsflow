@@ -115,29 +115,7 @@ class FragmentIdentifyZigbeeDevice : FragmentBase<FragmentIdentifyZigbeeDeviceBi
                 scanningTime.toInt(),
                 0,
                 object : PairZigbeeDeviceCallback {
-//                    override fun onPairingStatus(p0: Int) {
-//                    }
-//
-//                    override fun onPairedDevice(p0: IoTPairedZigbeeDevice?) {
-//                        CoroutineScope(Dispatchers.Main).launch {
-//                            if (discoveredZigbeeDevices.isEmpty()) {
-//                                binding.lnSelectDevice.visibility = View.VISIBLE
-//                                binding.clScanning.visibility = View.GONE
-//                            }
-//                            if (!discoveredZigbeeDevices.contains(p0)) {
-//                                p0?.let {
-//                                    ILogR.D(TAG, "discovery:deviceFound ", it.ioTProductModel.name)
-//                                    discoveredZigbeeDevices[it] = false
-//                                    binding.txtDeviceFound.text = "${discoveredZigbeeDevices.size}"
-//                                    adapterDiscoveredZigbeeDevices.submitList(discoveredZigbeeDevices.entries.toList())
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    override fun onPairedDevice(p0: IoTPairedZ2mDevice?) {}
-//                    override fun onPairedUnknownDevice(p0: String?, p1: String?, p2: String?) {}
-//                    override fun onNotDevicePaired() {}
+
                     override fun onPairingStatus(p0: Int, p1: String?) {
 
                     }
@@ -147,7 +125,20 @@ class FragmentIdentifyZigbeeDevice : FragmentBase<FragmentIdentifyZigbeeDeviceBi
                     }
 
                     override fun onNewDevicePaired(p0: IoTPairedZigbeeDevice?) {
-
+                        CoroutineScope(Dispatchers.Main).launch {
+                            if (discoveredZigbeeDevices.isEmpty()) {
+                                binding.lnSelectDevice.visibility = View.VISIBLE
+                                binding.clScanning.visibility = View.GONE
+                            }
+                            if (!discoveredZigbeeDevices.contains(p0)) {
+                                p0?.let {
+                                    ILogR.D(TAG, "discovery:deviceFound ", it.ioTProductModel.name)
+                                    discoveredZigbeeDevices[it] = false
+                                    binding.txtDeviceFound.text = "${discoveredZigbeeDevices.size}"
+                                    adapterDiscoveredZigbeeDevices.submitList(discoveredZigbeeDevices.entries.toList())
+                                }
+                            }
+                        }
                     }
 
                     override fun onNewDevicePaired(p0: IoTPairedZ2mDevice?) {
@@ -165,6 +156,33 @@ class FragmentIdentifyZigbeeDevice : FragmentBase<FragmentIdentifyZigbeeDeviceBi
                     override fun onNotFoundDevicePaired() {
 
                     }
+//                    override fun onPairingStatus(p0: Int, p1: String?) {
+//
+//                    }
+//
+//                    override fun onPairingFinished() {
+//
+//                    }
+//
+//                    override fun onNewDevicePaired(p0: IoTPairedZigbeeDevice?) {
+//
+//                    }
+//
+//                    override fun onNewDevicePaired(p0: IoTPairedZ2mDevice?) {
+//
+//                    }
+//
+//                    override fun onNewDevicePairedUnknown(
+//                        p0: String?,
+//                        p1: String?,
+//                        p2: String?
+//                    ) {
+//
+//                    }
+//
+//                    override fun onNotFoundDevicePaired() {
+//
+//                    }
                 }
             )
 

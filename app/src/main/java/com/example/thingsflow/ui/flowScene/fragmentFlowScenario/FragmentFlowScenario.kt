@@ -118,7 +118,10 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     // set label for the current flow
     internal val dialogLabelFlowScenario: DialogLabelFlowScenario by lazy {
         DialogLabelFlowScenario(
-            requireContext()
+            requireContext(),
+            onLabelChanged = { label ->
+                binding.txtSceneLabel.text = label
+            }
         )
     }
 
@@ -168,7 +171,9 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             }
 
             btnUpdateLabel.setOnClickListener {
-                dialogLabelFlowScenario.show()
+                dialogLabelFlowScenario.show(
+                    txtSceneLabel.text.toString()
+                )
             }
 
             btnEditScene.setOnClickListener {

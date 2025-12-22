@@ -205,7 +205,7 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
             RecyclerView.ViewHolder(binding.root) {
             fun onBind(elmInfo: MutableMap.MutableEntry<Int, IoTElementInfo>) {
                 binding.apply {
-                    txtLabel.text = elmInfo.value.label?: "Nuts ${elmInfo.key}"
+                    txtLabel.text = elmInfo.value.label?: "Nút ${elmInfo.key}"
 
                     when(action) {
                         IoTAttribute.ACT_ONOFF -> lnControlOnOff.show()

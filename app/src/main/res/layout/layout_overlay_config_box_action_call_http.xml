@@ -101,7 +101,7 @@
                 android:id="@+id/ln_input"
                 android:orientation="vertical"
                 android:paddingHorizontal="16dp"
-                android:visibility="visible">
+                android:visibility="gone">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -227,7 +227,8 @@
                         android:inputType="number"
                         android:textColor="@color/black"
                         android:background="@drawable/bg_white_stroke_gray"
-                        android:paddingVertical="16dp"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="8dp"
                         android:layout_marginTop="4dp"/>
                 </LinearLayout>
 
@@ -262,7 +263,7 @@
                 android:id="@+id/ln_output"
                 android:paddingHorizontal="16dp"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -387,116 +388,124 @@
                         android:layout_marginTop="20dp"/>
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/output_value"
-                            android:textColor="@color/black"
-                            android:textSize="13sp"/>
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/btn_table"
-                            android:text="@string/table"/>
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/btn_json"
-                            android:text="@string/json"/>
-                    </LinearLayout>
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1">
+                        android:layout_height="match_parent"
+                        android:id="@+id/ln_show_output_configured"
+                        android:orientation="vertical">
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/ln_output_table"
-                            android:orientation="vertical">
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/rv_table"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="8dp">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/output_value"
+                                android:textColor="@color/black"
+                                android:textSize="13sp"/>
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/btn_table"
+                                android:text="@string/table"/>
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/btn_json"
+                                android:text="@string/json"/>
+                        </LinearLayout>
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1">
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:nestedScrollingEnabled="false"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ln_output_json"
-                            android:orientation="vertical">
-                            <androidx.core.widget.NestedScrollView
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:fillViewport="true">
-
-                                <LinearLayout
+                                android:id="@+id/ln_output_table"
+                                android:orientation="vertical">
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rv_table"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical">
+                                    android:nestedScrollingEnabled="false"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ln_output_json"
+                                android:orientation="vertical">
+                                <androidx.core.widget.NestedScrollView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:fillViewport="true">
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:orientation="horizontal"
-                                        android:gravity="center_vertical"
-                                        android:layout_marginTop="12dp"
-                                        android:background="@color/gray"
-                                        android:paddingVertical="6dp">
-                                        <androidx.appcompat.widget.AppCompatImageView
-                                            android:layout_width="32dp"
-                                            android:layout_height="32dp"
-                                            android:src="@drawable/ic_up"
-                                            android:padding="10dp"/>
-                                        <TextView
-                                            android:layout_width="0dp"
+                                        android:orientation="vertical">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_weight="1"
-                                            android:text="Object Root"
-                                            android:textColor="@color/black"/>
-                                        <TextView
-                                            android:id="@+id/txt_type"
-                                            android:layout_width="wrap_content"
+                                            android:orientation="horizontal"
+                                            android:gravity="center_vertical"
+                                            android:layout_marginTop="12dp"
+                                            android:background="@color/gray"
+                                            android:paddingVertical="6dp">
+                                            <androidx.appcompat.widget.AppCompatImageView
+                                                android:layout_width="32dp"
+                                                android:layout_height="32dp"
+                                                android:src="@drawable/ic_up"
+                                                android:padding="10dp"/>
+                                            <TextView
+                                                android:layout_width="0dp"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight="1"
+                                                android:text="Object Root"
+                                                android:textColor="@color/black"/>
+                                            <TextView
+                                                android:id="@+id/txt_type"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:textSize="@dimen/text_caption"
+                                                android:text="OBJECT"
+                                                android:fontFamily="@font/roboto_medium"/>
+                                            <androidx.appcompat.widget.AppCompatImageView
+                                                android:id="@+id/btn_menu"
+                                                android:layout_width="32dp"
+                                                android:layout_height="32dp"
+                                                android:src="@drawable/ic_3_dot"
+                                                android:padding="4dp"/>
+                                        </LinearLayout>
+
+                                        <androidx.recyclerview.widget.RecyclerView
+                                            android:id="@+id/rv_json"
+                                            android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:textSize="@dimen/text_caption"
-                                            android:text="OBJECT"
-                                            android:fontFamily="@font/roboto_medium"/>
-                                        <androidx.appcompat.widget.AppCompatImageView
-                                            android:id="@+id/btn_menu"
-                                            android:layout_width="32dp"
-                                            android:layout_height="32dp"
-                                            android:src="@drawable/ic_3_dot"
-                                            android:padding="4dp"/>
+                                            android:nestedScrollingEnabled="false"
+                                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                            android:paddingStart="8dp"/>
+
                                     </LinearLayout>
+                                </androidx.core.widget.NestedScrollView>
+                            </LinearLayout>
+                        </FrameLayout>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btn_output_config_close"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/btn_gray"
+                            android:paddingHorizontal="8dp"
+                            android:text="@string/close"
+                            android:textColor="@color/white"
+                            android:textAllCaps="false"
+                            android:textSize="@dimen/text_button" />
+                    </LinearLayout>
 
-                                    <androidx.recyclerview.widget.RecyclerView
-                                        android:id="@+id/rv_json"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:nestedScrollingEnabled="false"
-                                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                        android:paddingStart="8dp"/>
 
-                                </LinearLayout>
-                            </androidx.core.widget.NestedScrollView>
-                        </LinearLayout>
-                    </FrameLayout>
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btn_output_config_close"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/btn_gray"
-                        android:paddingHorizontal="8dp"
-                        android:text="@string/close"
-                        android:textColor="@color/white"
-                        android:textAllCaps="false"
-                        android:textSize="@dimen/text_button" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

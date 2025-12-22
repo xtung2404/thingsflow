@@ -6,6 +6,7 @@ import com.example.thingsflow.R
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.flowcommon.type.FBoxType
+import rogo.iot.module.flowcommon.value.FControlValue
 
 
 fun View.show() {
@@ -103,4 +104,20 @@ fun getSupportedBoxType(): List<Int> = listOf(
     FTypeBox.TYPE_BOX_ACTION,
     FTypeBox.TYPE_BOX_CONDITION
 )
+
+
+fun HashMap<String?, Array<FControlValue>>.toElmIntArrayMap(): HashMap<String?, IntArray> {
+    // Dùng hàm 'mapValues' để biến đổi chỉ các giá trị (value) của Map
+    // và giữ nguyên các khóa (key).
+    return this.mapValues { (_, fControlValueArray) ->
+        // Nếu mảng value là null, trả về một IntArray rỗng.
+        if (fControlValueArray == null) {
+            intArrayOf()
+        } else {
+            // Dùng hàm 'map' của Array để trích xuất thuộc tính 'elm' từ mỗi FControlValue,
+            // sau đó dùng 'toIntArray()' để chuyển kết quả thành một IntArray.
+            fControlValueArray.map { it.elm }.toIntArray()
+        }
+    } as HashMap<String?, IntArray> // Ép kiểu kết quả cuối cùng về lại HashMap
+}
 

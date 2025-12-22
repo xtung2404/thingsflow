@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
-import com.example.thingflowsdk.core.define.TFMethodHttp
+import com.example.thingflowsdk.core.base.define.TFMethodHttp
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionCallHttpBinding
 import com.example.thingsflow.module.define.TFBodyHttpFormat
 import com.example.thingsflow.module.define.TFItemHeader
@@ -21,6 +21,7 @@ import com.example.thingsflow.ui.adapter.AdapterTableJsonField
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
+import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 
 /**
@@ -42,7 +43,7 @@ class OverlayConfigBoxActionCallHttp(
     private val onConfigHeader: () -> Unit,
     private val onConfigJsonOutput: () -> Unit,
     private val onBoxActionCallHttpCreated: (FBoxActionCallHttp) -> Unit,
-    private val onClose: () -> Unit
+    private val onClose: (isBackable: Boolean) -> Unit
 ): OverlayBase<LayoutOverlayConfigBoxActionCallHttpBinding>(
     context,
     container,
@@ -54,6 +55,8 @@ class OverlayConfigBoxActionCallHttp(
             ViewModelProvider(it)[VMFlowScenario::class.java]
         }
     }
+
+    private var fBoxActionCallHttp: FBoxActionCallHttp?= null
 
     val map = hashMapOf<String, TFPrimitiveType>()
     private val adapterInOutput: AdapterInOutput by lazy {
@@ -71,7 +74,7 @@ class OverlayConfigBoxActionCallHttp(
         )
     }
     // hashmap to store headers that user insert
-    private val requiredHeaders: HashMap<String, String> = hashMapOf()
+    private var requiredHeaders: HashMap<String, String> = hashMapOf()
 
     private val jsonFields: ArrayList<TFJsonField> = arrayListOf()
 
@@ -111,7 +114,7 @@ class OverlayConfigBoxActionCallHttp(
         setUpTabs()
         binding.apply {
             btnBack.setOnClickListener {
-                onClose.invoke()
+                onClose.invoke(btnBack.isShown)
             }
         }
 
@@ -131,17 +134,22 @@ class OverlayConfigBoxActionCallHttp(
             spinnerMethodType.adapter = adapterSpinnerMethodCallHttpType
             spinnerBodyFormat.adapter = adapterSpinnerBodyHttpFormat
 
+            btnClose.setOnClickListener {
+                onClose.invoke(btnBack.isShown)
+            }
+
             btnConfigHeader.setOnClickListener {
                 onConfigHeader.invoke()
             }
 
             btnCreateBox.setOnClickListener {
-                val fBox = FBoxActionCallHttp().apply {
-                    url = edtUrl.text.toString()
-                    headers = requiredHeaders
-                    timeoutMs = edtTimeout.text.toString().toInt()
+                if (fBoxActionCallHttp == null) {
+                    fBoxActionCallHttp = FBoxActionCallHttp()
                 }
-                onBoxActionCallHttpCreated.invoke(fBox)
+                fBoxActionCallHttp?.url = edtUrl.text.toString()
+                fBoxActionCallHttp?.headers = requiredHeaders
+                fBoxActionCallHttp?.timeoutMs = edtTimeout.text.toString().toInt()
+                onBoxActionCallHttpCreated.invoke(fBoxActionCallHttp!!)
             }
 
             spinnerMethodType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -198,7 +206,7 @@ class OverlayConfigBoxActionCallHttp(
             }
 
             btnOutputClose.setOnClickListener {
-                onClose.invoke()
+                onClose.invoke(btnBack.isShown)
             }
 
             cbForwardJson.setOnCheckedChangeListener { _, isChecked ->
@@ -207,6 +215,7 @@ class OverlayConfigBoxActionCallHttp(
 
             cbExportValue.setOnCheckedChangeListener { _, isChecked ->
                 cbForwardJson.isChecked = !isChecked
+                if (isChecked && jsonFields.isNotEmpty()) lnShowOutputConfigured.show() else lnShowOutputConfigured.gone()
             }
 
             btnTable.setOnClickListener {
@@ -250,10 +259,29 @@ class OverlayConfigBoxActionCallHttp(
     override fun show() {
         super.show()
         binding.apply {
+            fBoxActionCallHttp = null
+            requiredHeaders = hashMapOf()
             tabLayout.getTabAt(0)?.select()
             edtUrl.setText("")
+            if (edtTimeout.text.toString().isEmpty()) edtTimeout.setText("30000")
+            cbForwardJson.isChecked = false
+            cbExportValue.isChecked = true
+            btnBack.show()
         }
         showInputFromPreviousBox()
+    }
+
+    fun show(fBox: FBox?) {
+        super.show()
+        binding.apply {
+            btnBack.gone()
+            if (fBox is FBoxActionCallHttp) {
+                fBoxActionCallHttp = fBox
+                requiredHeaders = fBoxActionCallHttp?.headers?: hashMapOf()
+                edtUrl.setText(fBoxActionCallHttp?.url)
+                edtTimeout.setText(fBoxActionCallHttp?.timeoutMs.toString())
+            }
+        }
     }
 
     fun show(headers: ArrayList<TFItemHeader>) {
@@ -273,6 +301,7 @@ class OverlayConfigBoxActionCallHttp(
         super.show()
         jsonFields.clear()
         jsonFields.addAll(fieldList)
+        if (jsonFields.isNotEmpty()) binding.lnShowOutputConfigured.show() else binding.lnShowOutputConfigured.gone()
         adapterJsonField.submitList(jsonFields)
         mapJsonTable(jsonFields)
 
@@ -301,4 +330,18 @@ class OverlayConfigBoxActionCallHttp(
             }
         }
     }
+
+    private fun showOutputWhenBoxIsConfigured(isConfigured: Boolean) {
+        binding.apply {
+            when(isConfigured) {
+                true -> {
+
+                }
+                false -> {
+
+                }
+            }
+        }
+    }
+
 }

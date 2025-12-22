@@ -6,6 +6,7 @@ import com.example.thingsflow.databinding.DialogLabelFlowScenarioBinding
 
 class DialogLabelFlowScenario(
     context: Context,
+    private val onLabelChanged: (String) -> Unit
 ): DialogBase<DialogLabelFlowScenarioBinding>(
     context,
     R.layout.dialog_label_flow_scenario
@@ -22,6 +23,11 @@ class DialogLabelFlowScenario(
             }
 
 
+            btnSave.setOnClickListener {
+                val label = edtLabel.text.toString()
+                onLabelChanged.invoke(label)
+                dismiss()
+            }
         }
     }
 
@@ -33,10 +39,10 @@ class DialogLabelFlowScenario(
     }
 
 
-    fun show(ssid: String?) {
+    fun show(label: String?) {
         super.show()
         binding.apply {
-
+            edtLabel.setText(label)
         }
     }
 }

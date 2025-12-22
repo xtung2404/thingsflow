@@ -15,6 +15,7 @@ import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
 import com.example.thingsflow.utils.getControlableDeviceType
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
+import com.example.thingsflow.utils.toElmIntArrayMap
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.base.ILogR
 import rogo.iot.module.base.define.IoTAttribute
@@ -33,7 +34,7 @@ import rogo.iot.module.flowcommon.value.FControlValue
 class OverlayConfigBoxActionControlDevice(
     context: Context,
     container: ViewGroup,
-    private val onSelectDevice: (devType: Int?, attrs: IntArray?) -> Unit,
+    private val onSelectDevice: (devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>) -> Unit,
     private val onBoxActionControlDeviceCreated: (FBoxActionControlDevice) -> Unit,
     private val onClose: (isBackable: Boolean) -> Unit
 ) : OverlayBase<LayoutOverlayConfigBoxActionControlDeviceBinding>(
@@ -114,6 +115,7 @@ class OverlayConfigBoxActionControlDevice(
                     intArrayOf(
                         spinnerControlAction.selectedItem as Int
                     ),
+                    deviceActionMap.toElmIntArrayMap()
                 )
             }
         }
@@ -150,7 +152,8 @@ class OverlayConfigBoxActionControlDevice(
                             spinnerDeviceType.selectedItem as Int,
                             intArrayOf(
                                 spinnerControlAction.selectedItem as Int
-                            )
+                            ),
+                            deviceActionMap.toElmIntArrayMap()
                         )
                     }
                 }

@@ -40,7 +40,7 @@
                             android:layout_weight="1"
                             android:maxLines="1"
                             android:ellipsize="end"
-                            android:text="@string/list_of_flow_scenario"
+                            android:text="Flow Scenario"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_subtitle1"
                             android:textStyle="bold"/>

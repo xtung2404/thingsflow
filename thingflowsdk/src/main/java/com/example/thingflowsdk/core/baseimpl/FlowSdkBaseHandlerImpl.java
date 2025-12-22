@@ -1,9 +1,12 @@
-package com.example.thingflowsdk.core;
+package com.example.thingflowsdk.core.baseimpl;
 
 import android.content.Context;
 
-import com.example.thingflowsdk.core.handler.FlowHandler;
-import com.example.thingflowsdk.core.impl.FlowHandlerImpl;
+import com.example.thingflowsdk.core.base.FlowSdkBaseHandler;
+import com.example.thingflowsdk.core.base.handler.FlowBindingHandler;
+import com.example.thingflowsdk.core.base.handler.FlowScenarioHandler;
+import com.example.thingflowsdk.core.baseimpl.impl.FlowBindingHandlerImpl;
+import com.example.thingflowsdk.core.baseimpl.impl.FlowScenarioHandlerImpl;
 
 import rogo.iot.module.base.ILogR;
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback;
@@ -17,8 +20,17 @@ import rogo.iot.module.rogocore.sdk.handler.DeviceHandler;
 import rogo.iot.module.rogocore.sdk.handler.GroupHandler;
 import rogo.iot.module.rogocore.sdk.handler.LocationHandler;
 
-public class FlowSdkBaseHandlerImpl implements FlowSdkBaseHandler{
+public class FlowSdkBaseHandlerImpl implements FlowSdkBaseHandler {
     private String TAG = "FlowSdkBaseHandlerImpl";
+
+    private final FlowScenarioHandler flowScenarioHandler;
+    private final FlowBindingHandler flowBindingHandler;
+
+    public FlowSdkBaseHandlerImpl() {
+        this.flowScenarioHandler = new FlowScenarioHandlerImpl();
+        this.flowBindingHandler = new FlowBindingHandlerImpl();
+    }
+
     @Override
     public void initV2(
             Context context,
@@ -135,8 +147,13 @@ public class FlowSdkBaseHandlerImpl implements FlowSdkBaseHandler{
     }
 
     @Override
-    public FlowHandler flowHandler() {
-        return new FlowHandlerImpl();
+    public FlowScenarioHandler flowScenarioHandler() {
+        return flowScenarioHandler;
+    }
+
+    @Override
+    public FlowBindingHandler flowBindingHandler() {
+        return flowBindingHandler;
     }
 
     @Override

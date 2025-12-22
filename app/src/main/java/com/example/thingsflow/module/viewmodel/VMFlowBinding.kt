@@ -18,6 +18,7 @@ class VMFlowBinding
 {
     private val TAG = "VMFlowBinding"
     private var selectedFlowScene: String?= null
+    private var selectedFBox: FBox?= null
     private val selectedGateways: HashMap<String?, IntArray> = hashMapOf()
 
     private val _boxes = MutableLiveData<ArrayList<FBox>>(arrayListOf<FBox>())
@@ -32,6 +33,14 @@ class VMFlowBinding
 
     fun getSelectedFlowSceneId(): String? {
         return selectedFlowScene
+    }
+
+    fun setSelectedBox(fBox: FBox?) {
+        selectedFBox = fBox
+    }
+
+    fun getSelectedBox(): FBox? {
+        return selectedFBox
     }
 
     fun setSelectedGateways(devices: HashMap<String?, IntArray>) {

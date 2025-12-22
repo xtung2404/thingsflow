@@ -150,7 +150,7 @@ class AdapterConfiguredDeviceAction
                     device?.let { dev->
                         val elmInfo = dev.elementInfos?.toList()?.find { it.first == elmCmd.elm }
 
-                        txtElm.text = elmInfo?.second?.label ?: "Nuts ${elmInfo?.first}"
+                        txtElm.text = elmInfo?.second?.label ?: "Nút ${elmInfo?.first}"
                         txtDesc.text = getCmdLabel(root.context, elmCmd.attrValue[0], elmCmd.attrValue[1])
                     }
                 }

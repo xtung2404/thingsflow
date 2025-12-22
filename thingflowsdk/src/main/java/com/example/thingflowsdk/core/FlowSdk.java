@@ -2,7 +2,10 @@ package com.example.thingflowsdk.core;
 
 import android.content.Context;
 
-import com.example.thingflowsdk.core.handler.FlowHandler;
+import com.example.thingflowsdk.core.base.FlowSdkBaseHandler;
+import com.example.thingflowsdk.core.base.handler.FlowBindingHandler;
+import com.example.thingflowsdk.core.base.handler.FlowScenarioHandler;
+import com.example.thingflowsdk.core.baseimpl.FlowSdkBaseHandlerImpl;
 
 import rogo.iot.module.base.ILogR;
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback;
@@ -142,8 +145,12 @@ public class FlowSdk {
         return ((FlowSdkBaseHandler) instance).deviceHandler();
     }
 
-    public synchronized static FlowHandler flowHandler() {
-        return ((FlowSdkBaseHandler) instance).flowHandler();
+    public synchronized static FlowScenarioHandler flowScenarioHandler() {
+        return ((FlowSdkBaseHandler) instance).flowScenarioHandler();
+    }
+
+    public synchronized static FlowBindingHandler flowBindingHandler() {
+        return ((FlowSdkBaseHandler) instance).flowBindingHandler();
     }
 
     public synchronized static ConfigWileDirectDeviceHandler configWileDirectDeviceHandler() {

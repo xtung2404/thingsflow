@@ -1,8 +1,9 @@
-package com.example.thingflowsdk.core;
+package com.example.thingflowsdk.core.base;
 
 import android.content.Context;
 
-import com.example.thingflowsdk.core.handler.FlowHandler;
+import com.example.thingflowsdk.core.base.handler.FlowBindingHandler;
+import com.example.thingflowsdk.core.base.handler.FlowScenarioHandler;
 
 import rogo.iot.module.cloudapi.auth.callback.AuthRequestCallback;
 import rogo.iot.module.rogocore.sdk.callback.SmartSdkConnectCallback;
@@ -13,7 +14,7 @@ import rogo.iot.module.rogocore.sdk.handler.DeviceHandler;
 import rogo.iot.module.rogocore.sdk.handler.GroupHandler;
 import rogo.iot.module.rogocore.sdk.handler.LocationHandler;
 
-interface FlowSdkBaseHandler {
+public interface FlowSdkBaseHandler {
     void initV2(Context context, Boolean isForceStaging, String appKey, String appSecretKey);
 
     void signIn(String username, String email, String phoneNumber, String password, AuthRequestCallback callback);
@@ -42,7 +43,9 @@ interface FlowSdkBaseHandler {
 
     DeviceHandler deviceHandler();
 
-    FlowHandler flowHandler();
+    FlowScenarioHandler flowScenarioHandler();
+    FlowBindingHandler flowBindingHandler();
+
     ConfigWileDirectDeviceHandler configWileDirectDeviceHandler();
     ConfigZigbeeDeviceHandler configZigbeeDeviceHandler();
 

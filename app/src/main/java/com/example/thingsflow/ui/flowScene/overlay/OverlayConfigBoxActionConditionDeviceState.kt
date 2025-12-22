@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.FlowSdk
-import com.example.thingflowsdk.core.define.TFComparision
+import com.example.thingflowsdk.core.base.define.TFComparision
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionDeviceStateBinding
 import com.example.thingsflow.module.define.TFCommand
 import com.example.thingsflow.module.define.TFInOutType
@@ -23,8 +23,13 @@ import com.example.thingsflow.utils.getDeviceTypeLabel
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
+import rogo.iot.module.base.ILogR
+import rogo.iot.module.base.define.IoTDeviceType
+import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
+import rogo.iot.module.flowcommon.value.FInputValue
+import rogo.iot.module.flowcommon.value.FInputValueType
 
 /**
  * @file: This overlay is used to configure a box action condition device state(FBoxActionConditionDeviceState)
@@ -39,7 +44,7 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 class OverlayConfigBoxActionConditionDeviceState(
     context: Context,
     container: ViewGroup,
-    private val onConfigInput: () -> Unit,
+    private val onConfigInput: (devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>) -> Unit,
     private val onBoxActionCondtionDeviceStateCreated: (FBoxActionConditionDeviceState) -> Unit,
     private val onClose: (Boolean) -> Unit
 ): OverlayBase<LayoutOverlayConfigBoxActionConditionDeviceStateBinding>(
@@ -53,6 +58,10 @@ class OverlayConfigBoxActionConditionDeviceState(
             ViewModelProvider(it)[VMFlowScenario::class.java]
         }
     }
+
+    private var fBoxActionConditionDeviceState: FBoxActionConditionDeviceState?= null
+    private var selectedDevType: Int = IoTDeviceType.ALL
+    private var selectedAttrs: IntArray = intArrayOf()
 
     //key: deviceUUID, value: selected elements of device
     private var selectedDeviceInputs: HashMap<String?, IntArray> = hashMapOf() // list of device that is configured as a input for box condition device state
@@ -88,9 +97,6 @@ class OverlayConfigBoxActionConditionDeviceState(
         super.initUI()
         setUpTabs()
         binding.apply {
-            txtDeviceType.text = ""
-            txtAttr.text = ""
-
             btnBack.setOnClickListener {
                 onClose.invoke(true)
             }
@@ -111,7 +117,11 @@ class OverlayConfigBoxActionConditionDeviceState(
             rvOtherInputs.adapter = adapterInOutputOtherDevices
 
             btnConfigInput.setOnClickListener {
-                onConfigInput.invoke()
+                onConfigInput.invoke(
+                    selectedDevType,
+                    selectedAttrs,
+                    selectedDeviceInputs
+                )
             }
         }
     }
@@ -184,20 +194,35 @@ class OverlayConfigBoxActionConditionDeviceState(
     override fun show() {
         super.show()
         binding.apply {
+            fBoxActionConditionDeviceState = null
+
+            selectedDeviceInputs = hashMapOf()
+            selectedDevType = IoTDeviceType.ALL
+            selectedAttrs = intArrayOf()
+
             tabLayoutEvtDevice.getTabAt(0)?.select()
+
             showInputFromPreviousBox()
-            showInputFromOtherDevicesSelected(false, null, null, hashMapOf())
+            showInputFromOtherDevicesSelected(false)
         }
     }
 
+    fun show(fBox: FBoxActionConditionDeviceState?) {
+        super.show()
+        fBoxActionConditionDeviceState = fBox
+        binding.apply {
+
+        }
+    }
     fun show(devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) {
         super.show()
         binding.apply {
             selectedDeviceInputs = selectedDevices
-            devType?.let {
-                txtDeviceType.text = getDeviceTypeLabel(context, it)
-            }
-            showInputFromOtherDevicesSelected(true, devType, attrs, selectedDevices)
+            selectedDevType = devType ?: IoTDeviceType.ALL
+            selectedAttrs = attrs ?: intArrayOf()
+
+            txtDeviceType.text = getDeviceTypeLabel(context, selectedDevType)
+            showInputFromOtherDevicesSelected(true)
         }
     }
 
@@ -210,10 +235,8 @@ class OverlayConfigBoxActionConditionDeviceState(
     private fun showInputFromPreviousBox() {
         binding.apply {
             //get parent box info
-            val parentBoxId = vmFlowScenario?.getRootBoxId()
-            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
+            val parentBox = getPreviousBox()
             val inputSourceList: ArrayList<Int> = arrayListOf()
-
             parentBox?.let {
                 when(parentBox) {
                     is FBoxEventDevice -> {
@@ -246,6 +269,12 @@ class OverlayConfigBoxActionConditionDeviceState(
         }
     }
 
+    private fun getPreviousBox(): FBox? {
+        val parentBoxId = vmFlowScenario?.getRootBoxId()
+        return vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
+
+    }
+
     /**
      * handle views when the inputs from other devices are configured or not
      * @param isSelected: ```Boolean``` the inputs from other devices are configured or not
@@ -253,21 +282,22 @@ class OverlayConfigBoxActionConditionDeviceState(
      * @param attrs: ```IntArray``` list of attributes
      * @param selectedDevices: ```HashMap<String?, IntArray>``` list of selected devices . key: uuid of device, value: selected elements of device
      */
-    private fun showInputFromOtherDevicesSelected(isSelected: Boolean, devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) {
+    private fun showInputFromOtherDevicesSelected(isSelected: Boolean) {
         binding.apply {
             when(isSelected) {
                 true -> {
                     //if the devices are configured as input, show list of available inputs
                     btnConfigInput.gone()
                     lnInputConfigured.show()
-                    adapterSelectedDevice.submitList(selectedDevices.entries.toList())
+                    adapterSelectedDevice.submitList(selectedDeviceInputs.entries.toList())
                     inputFromOtherDevicesList =
                         vmFlowScenario?.generateInputsFromSpecificDevices(
-                            devType,
-                            attrs,
-                            selectedDevices
+                            selectedDevType,
+                            selectedAttrs,
+                            selectedDeviceInputs
                         )?.filter { it.first == TFInOutType.PAYLOAD }
                     adapterInOutputOtherDevices.submitList(inputFromOtherDevicesList)
+
                 }
                 else -> {
                     btnConfigInput.show()
@@ -283,6 +313,7 @@ class OverlayConfigBoxActionConditionDeviceState(
     private fun handleInputSourceChanged(source: Int) {
         binding.apply {
             val comparedValueList = if (source == TFInputSource.INPUT_FROM_PREVIOUS_BOX) inputFromParentBoxList else inputFromOtherDevicesList
+            ILogR.D(TAG, "handleInputSourceChanged:comparedValueListSize=", comparedValueList?.size)
             if (comparedValueList.isNullOrEmpty()) {
                 lnConfigComparedValue.gone()
             } else {
@@ -332,109 +363,107 @@ class OverlayConfigBoxActionConditionDeviceState(
 
     private fun createBoxActionConditionDeviceState() {
         binding.apply {
-            val fBox = FBoxActionConditionDeviceState().apply {
-                val selectedComparedValue = spinnerComparedValue.selectedItem as Pair<TFInOutType, Int>
-                when(spinnerInputSource.selectedItem as Int) {
-                    TFInputSource.INPUT_FROM_PREVIOUS_BOX -> {
-                        isInputFromPreviousBox = true
-                        val comparisionType = spinnerComparisionType.selectedItem as Int
-                        val selectedComparingValue = spinnerComparingValue.selectedItem as Pair<TFInOutType, IntArray>
+            if (fBoxActionConditionDeviceState == null) {
+                fBoxActionConditionDeviceState = FBoxActionConditionDeviceState()
+            }
+            val selectedComparedValue = spinnerComparedValue.selectedItem as Pair<TFInOutType, Int>
+            val comparisionType = spinnerComparisionType.selectedItem as Int
+            val selectedComparingValue = spinnerComparingValue.selectedItem as Pair<TFInOutType, IntArray>
 
-                        when(selectedComparedValue.first) {
-                            TFInOutType.PAYLOAD -> {
-                                val parentBoxId = vmFlowScenario?.getRootBoxId()
-                                val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
-                                parentBox?.let {
-                                    if (parentBox is FBoxEventDevice) {
-                                        attrType = selectedComparedValue.second
-                                        condition = comparisionType
-//                                        if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
-//                                            comparingValue = arrayOf<InputSource>(
-//                                                InputSource(
-//                                                    InputSourceType.INTEGER,
-//                                                    selectedComparingValue.second[1]
-//                                                )
-//                                            )
-//                                        }
-
-                                        val device = FlowSdk.deviceHandler().get(parentBox.devId)
-                                        device?.let {
-                                            devId = device.uuid
-                                            eid = device.eid
+            fBoxActionConditionDeviceState?.attrType = selectedComparedValue.second
+            fBoxActionConditionDeviceState?.condition = comparisionType
+            when(spinnerInputSource.selectedItem as Int) {
+                TFInputSource.INPUT_FROM_PREVIOUS_BOX -> {
+                    when(selectedComparedValue.first) {
+                        TFInOutType.PAYLOAD -> {
+                            val parentBox = getPreviousBox()
+                            parentBox?.let {
+                                if (parentBox is FBoxEventDevice) {
+                                    val device = FlowSdk.deviceHandler().get(parentBox.devId)
+                                    device?.let {
+                                        fBoxActionConditionDeviceState?.devId = device.uuid
+                                        fBoxActionConditionDeviceState?.eid = device.eid
 //                                            elm = device.elementInfos.filter {
 //                                                it.value.attrInfos.contains(selectedComparedValue.second)
 //                                            }.entries.first().key
-                                        }
                                     }
-                                }
-                                if (selectedDeviceInputs.isNotEmpty()) {
-                                    val deviceEntry = selectedDeviceInputs.entries.first()
-                                    val device = FlowSdk.deviceHandler().get(deviceEntry.key)
-                                    val selectedElms: IntArray = deviceEntry.value
-                                    val comparisionType = spinnerComparisionType.selectedItem as Int
-                                    val selectedComparingValue = spinnerComparingValue.selectedItem as Pair<TFInOutType, IntArray>
-
-                                    device?.let {
-                                        devId = device.uuid
-                                        eid = device.eid
-                                        elm = if (selectedElms.isNotEmpty()) selectedElms.first() else device.elementIds.first()
-                                        attrType = selectedComparedValue.second
-                                        isInputFromPreviousBox = false
-                                        condition = comparisionType
-//                                        if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
-//                                            comparingValue = arrayOf<InputSource>(
-//                                                InputSource(
-//                                                    InputSourceType.INTEGER,
-//                                                    selectedComparingValue.second[1]
-//                                                )
-//                                            )
-//                                        }
+                                    if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
+                                        fBoxActionConditionDeviceState?.comparingValue = arrayOf<FInputValue>(
+                                            FInputValue(
+                                                FInputValueType.INTEGER,
+                                                selectedComparingValue.second[1]
+                                            )
+                                        )
                                     }
-
                                 }
                             }
-                            else -> {
+//                            if (selectedDeviceInputs.isNotEmpty()) {
+//                                val deviceEntry = selectedDeviceInputs.entries.first()
+//                                val device = FlowSdk.deviceHandler().get(deviceEntry.key)
+//                                val selectedElms: IntArray = deviceEntry.value
+//                                val comparisionType = spinnerComparisionType.selectedItem as Int
+//                                val selectedComparingValue = spinnerComparingValue.selectedItem as Pair<TFInOutType, IntArray>
+//
+//                                device?.let {
+//                                    devId = device.uuid
+//                                    eid = device.eid
+//                                    elm = if (selectedElms.isNotEmpty()) selectedElms.first() else device.elementIds.first()
+//                                    attrType = selectedComparedValue.second
+//                                    isInputFromPreviousBox = false
+//                                    condition = comparisionType
+//                                    if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
+//                                        comparingValue = arrayOf<FInputValue>(
+//                                            FInputValue(
+//                                                FInputValueType.INTEGER,
+//                                                selectedComparingValue.second[1]
+//                                            )
+//                                        )
+//                                    }
+//                                }
+//
+//                            }
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+                else -> {
+                    when(selectedComparedValue.first) {
+                        TFInOutType.PAYLOAD -> {
+                            if (selectedDeviceInputs.isNotEmpty()) {
+                                val deviceEntry = selectedDeviceInputs.entries.first()
+                                val device = FlowSdk.deviceHandler().get(deviceEntry.key)
+                                val selectedElms: IntArray = deviceEntry.value
+                                val comparisionType = spinnerComparisionType.selectedItem as Int
+                                val selectedComparingValue = spinnerComparingValue.selectedItem as Pair<TFInOutType, IntArray>
+
+                                device?.let {
+//                                    devId = device.uuid
+//                                    eid = device.eid
+//                                    elm = if (selectedElms.isNotEmpty()) selectedElms.first() else device.elementIds.first()
+//                                    attrType = selectedComparedValue.second
+//                                    isInputFromPreviousBox = false
+//                                    condition = comparisionType
+//                                    if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
+//                                        comparingValue = arrayOf<FInputValue>(
+//                                            FInputValue(
+//                                                FInputValueType.INTEGER,
+//                                                selectedComparingValue.second[1]
+//                                            )
+//                                        )
+//                                    }
+                                }
 
                             }
                         }
-                    }
-                    else -> {
-                        when(selectedComparedValue.first) {
-                            TFInOutType.PAYLOAD -> {
-                                if (selectedDeviceInputs.isNotEmpty()) {
-                                    val deviceEntry = selectedDeviceInputs.entries.first()
-                                    val device = FlowSdk.deviceHandler().get(deviceEntry.key)
-                                    val selectedElms: IntArray = deviceEntry.value
-                                    val comparisionType = spinnerComparisionType.selectedItem as Int
-                                    val selectedComparingValue = spinnerComparingValue.selectedItem as Pair<TFInOutType, IntArray>
+                        else -> {
 
-                                    device?.let {
-                                        devId = device.uuid
-                                        eid = device.eid
-                                        elm = if (selectedElms.isNotEmpty()) selectedElms.first() else device.elementIds.first()
-                                        attrType = selectedComparedValue.second
-                                        isInputFromPreviousBox = false
-                                        condition = comparisionType
-                                        if (selectedComparingValue.second.isNotEmpty() && selectedComparingValue.second.size >= 2) {
-//                                            comparingValue = arrayOf<InputSource>(
-//                                                InputSource(
-//                                                    InputSourceType.INTEGER,
-//                                                    selectedComparingValue.second[1]
-//                                                )
-//                                            )
-                                        }
-                                    }
-
-                                }
-                            }
-                            else -> {
-
-                            }
                         }
                     }
                 }
             }
-            onBoxActionCondtionDeviceStateCreated.invoke(fBox)
+            onBoxActionCondtionDeviceStateCreated.invoke(fBoxActionConditionDeviceState!!)
         }
     }
 

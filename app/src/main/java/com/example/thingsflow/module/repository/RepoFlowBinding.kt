@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class RepoFlowBinding @Inject constructor() {
     private val TAG = "RepoFlowBinding"
-    val handler = FlowSdk.flowHandler()
+    val handler = FlowSdk.flowBindingHandler()
 
     fun createFlowBinding(
         devId: String,
@@ -17,8 +17,8 @@ class RepoFlowBinding @Inject constructor() {
     ) {
         handler.createFlowBinding(
             devId,
-            sceneId,
-            "",
+            "sceneId",
+            "bindingId",
             label,
             callback
         )
@@ -30,7 +30,7 @@ class RepoFlowBinding @Inject constructor() {
         boxes: ArrayList<FBox?>,
         callback: SuccessStatusCallback
     ) {
-        handler.bindBoxes(
+        handler.bindBoxesBinding(
             devId,
             bindingId,
             boxes,

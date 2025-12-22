@@ -108,7 +108,7 @@ class OverlaySelectDevice(
         devType: Int?,
         attrs: IntArray?
     ) {
-        selectedDeviceMap.clear()
+        selectedDeviceMap = hashMapOf()
         originalDevList.clear()
 
         super.show()
@@ -125,7 +125,6 @@ class OverlaySelectDevice(
         devMap: HashMap<String?, IntArray>?= null
     ) {
         super.show()
-
         selectedDeviceMap = devMap?: hashMapOf()
         originalDevList.clear()
         binding.apply {

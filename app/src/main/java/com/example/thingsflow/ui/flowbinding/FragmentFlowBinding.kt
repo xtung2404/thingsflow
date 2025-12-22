@@ -1,6 +1,5 @@
 package com.example.thingsflow.ui.flowbinding
 
-import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
@@ -10,6 +9,8 @@ import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterSpinnerGatewayBinding
 import com.example.thingsflow.ui.customview.ViewBox
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
+import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectDevice
+import com.example.thingsflow.ui.flowbinding.overlayBinding.OverlayBindingBoxActionControlDevice
 import com.example.thingsflow.ui.flowbinding.overlayBinding.OverlayBindingBoxEventFromDevice
 import dagger.hilt.android.AndroidEntryPoint
 import rogo.iot.module.base.ILogR
@@ -41,6 +42,7 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventTimerInterval
 import rogo.iot.module.flowcommon.box.event.FBoxEventTouchID
 import rogo.iot.module.flowcommon.box.event.FBoxEventVoiceRecognize
 import rogo.iot.module.flowcommon.box.event.FBoxEventWeather
+import rogo.iot.module.flowcommon.type.FBoxType
 import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
 
 @AndroidEntryPoint
@@ -50,17 +52,25 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
         get() = R.layout.fragment_flow_binding
 
     private val TAG = "FragmentFlowBinding"
-    private val vmFlowBinding: VMFlowBinding by activityViewModels<VMFlowBinding>()
-    var boxes = arrayListOf<FBox?>()
+    internal val vmFlowBinding: VMFlowBinding by activityViewModels<VMFlowBinding>()
+
+    internal var currentBoxType: Int = -1
 
     private val dialogLabelFlowScenario: DialogLabelFlowScenario by lazy {
         DialogLabelFlowScenario(
             requireContext(),
+            onLabelChanged = { label->
+
+            }
         )
     }
 
     private lateinit var adapterSpinnerGatewayBinding: AdapterSpinnerGatewayBinding
-    private lateinit var overlayBindingBoxEventFromDevice: OverlayBindingBoxEventFromDevice
+    internal lateinit var overlayBindingBoxEventFromDevice: OverlayBindingBoxEventFromDevice
+    internal lateinit var overlayBindingBoxActionControlDevice: OverlayBindingBoxActionControlDevice
+    internal lateinit var overlaySelectDevice: OverlaySelectDevice
+
+
 
 
     override fun initVariable() {
@@ -74,6 +84,8 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
     override fun initView() {
         super.initView()
         binding.apply {
+            handleBindingBoxes()
+            handlerOverlaySelectDevice()
             toolbar.txtTitle.text = "Danh sách các thiết bị đang triển khai"
             adapterSpinnerGatewayBinding = AdapterSpinnerGatewayBinding(requireContext(), vmFlowBinding.getSelectedGateways().entries.toList())
             spinnerGateway.adapter = adapterSpinnerGatewayBinding
@@ -96,26 +108,55 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
                 dialogLabelFlowScenario.show()
             }
 
+            btnSave.setOnClickListener {
+                val selectedGateway = spinnerGateway.selectedItem as Map.Entry<String?, IntArray>
+                vmFlowBinding.createFlowBinding(
+                    selectedGateway.key!!,
+                    "",
+                    "",
+                    object : SuccessStatusCallback {
+                        override fun onSuccess() {
+                            ILogR.D(TAG, "onBindingSuccess")
+                        }
 
-            overlayBindingBoxEventFromDevice = OverlayBindingBoxEventFromDevice(
-                requireActivity(),
-                binding.overlayBindingContainer,
-                onSave = { fBox ->
-                    overlayBindingBoxEventFromDevice.hide()
-                    vmFlowBinding.updateBox(fBox)
-                },
-                onClose = {
-                    overlayBindingBoxEventFromDevice.hide()
-                }
-            )
+                        override fun onFailure(p0: Int, p1: String?) {
+                            ILogR.D(TAG, "onBindingFalure", p0, p1)
+                        }
+
+                    }
+                )
+
+                vmFlowBinding.bindBoxes(
+                    selectedGateway.key!!,
+                    "bindingId",
+                    vmFlowBinding.boxes.value as ArrayList<FBox?>,
+                    object : SuccessStatusCallback {
+                        override fun onSuccess() {
+                            ILogR.D(TAG, "onBindBoxesSuccess")
+                        }
+
+                        override fun onFailure(p0: Int, p1: String?) {
+                            ILogR.D(TAG, "onBindBoxesFailure", p0, p1)
+                        }
+
+                    }
+                )
+            }
         }
     }
 
     override fun onBoxClick(box: FBox?) {
         ILogR.D(TAG, "onBoxClick", box?.id)
+        vmFlowBinding.setSelectedBox(box)
         when (box) {
             is FBoxEventDevice -> {
-                overlayBindingBoxEventFromDevice.show(box)
+                currentBoxType = FBoxType.EVT_FROM_DEVICE
+                overlayBindingBoxEventFromDevice.show()
+            }
+
+            is FBoxActionControlDevice -> {
+                currentBoxType = FBoxType.ACT_CONTROL_DEVICE
+                overlayBindingBoxActionControlDevice.show()
             }
 
             is FBoxEventMqtt,
@@ -144,7 +185,6 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
             is FBoxActionAIGPT,
             is FBoxActionAIGemini,
             is FBoxActionCallHttp,
-            is FBoxActionControlDevice,
             is FBoxActionCodeFunction,
             is FBoxActionFaceIDLearn,
             is FBoxActionFaceIDRecognize,
