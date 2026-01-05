@@ -52,22 +52,6 @@ class AdapterDevices(
     private fun handleElementClick(deviceUuid: String, elementKey: Int) {
         val currentSelections = selectedDeviceMap[deviceUuid]?.toMutableList() ?: mutableListOf()
 
-//        if (!isAllowedToSelectMultipleDevices) {
-//            selectedDeviceMap.clear()
-//            selectedDeviceMap[deviceUuid] = intArrayOf(elementKey)
-//        } else {
-//            if (currentSelections.contains(elementKey)) {
-//                currentSelections.remove(elementKey)
-//            } else {
-//                currentSelections.add(elementKey)
-//            }
-//
-//            if (currentSelections.isEmpty()) {
-//                selectedDeviceMap.remove(deviceUuid)
-//            } else {
-//                selectedDeviceMap[deviceUuid] = currentSelections.toIntArray()
-//            }
-//        }
         if (!isAllowedToSelectMultipleDevices) {
             if(!selectedDeviceMap.keys.contains(deviceUuid)) {
                 selectedDeviceMap.clear()
@@ -84,11 +68,11 @@ class AdapterDevices(
         } else {
             selectedDeviceMap[deviceUuid] = currentSelections.toIntArray()
         }
-        // Thông báo thay đổi cho toàn bộ danh sách để cập nhật UI đúng cách
+
         notifyItemRangeChanged(0, itemCount)
     }
 
-    //store the view for device that has only 1 element
+
     inner class SingleViewHolder(
         private val binding: LayoutItemDeviceSingleBinding
     ) : RecyclerView.ViewHolder(binding.root) {

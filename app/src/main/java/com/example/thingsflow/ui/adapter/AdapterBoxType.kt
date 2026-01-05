@@ -9,6 +9,9 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemBoxTypeBinding
 import com.example.thingsflow.utils.FTypeBox
 
+/**
+ * adapter for selecting type of box(action or condition)
+ */
 class AdapterBoxType(
     private val onItemClicked: (Int) -> Unit
 ): ListAdapter<Int, AdapterBoxType.BoxTypeViewHolder>(

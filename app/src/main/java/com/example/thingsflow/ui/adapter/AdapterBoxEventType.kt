@@ -9,6 +9,9 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemBoxEventTypeBinding
 import rogo.iot.module.flowcommon.type.FBoxType
 
+/**
+ * adapter for selecting type of box event(event from device or ....)
+ */
 class AdapterBoxEventType(
     private val onItemClicked: (Int) -> Unit
 ): ListAdapter<Int, AdapterBoxEventType.BoxEventTypeViewHolder>(

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.base.define.TFMethodHttp
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionCallHttpBinding
 import com.example.thingsflow.module.define.TFBodyHttpFormat
-import com.example.thingsflow.module.define.TFItemHeader
+import com.example.thingsflow.module.define.TFHttpHeader
 import com.example.thingsflow.module.define.TFJsonField
 import com.example.thingsflow.module.define.TFPrimitiveType
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
@@ -284,7 +284,7 @@ class OverlayConfigBoxActionCallHttp(
         }
     }
 
-    fun show(headers: ArrayList<TFItemHeader>) {
+    fun show(headers: ArrayList<TFHttpHeader>) {
         super.show()
         requiredHeaders.clear()
         headers.forEach { header ->
@@ -326,7 +326,7 @@ class OverlayConfigBoxActionCallHttp(
             val parentBoxId = vmFlowScenario?.getRootBoxId()
             val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
             parentBox?.let {
-                adapterInOutput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
+//                adapterInOutput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
             }
         }
     }

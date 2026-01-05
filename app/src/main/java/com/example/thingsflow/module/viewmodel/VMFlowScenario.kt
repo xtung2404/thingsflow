@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.module.define.TFInOutType
+import com.example.thingsflow.module.define.TFInputBoxValue
 import com.example.thingsflow.module.repository.RepoFlowScenario
+import com.example.thingsflow.ui.adapter.AdapterItem
 import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +17,8 @@ import rogo.iot.module.base.ILogR
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import javax.inject.Inject
+import kotlin.collections.component1
+import kotlin.collections.component2
 
 @HiltViewModel
 class VMFlowScenario
@@ -88,7 +93,7 @@ class VMFlowScenario
         _boxes.value = ArrayList(newBoxes)
     }
 
-    fun getInputsFromParentBox(box: FBox?): ArrayList<Pair<TFInOutType, Int>> {
+    fun getInputsFromParentBox(box: FBox?): ArrayList<TFInputBoxValue> {
         return repo.generateInputsFromPreviousBox(box)
     }
 
@@ -96,7 +101,7 @@ class VMFlowScenario
         devType: Int?,
         attrs: IntArray?,
         devMap: HashMap<String?, IntArray>?
-    ): ArrayList<Pair<TFInOutType, Int>> {
+    ): ArrayList<TFInputBoxValue> {
         return repo.generateInputsFromSpecificDevices(
             devType,
             attrs,
@@ -104,7 +109,35 @@ class VMFlowScenario
         )
     }
 
-    fun generateOutputs(fBox: FBox?): List<Pair<TFInOutType, Int>> {
+    fun groupInputs(inputs: List<TFInputBoxValue>?): MutableList<AdapterItem> {
+        val displayList = mutableListOf<AdapterItem>()
+        val groupedInputsByDevice = inputs?.groupBy { it.devId }
+        groupedInputsByDevice?.forEach { (devId, values) ->
+            val device = FlowSdk.deviceHandler().get(devId)
+            device?.let {
+                val groupedInputsByElm = values.groupBy { it.elm }
+                groupedInputsByElm.forEach { (elm, values) ->
+                    val elmInfo = device.elementInfos[elm]
+                    elmInfo?.let {
+                        if (device.elementIds.size != 1) {
+                            if (elmInfo.label.isNullOrEmpty()) {
+                                displayList.add(AdapterItem.HeaderItem("Nút $elm"))
+                            } else {
+                                displayList.add(AdapterItem.HeaderItem(elmInfo.label))
+                            }
+                        }
+                    }
+                    values.forEach { value ->
+                        displayList.add(AdapterItem.ContentItem(value))
+                    }
+                }
+            }
+        }
+
+        return displayList
+    }
+
+    fun generateOutputs(fBox: FBox?): List<TFInputBoxValue> {
         return repo.generateOutputs(fBox)
     }
 }

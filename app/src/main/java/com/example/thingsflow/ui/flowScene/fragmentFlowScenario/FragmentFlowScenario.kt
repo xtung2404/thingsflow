@@ -1,11 +1,10 @@
 package com.example.thingsflow.ui.flowScene.fragmentFlowScenario
 
-import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowScenarioBinding
-import com.example.thingsflow.module.define.TFItemHeader
+import com.example.thingsflow.module.define.TFHttpHeader
 import com.example.thingsflow.module.viewmodel.VMFlowBinding
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.FragmentBase
@@ -30,7 +29,6 @@ import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
 import dagger.hilt.android.AndroidEntryPoint
 import rogo.iot.module.flowcommon.box.FBox
-import rogo.iot.module.flowcommon.box.action.FBoxAction
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGemini
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
@@ -110,7 +108,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             },
             onClose = {
                 dialogConfigHeaderHttp.dismiss()
-                overlayConfigBoxActionCallHttp.show(arrayListOf<TFItemHeader>())
+                overlayConfigBoxActionCallHttp.show(arrayListOf<TFHttpHeader>())
             }
         )
     }

@@ -3,6 +3,7 @@ package com.example.thingsflow.utils
 import android.content.Context
 import com.example.thingsflow.R
 import com.example.thingsflow.module.define.TFInOutType
+import com.example.thingsflow.module.define.TFInputBoxValue
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.platform.define.IoTCmdConst
@@ -84,16 +85,10 @@ fun getCmdLabel(context: Context, attr: Int?, cmd: Int?): String =
     }
 
 
-fun getInputLabel(context: Context, input: Pair<TFInOutType, Int>): String? =
-    when(input.first) {
-        TFInOutType.ATTRIBUTE -> {
-            getAttrLabel(context, input.second)
-        }
-        TFInOutType.DEVICE_TYPE -> {
-            getDeviceTypeLabel(context, input.second)
-        }
-        TFInOutType.PAYLOAD -> {
-            getStateLabel(context, input.second)
+fun getInputLabel(context: Context, input: TFInputBoxValue): String? =
+    when(input.inputType) {
+        TFInOutType.PAYLOAD_STATE -> {
+            getStateLabel(context, input.value as Int)
         }
         else -> ""
 }

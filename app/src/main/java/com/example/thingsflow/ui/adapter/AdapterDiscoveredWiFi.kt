@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.databinding.LayoutItemDiscoveredWifiBinding
 import rogo.iot.module.base.entity.IoTWifiInfo
 
+/**
+ * adapter for showing discovered WiFis for gateway devices
+ */
 class AdapterDiscoveredWiFi(
     private val onWiFiSelected: (IoTWifiInfo) -> Unit
 ):

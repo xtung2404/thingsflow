@@ -128,7 +128,7 @@ class OverlayConfigBoxActionConditionGeneral(
             val parentBoxId = vmFlowScenario?.getRootBoxId()
             val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
             parentBox?.let {
-                adapterInOutput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
+//                adapterInOutput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
             }
         }
     }

@@ -10,6 +10,9 @@ import com.example.thingsflow.databinding.LayoutItemDiscoveredDeviceBinding
 import rogo.iot.module.base.entity.IoTModelSmartConfig
 import rogo.iot.module.rogocore.sdk.SmartSdk
 
+/**
+ * adapter for showing discovered devices(gateway)
+ */
 class AdapterDiscoveredDevices(
     private val onItemSelected: (IoTModelSmartConfig) -> Unit
 ):

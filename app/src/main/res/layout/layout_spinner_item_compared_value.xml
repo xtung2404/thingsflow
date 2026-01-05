@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/root"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/space_screen_super_small"
+        android:paddingVertical="8dp"
+        android:layout_marginBottom="@dimen/_space12dp"
+        android:background="@color/light_gray">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_elm"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_body2"
+            android:fontFamily="@font/roboto_regular"
+            android:layout_marginEnd="@dimen/space_screen_super_small"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/txt_label"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_body2"
+            android:layout_marginEnd="@dimen/space_screen_super_small"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/_space16dp"
+            android:layout_height="@dimen/_space16dp"
+            android:src="@drawable/ic_drop_down"/>
+    </LinearLayout>
+</layout>

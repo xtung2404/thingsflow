@@ -10,6 +10,10 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemDiscoveredDeviceBinding
 import rogo.iot.module.rogocore.sdk.entity.IoTPairedZigbeeDevice
 
+/**
+ * adapter for showing discovered Zigbee devices
+ * @param isAllowToSelect if this view allow user to choose an item
+ */
 class AdapterDiscoveredZigbeeDevices(
     private val isAllowToSelect: Boolean = false,
     private val onItemSelected: (IoTPairedZigbeeDevice) -> Unit

@@ -334,7 +334,7 @@ class OverlayConfigBoxEventFromDevice(
                 true -> {
                     lnOutputEmpty.gone()
                     lnOutputList.show()
-                    adapterOutput.submitList(vmFlowScenario?.generateOutputs(fBoxEventDevice))
+//                    adapterOutput.submitList(vmFlowScenario?.generateOutputs(fBoxEventDevice))
                 }
                 false -> {
                     lnOutputEmpty.show()

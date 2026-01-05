@@ -311,7 +311,7 @@ class OverlayConfigBoxActionControlDevice(
             }
             val previousBox = vmFlowScenario?.boxes?.value?.find { it.id == previousBoxId }
             previousBox?.let {
-                adapterInputFromPreviousBox.submitList(vmFlowScenario?.getInputsFromParentBox(previousBox))
+//                adapterInputFromPreviousBox.submitList(vmFlowScenario?.getInputsFromParentBox(previousBox))
             }
         }
     }

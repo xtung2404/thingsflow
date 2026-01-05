@@ -6,36 +6,51 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.R
 import com.example.thingsflow.module.define.TFInOutType
+import com.example.thingsflow.module.define.TFInputBoxValue
 import com.example.thingsflow.utils.getInputLabel
 
 class AdapterSpinnerInput(
     context: Context,
-    private val items: List<Pair<TFInOutType, Int>>
-): ArrayAdapter<Pair<TFInOutType, Int>>(context, R.layout.layout_spinner_item_location, items) {
+    private val items: List<TFInputBoxValue>
+): ArrayAdapter<TFInputBoxValue>(context, R.layout.layout_spinner_item_compared_value, items) {
     init {
-        setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        setDropDownViewResource(R.layout.layout_spinner_item_compared_value)
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: LayoutInflater.from(context)
-            .inflate(R.layout.layout_spinner_item_location, parent, false)
+            .inflate(R.layout.layout_spinner_item_compared_value, parent, false)
 
-        val textView = view.findViewById<TextView>(R.id.txt_label)
-        textView.text = getInputLabel(context, items[position])
+        val txtElm = view.findViewById<TextView>(R.id.txt_elm)
+        val txtState = view.findViewById<TextView>(R.id.txt_label)
+        val inputValue = items[position]
+        val device = FlowSdk.deviceHandler().get(inputValue.devId)
+        device?.let {
+            txtElm.text = device.elementInfos[inputValue.elm]?.label?: "Nút ${inputValue.elm}"
+            txtState.text =  getInputLabel(context, inputValue)
+        }
 
 
         return view
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = super.getDropDownView(position, convertView, parent) as TextView
-        if (items[position] == null) {
-            view.text = context.resources.getString(R.string.undefined)
-        } else {
-            view.text = getInputLabel(context, items[position])
+        val view = convertView ?: LayoutInflater.from(context)
+            .inflate(R.layout.layout_spinner_item_compared_value, parent, false)
+
+        val txtElm = view.findViewById<TextView>(R.id.txt_elm)
+        val txtState = view.findViewById<TextView>(R.id.txt_label)
+        val inputValue = items[position]
+        val device = FlowSdk.deviceHandler().get(inputValue.devId)
+        device?.let {
+            txtElm.text = device.elementInfos[inputValue.elm]?.label?: "Nút ${inputValue.elm}"
+            txtState.text =  getInputLabel(context, inputValue)
         }
+
+
         return view
     }
 }

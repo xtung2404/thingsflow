@@ -19,6 +19,11 @@ import rogo.iot.module.flowcommon.value.FControlValue
 import rogo.iot.module.platform.entity.IoTElementInfo
 import rogo.iot.module.rogocore.sdk.entity.IoTDevice
 
+/**
+ * adapter for setting control command to elements of device
+ * @param context
+ * @param action: type of action control(on/off or lock/unlock or ....)
+ */
 class AdapterConfiguredControlCmd(
     context: Context,
     private  val action: Int,
@@ -41,17 +46,27 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
 }
 ) {
     private val TAG = "AdapterConfigControlCommand"
+    // map of control commands to devices. key: uuid of device, value: array of control command
     private var deviceControlCmdMap: HashMap<String?, Array<FControlValue>> = hashMapOf()
 
+    // return map of control commands
     fun getDeviceControlCmdMap(): HashMap<String?, Array<FControlValue>> {
         return deviceControlCmdMap
     }
     private lateinit var adapterControlElement: AdapterControlElement
+
+    /**
+     * handle when select or unselect a command
+     * @param device the device that is being set the control command
+     * @param newCmd The new control command that is setted to device
+     */
     private fun handleAddAndRemoveAction(
         device: IoTDevice,
         newCmd: FControlValue
     ) {
-        var cmds: Array<FControlValue>? = deviceControlCmdMap[device.uuid] // Giữ nguyên kiểu Array?
+        // get the current commands of devices
+        var cmds: Array<FControlValue>? = deviceControlCmdMap[device.uuid]
+        // check if the the command is already setted to the device
         if (cmds != null) {
             val cmd = cmds.firstOrNull {
                 it.elm == newCmd.elm
@@ -74,6 +89,10 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
             deviceControlCmdMap.remove(device.uuid)
         }
     }
+
+    /**
+     * view holder of device that has one element
+     */
     inner class SingleViewHolder(private val binding: LayoutItemSetControlActionSingleBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(deviceEntry: Map.Entry<String?, IntArray>) {
@@ -84,7 +103,7 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
 
                     val location = FlowSdk.locationHandler().get(device.locationId)
                     txtLocation.text = location?.label?: ""
-
+                    //handle action when user wanna set on/off command
                     lnControlOnOff.initView(onOnOffSelected = { newActionValue ->
                         val elm = device.elementIds.first()
 
@@ -99,7 +118,7 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
                             newCtlValue
                         )
                         cbConfiged.isChecked = deviceControlCmdMap[device.uuid]?.isEmpty() == false
-
+                        //refresh button state
                         lnControlOnOff.updateButtonState(deviceControlCmdMap[device.uuid]?.find { it == newCtlValue }?.attrValue)
                     })
                 }
@@ -107,6 +126,9 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
         }
     }
 
+    /**
+     * view holder of device that has more than 1 element
+     */
     inner class GridViewHolder(private val binding: LayoutItemSetControlActionGridBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(deviceEntry: Map.Entry<String?, IntArray>) {
@@ -118,7 +140,7 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
                         cbConfiged.isChecked = deviceControlCmdMap[deviceEntry.key]?.isEmpty() == false
                     }
                 )
-
+                //show information of device
                 val device = FlowSdk.deviceHandler().get(deviceEntry.key)
                 val selectedElmsInfo = hashMapOf<Int, IoTElementInfo>()
                 device?.let { dev ->
@@ -179,6 +201,12 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
         }
     }
 
+    /**
+     * adapter for setting control command to elements of device
+     * @param devId: uuid of the device
+     * @param action: type of control command(on/off or lock/unlock)
+     * @param onCmdSelected: The callback to be invoked after user select or unselect a command
+     */
     inner class AdapterControlElement(
         private val devId: String?= null,
         private val action: Int,
@@ -205,12 +233,13 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
             RecyclerView.ViewHolder(binding.root) {
             fun onBind(elmInfo: MutableMap.MutableEntry<Int, IoTElementInfo>) {
                 binding.apply {
+                    // show information of element
                     txtLabel.text = elmInfo.value.label?: "Nút ${elmInfo.key}"
 
                     when(action) {
                         IoTAttribute.ACT_ONOFF -> lnControlOnOff.show()
                     }
-
+                    //handle control action on/off of element
                     lnControlOnOff.initView(onOnOffSelected = { newActionValue ->
                         val device = FlowSdk.deviceHandler().get(devId)
                         device?.let {
@@ -226,6 +255,7 @@ object : DiffUtil.ItemCallback<Map.Entry<String?, IntArray>>() {
                             )
 
                             onCmdSelected.invoke()
+                            // refresh button state
                             lnControlOnOff.updateButtonState(deviceControlCmdMap[device.uuid]?.find { it == newCtlValue }?.attrValue)
                         }
                     })

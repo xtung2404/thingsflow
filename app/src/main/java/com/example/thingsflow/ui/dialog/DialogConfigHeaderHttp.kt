@@ -3,20 +3,20 @@ package com.example.thingsflow.ui.dialog
 import android.content.Context
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.DialogConfigHeaderHttpBinding
-import com.example.thingsflow.module.define.TFItemHeader
+import com.example.thingsflow.module.define.TFHttpHeader
 import com.example.thingsflow.ui.adapter.AdapterHeader
 import rogo.iot.module.base.ILogR
 
 class DialogConfigHeaderHttp(
     context: Context,
-    private val onHeadersConfiged: (ArrayList<TFItemHeader>) -> Unit,
+    private val onHeadersConfiged: (ArrayList<TFHttpHeader>) -> Unit,
     private val onClose: () -> Unit
 ): DialogBase<DialogConfigHeaderHttpBinding>(
     context,
     R.layout.dialog_config_header_http
 )  {
     private val TAG = "DialogConfigHeaderHttp"
-    private val headerList = arrayListOf<TFItemHeader>()
+    private val headerList = arrayListOf<TFHttpHeader>()
     private val adapterHeader: AdapterHeader by lazy {
         AdapterHeader(
             onDelete = {pos, header->
@@ -46,7 +46,7 @@ class DialogConfigHeaderHttp(
         binding.apply {
             rvHeader.adapter = adapterHeader
             headerList.clear()
-            headerList.add(TFItemHeader(key = "", value = ""))
+            headerList.add(TFHttpHeader(key = "", value = ""))
             adapterHeader.submitList(headerList)
             btnCancel.setOnClickListener {
                 onClose.invoke()
@@ -66,7 +66,7 @@ class DialogConfigHeaderHttp(
                 }
 
                 if (!isEmpty) {
-                    headerList.add(TFItemHeader(key = "", value = ""))
+                    headerList.add(TFHttpHeader(key = "", value = ""))
 
                     headerList.forEach {
                         ILogR.D(TAG, "headerInfo: ", it.id, it.key, it.value)

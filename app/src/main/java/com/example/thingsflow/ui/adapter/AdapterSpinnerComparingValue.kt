@@ -29,7 +29,7 @@ class AdapterSpinnerComparingValue(
         comparingValue.let {
             if (comparingValue.isNotEmpty() && comparingValue.size >= 2) {
                 when(comparingValueType) {
-                    TFInOutType.PAYLOAD -> {
+                    TFInOutType.PAYLOAD_STATE -> {
                         when(comparingValue[0]) {
                             IoTAttribute.ACT_ONOFF -> {
                                 textView.text = getCmdLabel(context, comparingValue[0], comparingValue[1])
@@ -53,7 +53,7 @@ class AdapterSpinnerComparingValue(
         comparingValue.let {
             if (comparingValue.isNotEmpty() && comparingValue.size >= 2) {
                 when(comparingValueType) {
-                    TFInOutType.PAYLOAD -> {
+                    TFInOutType.PAYLOAD_STATE -> {
                         when(comparingValue[0]) {
                             IoTAttribute.ACT_ONOFF -> {
                                 view.text = getCmdLabel(context, comparingValue[0], comparingValue[1])

@@ -10,6 +10,10 @@ import com.example.thingsflow.databinding.LayoutItemBoxActionTypeBinding
 import com.example.thingsflow.ui.adapter.AdapterBoxActionType.BoxActionTypeViewHolder
 import rogo.iot.module.flowcommon.type.FBoxType
 
+/**
+ * adapter for selecting type of the next action box(control device or call http or ....)
+ *
+ */
 class AdapterBoxActionType(
     private val onItemClicked: (Int) -> Unit
 ): ListAdapter<Int, BoxActionTypeViewHolder> (

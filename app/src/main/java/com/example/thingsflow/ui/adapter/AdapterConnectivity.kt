@@ -9,6 +9,9 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemConnectivityBinding
 import rogo.iot.module.base.entity.IoTNetworkConnectivity
 
+/**
+ * adapter for showing types of available connectivity of gateway device(cable or wireless)
+ */
 class AdapterConnectivity(
     private val onItemClick: (Int) -> Unit
 ): ListAdapter<Map.Entry<IoTNetworkConnectivity, Boolean>, AdapterConnectivity.ConnectivityViewHolder>(

@@ -9,6 +9,9 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemAttributeBinding
 import com.example.thingsflow.utils.getAttrLabel
 
+/**
+ * adapter for selecting type of device
+ */
 class AdapterDeviceType(
     val onItemClicked: (Pair<Int, String>) -> Unit
 ):
