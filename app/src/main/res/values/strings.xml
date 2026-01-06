@@ -259,6 +259,7 @@
     <string name="compare_greater_equal">Lớn hơn hoặc bằng</string>
     <string name="int_type">Int</string>
     <string name="long_type">Long</string>
+    <string name="float_type">Float</string>
     <string name="string_type">String</string>
     <string name="object_type">Object</string>
     <string-array name="location_type">

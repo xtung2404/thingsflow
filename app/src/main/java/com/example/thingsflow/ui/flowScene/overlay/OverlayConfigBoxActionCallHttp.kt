@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
+import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingflowsdk.core.base.define.TFMethodHttp
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionCallHttpBinding
 import com.example.thingsflow.module.define.TFBodyHttpFormat
 import com.example.thingsflow.module.define.TFHttpHeader
-import com.example.thingsflow.module.define.TFJsonField
-import com.example.thingsflow.module.define.TFPrimitiveType
+import com.example.thingsflow.module.define.TFInputBoxValue
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterInOutput
@@ -23,6 +23,10 @@ import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
+import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
+import rogo.iot.module.flowcommon.define.FJsonField
+import rogo.iot.module.flowcommon.type.FBoxType
+import rogo.iot.module.flowcommon.type.FInputValueType
 
 /**
  * @file: This overlay is used to configure a box action call http(FBoxActionCallHttp)
@@ -57,9 +61,14 @@ class OverlayConfigBoxActionCallHttp(
     }
 
     private var fBoxActionCallHttp: FBoxActionCallHttp?= null
+    private var inputFromParentBoxList: List<TFInputBoxValue>? = listOf() // list of input from previous box
+    // hashmap to store headers that user insert
+    private var requiredHeaders: HashMap<String, String> = hashMapOf()
 
-    val map = hashMapOf<String, TFPrimitiveType>()
-    private val adapterInOutput: AdapterInOutput by lazy {
+    private var jsonFields: MutableList<FJsonField> = mutableListOf()
+
+    val map = hashMapOf<String, Int>()
+    private val adapterInputFromPreviousBox: AdapterInOutput by lazy {
         AdapterInOutput()
     }
 
@@ -73,11 +82,6 @@ class OverlayConfigBoxActionCallHttp(
             }
         )
     }
-    // hashmap to store headers that user insert
-    private var requiredHeaders: HashMap<String, String> = hashMapOf()
-
-    private val jsonFields: ArrayList<TFJsonField> = arrayListOf()
-
     // adapter of method http spinner
     private val adapterSpinnerMethodCallHttpType: AdapterSpinnerMethodCallHttpType by lazy {
         AdapterSpinnerMethodCallHttpType(
@@ -125,7 +129,9 @@ class OverlayConfigBoxActionCallHttp(
 
     private fun setUpInputLayout() {
         binding.apply {
-            rvInputFromParentBox.adapter = adapterInOutput
+            lnInput.lnInputFromPreviousBox.show()
+            lnInput.lnInputFromSpecificDevice.gone()
+            lnInput.rvInputFromParentBox.adapter = adapterInputFromPreviousBox
         }
     }
 
@@ -149,6 +155,7 @@ class OverlayConfigBoxActionCallHttp(
                 fBoxActionCallHttp?.url = edtUrl.text.toString()
                 fBoxActionCallHttp?.headers = requiredHeaders
                 fBoxActionCallHttp?.timeoutMs = edtTimeout.text.toString().toInt()
+                fBoxActionCallHttp?.jsonFields = jsonFields.toTypedArray()
                 onBoxActionCallHttpCreated.invoke(fBoxActionCallHttp!!)
             }
 
@@ -209,6 +216,10 @@ class OverlayConfigBoxActionCallHttp(
                 onClose.invoke(btnBack.isShown)
             }
 
+            btnOutputConfigClose.setOnClickListener {
+                onClose.invoke(btnBack.isShown)
+            }
+
             cbForwardJson.setOnCheckedChangeListener { _, isChecked ->
                 cbExportValue.isChecked = !isChecked
             }
@@ -228,6 +239,121 @@ class OverlayConfigBoxActionCallHttp(
                 lnOutputJson.show()
             }
         }
+    }
+
+    override fun show() {
+        super.show()
+        binding.apply {
+            fBoxActionCallHttp = null
+            requiredHeaders = hashMapOf()
+            initialize(
+                null,
+                null,
+                arrayOf()
+            )
+            cbForwardJson.isChecked = false
+            cbExportValue.isChecked = true
+            btnBack.show()
+        }
+    }
+
+    fun show(fBox: FBoxActionCallHttp?) {
+        super.show()
+        binding.apply {
+            btnBack.gone()
+            fBoxActionCallHttp = fBox
+            requiredHeaders = fBoxActionCallHttp?.headers?: hashMapOf()
+            initialize(
+                fBoxActionCallHttp?.url,
+                fBoxActionCallHttp?.timeoutMs,
+                fBoxActionCallHttp?.jsonFields?: arrayOf()
+            )
+        }
+    }
+
+    fun show(headers: ArrayList<TFHttpHeader>) {
+        super.show()
+        requiredHeaders = hashMapOf()
+        headers.forEach { header ->
+            requiredHeaders[header.key] = header.value
+        }
+    }
+
+    fun show(fieldList: Array<FJsonField>) {
+        super.show()
+        submitJsonFields(fieldList)
+    }
+
+    private fun initialize(url: String?, timeout: Int?, jsonFields: Array<FJsonField>) {
+        binding.apply {
+            tabLayout.getTabAt(1)?.select()
+            edtUrl.setText(url?: "")
+            edtTimeout.setText(timeout?.toString()?: "30000")
+
+            submitJsonFields(jsonFields)
+            showInputFromPreviousBox()
+        }
+    }
+
+    /**
+     * update UI to show json fields(json type and table type)
+     */
+    private fun submitJsonFields(
+        fields: Array<FJsonField>
+    ) {
+        this@OverlayConfigBoxActionCallHttp.jsonFields = fields.toMutableList()
+        if (jsonFields.isNotEmpty()) binding.lnShowOutputConfigured.show() else binding.lnShowOutputConfigured.gone()
+        adapterJsonField.submitList(jsonFields)
+        mapJsonTable(jsonFields)
+        adapterTableJsonField.submitList(map.entries.toList())
+    }
+
+    private fun mapJsonTable(fields: List<FJsonField>) {
+        fields.forEach { field ->
+            when(field.type) {
+                FInputValueType.OBJECT -> {
+                    mapJsonTable(field.fields.toList())
+                }
+                else -> {
+                    map[field.jsonPath] = field.type
+                }
+            }
+        }
+    }
+
+    private fun showInputFromPreviousBox() {
+        binding.apply {
+            //get parent box info
+            val parentBox = getPreviousBox()
+            parentBox?.let {
+                when(parentBox) {
+                    is FBoxEventDevice -> {
+                        // get list of input from previous box
+                        val device = FlowSdk.deviceHandler().get(parentBox.devId)
+                        device?.let {
+                            val location = FlowSdk.locationHandler().get(device.locationId)
+                            lnInput.txtPinputLabel.text = device.label
+                            lnInput.txtPinputLocation.text = location.label
+                        }
+                        inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)
+
+                        adapterInputFromPreviousBox.submitList(
+                            vmFlowScenario?.groupInputs(FBoxType.EVT_FROM_DEVICE, inputFromParentBoxList)
+                        )
+
+                        lnInput.lnInputFromPreviousBox.show()
+                    }
+                    else -> {
+                        lnInput.lnInputFromPreviousBox.gone()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getPreviousBox(): FBox? {
+        val previousBoxId = if (fBoxActionCallHttp == null) vmFlowScenario?.getRootBoxId() else fBoxActionCallHttp?.rootId
+        return vmFlowScenario?.boxes?.value?.find { it.id == previousBoxId }
     }
 
     private fun setUpTabs() {
@@ -250,98 +376,9 @@ class OverlayConfigBoxActionCallHttp(
 
     private fun showTab(input: Boolean = false, config: Boolean = false, output: Boolean = false) {
         binding.apply {
-            if (input) lnInput.show() else lnInput.gone()
+            if (input) lnInput.root.show() else lnInput.root.gone()
             if (config) lnConfig.show() else lnConfig.gone()
             if (output) lnOutput.show() else lnOutput.gone()
         }
     }
-
-    override fun show() {
-        super.show()
-        binding.apply {
-            fBoxActionCallHttp = null
-            requiredHeaders = hashMapOf()
-            tabLayout.getTabAt(0)?.select()
-            edtUrl.setText("")
-            if (edtTimeout.text.toString().isEmpty()) edtTimeout.setText("30000")
-            cbForwardJson.isChecked = false
-            cbExportValue.isChecked = true
-            btnBack.show()
-        }
-        showInputFromPreviousBox()
-    }
-
-    fun show(fBox: FBox?) {
-        super.show()
-        binding.apply {
-            btnBack.gone()
-            if (fBox is FBoxActionCallHttp) {
-                fBoxActionCallHttp = fBox
-                requiredHeaders = fBoxActionCallHttp?.headers?: hashMapOf()
-                edtUrl.setText(fBoxActionCallHttp?.url)
-                edtTimeout.setText(fBoxActionCallHttp?.timeoutMs.toString())
-            }
-        }
-    }
-
-    fun show(headers: ArrayList<TFHttpHeader>) {
-        super.show()
-        requiredHeaders.clear()
-        headers.forEach { header ->
-            requiredHeaders[header.key] = header.value
-        }
-        showInputFromPreviousBox()
-
-        binding.apply {
-            tabLayout.getTabAt(1)?.select()
-        }
-    }
-
-    fun show(fieldList: List<TFJsonField>) {
-        super.show()
-        jsonFields.clear()
-        jsonFields.addAll(fieldList)
-        if (jsonFields.isNotEmpty()) binding.lnShowOutputConfigured.show() else binding.lnShowOutputConfigured.gone()
-        adapterJsonField.submitList(jsonFields)
-        mapJsonTable(jsonFields)
-
-        adapterTableJsonField.submitList(map.entries.toList())
-    }
-
-    private fun mapJsonTable(fields: List<TFJsonField>) {
-        fields.forEach { field ->
-            when(field.type) {
-                TFPrimitiveType.OBJECT -> {
-                    mapJsonTable(field.fields)
-                }
-                else -> {
-                    map[field.jsonPath] = field.type
-                }
-            }
-        }
-    }
-
-    private fun showInputFromPreviousBox() {
-        binding.apply {
-            val parentBoxId = vmFlowScenario?.getRootBoxId()
-            val parentBox = vmFlowScenario?.boxes?.value?.find { it.id == parentBoxId }
-            parentBox?.let {
-//                adapterInOutput.submitList(vmFlowScenario?.getInputsFromParentBox(parentBox))
-            }
-        }
-    }
-
-    private fun showOutputWhenBoxIsConfigured(isConfigured: Boolean) {
-        binding.apply {
-            when(isConfigured) {
-                true -> {
-
-                }
-                false -> {
-
-                }
-            }
-        }
-    }
-
 }

@@ -6,9 +6,12 @@ import com.example.thingsflow.module.define.TFInputBoxValue
 import com.example.thingsflow.ui.customview.LayoutZoomPan
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxAction
-import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice
+import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 import rogo.iot.module.flowcommon.box.event.FBoxEvent
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
+import rogo.iot.module.flowcommon.define.FJsonField
+import rogo.iot.module.flowcommon.type.FInputValueType
+import rogo.iot.module.flowcommon.value.FInputValue
 import javax.inject.Inject
 
 class RepoFlowScenario @Inject constructor() {
@@ -104,8 +107,8 @@ class RepoFlowScenario @Inject constructor() {
                 }
             }
 
-            is FBoxActionControlDevice -> {
-
+            is FBoxActionCallHttp -> {
+                availableInputs.addAll(generateInputsFromCallHttp(fBox.jsonFields))
             }
         }
         return availableInputs
@@ -145,12 +148,14 @@ class RepoFlowScenario @Inject constructor() {
             when (device.elementIds.size) {
                 1 -> {
                     device.features.forEach { feature ->
+                        val inputValue = FInputValue()
+                        inputValue.setIntegerValue(feature)
                         availableInputs.add(
                             TFInputBoxValue(
                                 device.uuid,
                                 device.elementIds[0],
                                 TFInOutType.PAYLOAD_STATE,
-                                feature
+                                inputValue
                             )
                         )
                     }
@@ -158,25 +163,29 @@ class RepoFlowScenario @Inject constructor() {
 
                 else -> {
                     device.elementInfos.forEach { elmInfo ->
-                        if (elmInfo.value.attrInfos != null && elmInfo.value.attrInfos.isNotEmpty()) {
-                            elmInfo.value.attrInfos.forEach { feature ->
+                        if (elmInfo.value.attrs != null && elmInfo.value.attrs.isNotEmpty()) {
+                            elmInfo.value.attrs.forEach { feature ->
+                                val inputValue = FInputValue()
+                                inputValue.setIntegerValue(feature)
                                 availableInputs.add(
                                     TFInputBoxValue(
                                         device.uuid,
                                         elmInfo.key,
                                         TFInOutType.PAYLOAD_STATE,
-                                        feature
+                                        inputValue
                                     )
                                 )
                             }
                         } else {
                             device.features.forEach { feature ->
+                                val inputValue = FInputValue()
+                                inputValue.setIntegerValue(feature)
                                 availableInputs.add(
                                     TFInputBoxValue(
                                         device.uuid,
                                         elmInfo.key,
                                         TFInOutType.PAYLOAD_STATE,
-                                        feature
+                                        inputValue
                                     )
                                 )
                             }
@@ -184,6 +193,28 @@ class RepoFlowScenario @Inject constructor() {
                     }
                 }
             }
+        }
+        return availableInputs
+    }
+
+    private fun generateInputsFromCallHttp(jsonFields: Array<FJsonField>): ArrayList<TFInputBoxValue> {
+        val availableInputs = arrayListOf<TFInputBoxValue>()
+        jsonFields.forEach { field ->
+            if (field.type == FInputValueType.OBJECT) {
+                availableInputs.addAll(generateInputsFromCallHttp(field.fields))
+            } else {
+                val inputValue = FInputValue()
+                inputValue.setValue(field.type, field.jsonPath)
+                availableInputs.add(
+                    TFInputBoxValue(
+                        null,
+                        null,
+                        TFInOutType.JSON_FIELD,
+                        inputValue
+                    )
+                )
+            }
+
         }
         return availableInputs
     }

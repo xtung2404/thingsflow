@@ -94,41 +94,10 @@
                         android:text="@string/output"/>
                 </com.google.android.material.tabs.TabLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+
+            <include layout="@layout/layout_tab_input"
                 android:id="@+id/ln_input"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/input_from_previous_box"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_caption" />
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:src="@drawable/ic_up"
-                        android:padding="8dp"/>
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/gray"
-                    android:layout_marginTop="12dp"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/rv_input_from_parent_box"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-            </LinearLayout>
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -136,7 +105,7 @@
                 android:id="@+id/ln_config"
                 android:orientation="vertical"
                 android:paddingHorizontal="@dimen/_space16dp"
-                android:visibility="gone">
+                android:visibility="visible">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -150,7 +119,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_caption" />
                     <Spinner
-                        android:id="@+id/spinner_value_type"
+                        android:id="@+id/spinner_compared_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_space10dp"
@@ -188,15 +157,28 @@
                         android:text="@string/compared_value"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_caption" />
-
-                    <Spinner
-                        android:id="@+id/spinner_compared_value"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_space10dp"
-                        android:background="@drawable/bg_text_input_gray"
-                        android:paddingHorizontal="13dp"
-                        android:paddingVertical="14dp" />
+                        android:layout_marginTop="@dimen/space_screen_super_small"
+                        android:background="@drawable/bg_white_stroke_black"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="@dimen/_space4dp"
+                        android:paddingStart="8dp">
+
+                        <EditText
+                            android:id="@+id/edt_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="@dimen/text_caption"
+                            android:layout_weight="1"
+                            android:paddingVertical="8dp"/>
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatButton

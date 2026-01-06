@@ -202,6 +202,13 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                 overlayConfigBoxActionControlDevice.show(box)
             }
 
+            is FBoxActionConditionDeviceState -> {
+                overlayConfigBoxActionConditionDeviceState.show(box)
+            }
+
+            is FBoxActionCallHttp -> {
+                overlayConfigBoxActionCallHttp.show(box)
+            }
             is FBoxEventMqtt,
             is FBoxEventWeather,
             is FBoxEventSchedule,
@@ -219,12 +226,9 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
 
             is FBoxActionConditionGeneral,
             is FBoxActionConditionTime,
-            is FBoxActionConditionDeviceState -> {
 
-            }
             is FBoxActionAIGPT,
             is FBoxActionAIGemini,
-            is FBoxActionCallHttp,
             is FBoxActionCodeFunction,
             is FBoxActionFaceIDLearn,
             is FBoxActionFaceIDRecognize,

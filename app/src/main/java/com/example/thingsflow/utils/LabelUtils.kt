@@ -88,7 +88,7 @@ fun getCmdLabel(context: Context, attr: Int?, cmd: Int?): String =
 fun getInputLabel(context: Context, input: TFInputBoxValue): String? =
     when(input.inputType) {
         TFInOutType.PAYLOAD_STATE -> {
-            getStateLabel(context, input.value as Int)
+            getStateLabel(context, input.input.value as Int)
         }
         else -> ""
 }

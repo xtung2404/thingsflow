@@ -239,8 +239,11 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionCallHttp() {
             overlayConfigBoxActionCallHttp.hide()
             vmFlowScenario.configBox(it, newSegType)
         },
-        onClose = {
+        onClose = { isBackable ->
             overlayConfigBoxActionCallHttp.hide()
+            if (isBackable) {
+                overlaySelectBoxActionType.show()
+            }
         }
     )
 

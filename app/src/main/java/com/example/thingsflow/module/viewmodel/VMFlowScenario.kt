@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import rogo.iot.module.base.ILogR
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
+import rogo.iot.module.flowcommon.type.FBoxType
 import javax.inject.Inject
 import kotlin.collections.component1
 import kotlin.collections.component2
@@ -109,26 +110,36 @@ class VMFlowScenario
         )
     }
 
-    fun groupInputs(inputs: List<TFInputBoxValue>?): MutableList<AdapterItem> {
+    fun groupInputs(boxType: Int, inputs: List<TFInputBoxValue>?): MutableList<AdapterItem> {
         val displayList = mutableListOf<AdapterItem>()
-        val groupedInputsByDevice = inputs?.groupBy { it.devId }
-        groupedInputsByDevice?.forEach { (devId, values) ->
-            val device = FlowSdk.deviceHandler().get(devId)
-            device?.let {
-                val groupedInputsByElm = values.groupBy { it.elm }
-                groupedInputsByElm.forEach { (elm, values) ->
-                    val elmInfo = device.elementInfos[elm]
-                    elmInfo?.let {
-                        if (device.elementIds.size != 1) {
-                            if (elmInfo.label.isNullOrEmpty()) {
-                                displayList.add(AdapterItem.HeaderItem("Nút $elm"))
-                            } else {
-                                displayList.add(AdapterItem.HeaderItem(elmInfo.label))
+        when(boxType) {
+            FBoxType.ACT_CALL_HTTP -> {
+                inputs?.forEach { input ->
+                    displayList.add(AdapterItem.ContentItem(input))
+                }
+            }
+
+            FBoxType.EVT_FROM_DEVICE -> {
+                val groupedInputsByDevice = inputs?.groupBy { it.devId }
+                groupedInputsByDevice?.forEach { (devId, values) ->
+                    val device = FlowSdk.deviceHandler().get(devId)
+                    device?.let {
+                        val groupedInputsByElm = values.groupBy { it.elm }
+                        groupedInputsByElm.forEach { (elm, values) ->
+                            val elmInfo = device.elementInfos[elm]
+                            elmInfo?.let {
+                                if (device.elementIds.size != 1) {
+                                    if (elmInfo.label.isNullOrEmpty()) {
+                                        displayList.add(AdapterItem.HeaderItem("Nút $elm"))
+                                    } else {
+                                        displayList.add(AdapterItem.HeaderItem(elmInfo.label))
+                                    }
+                                }
+                            }
+                            values.forEach { value ->
+                                displayList.add(AdapterItem.ContentItem(value))
                             }
                         }
-                    }
-                    values.forEach { value ->
-                        displayList.add(AdapterItem.ContentItem(value))
                     }
                 }
             }

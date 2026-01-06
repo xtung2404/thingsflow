@@ -105,7 +105,7 @@ class AdapterInOutput : ListAdapter<AdapterItem, RecyclerView.ViewHolder>(
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(inputEntry: AdapterItem.ContentItem) {
             binding.apply {
-                txtLabel.text = inputEntry.data.value as String
+                txtLabel.text = inputEntry.data.input.value as String
             }
         }
     }

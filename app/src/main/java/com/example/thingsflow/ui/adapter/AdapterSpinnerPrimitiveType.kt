@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.thingsflow.R
-import com.example.thingsflow.module.define.TFPrimitiveType
+import com.example.thingsflow.utils.getFieldTypeLabel
 
 class AdapterSpinnerPrimitiveType(
     context: Context,
-    private val items: List<TFPrimitiveType>
-): ArrayAdapter<TFPrimitiveType>(context, R.layout.layout_spinner_item_location, items) {
+    private val items: List<Int>
+): ArrayAdapter<Int>(context, R.layout.layout_spinner_item_location, items) {
     init {
         setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
@@ -37,7 +37,7 @@ class AdapterSpinnerPrimitiveType(
         return view
     }
 
-    fun getPrimitiveTypeLabel(type: TFPrimitiveType): String {
-        return TFPrimitiveType.getFieldTypeLabel(context, type)
+    fun getPrimitiveTypeLabel(type: Int): String {
+        return getFieldTypeLabel(context, type)
     }
 }

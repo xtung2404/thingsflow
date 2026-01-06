@@ -6,6 +6,7 @@ import com.example.thingsflow.R
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.base.define.IoTDeviceType
 import rogo.iot.module.flowcommon.type.FBoxType
+import rogo.iot.module.flowcommon.type.FInputValueType
 import rogo.iot.module.flowcommon.value.FControlValue
 
 
@@ -120,4 +121,22 @@ fun HashMap<String?, Array<FControlValue>>.toElmIntArrayMap(): HashMap<String?, 
         }
     } as HashMap<String?, IntArray> // Ép kiểu kết quả cuối cùng về lại HashMap
 }
+
+fun getFieldTypeLabel(context: Context, type: Int): String =
+    when(type) {
+        FInputValueType.INTEGER -> context.getString(R.string.int_type)
+        FInputValueType.FLOAT -> context.getString(R.string.float_type)
+        FInputValueType.STRING -> context.getString(R.string.string_type)
+        FInputValueType.OBJECT -> context.getString(R.string.object_type)
+        else -> ""
+    }
+
+fun getFieldTypeColor(context: Context, type: Int): Int =
+    when(type) {
+        FInputValueType.OBJECT -> context.getColor(R.color.liga)
+        FInputValueType.INTEGER-> context.getColor(R.color.green)
+        FInputValueType.FLOAT -> context.getColor(R.color.green)
+        FInputValueType.STRING -> context.getColor(R.color.green)
+        else -> -1
+    }
 

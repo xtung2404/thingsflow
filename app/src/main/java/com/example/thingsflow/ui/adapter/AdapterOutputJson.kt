@@ -6,23 +6,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.databinding.LayoutItemJsonFieldBinding
-import com.example.thingsflow.module.define.TFJsonField
+import rogo.iot.module.flowcommon.define.FJsonField
 
 class AdapterOutputJson(
-): ListAdapter<TFJsonField, AdapterOutputJson.OutputJsonViewHolder>(
-    object : DiffUtil.ItemCallback<TFJsonField>() {
+): ListAdapter<FJsonField, AdapterOutputJson.OutputJsonViewHolder>(
+    object : DiffUtil.ItemCallback<FJsonField>() {
         override fun areItemsTheSame(
-            oldItem: TFJsonField,
-            newItem: TFJsonField
+            oldItem: FJsonField,
+            newItem: FJsonField
         ): Boolean {
-            return oldItem.id.contentEquals(newItem.id) && oldItem.label.contentEquals(newItem.label)
+            return oldItem.uuid.contentEquals(newItem.uuid) && oldItem.label.contentEquals(newItem.label)
         }
 
         override fun areContentsTheSame(
-            oldItem: TFJsonField,
-            newItem: TFJsonField
+            oldItem: FJsonField,
+            newItem: FJsonField
         ): Boolean {
-            return oldItem.id.contentEquals(newItem.id) && oldItem.label.contentEquals(newItem.label)
+            return oldItem.uuid.contentEquals(newItem.uuid) && oldItem.label.contentEquals(newItem.label)
         }
 
     }
@@ -47,7 +47,7 @@ class AdapterOutputJson(
     }
 
     inner class OutputJsonViewHolder(private val binding: LayoutItemJsonFieldBinding): RecyclerView.ViewHolder(binding.root) {
-        fun onBind(item: TFJsonField) {
+        fun onBind(item: FJsonField) {
             binding.apply {
                 txtLabel.text = item.label
 

@@ -1,9 +1,10 @@
 package com.example.thingsflow.module.define
 
+import rogo.iot.module.flowcommon.define.FJsonField
 import java.util.UUID
 
 class TFOuputJson(
     val uuid: String = UUID.randomUUID().toString(),
     val flowSceneId: String?= null,
-    var jsonFields: ArrayList<TFJsonField>
+    var jsonFields: ArrayList<FJsonField>
 )

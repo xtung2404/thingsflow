@@ -3,22 +3,22 @@ package com.example.thingsflow.ui.flowScene.overlay
 import android.content.Context
 import android.view.ViewGroup
 import com.example.thingsflow.databinding.LayoutOverlayConfigOutputJsonBinding
-import com.example.thingsflow.module.define.TFJsonField
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterJsonField
 import com.example.thingsflow.ui.dialog.DialogAddAndEditJsonField
+import rogo.iot.module.flowcommon.define.FJsonField
 
 class OverlayConfigOutputJson(
     context: Context,
     container: ViewGroup,
-    private val onOutputConfigured: (ArrayList<TFJsonField>) -> Unit,
+    private val onOutputConfigured: (Array<FJsonField>) -> Unit,
     private val onClose: () -> Unit
 ) : OverlayBase<LayoutOverlayConfigOutputJsonBinding>(
     context,
     container,
     LayoutOverlayConfigOutputJsonBinding::inflate
 ) {
-    private val fieldList = arrayListOf<TFJsonField>()
+    private var fieldList = arrayListOf<FJsonField>()
 
     // Adapter gốc quản lý toàn bộ cấu trúc cây
     private val adapterJsonField: AdapterJsonField by lazy {
@@ -26,7 +26,12 @@ class OverlayConfigOutputJson(
             onMenuClick = { parentField, returnToChild ->
                 // Mở dialog khi nhấn menu ở bất kỳ node nào (cha, con, cháu...)
                 dialogAddAndEditJsonField.setCallback { key, type ->
-                    val newField = TFJsonField(label = key, type = type, jsonPath = parentField.jsonPath + "${key}" + ".")
+                    val newField = FJsonField().apply {
+                        this.label = key
+                        this.type = type
+                        this.jsonPath = parentField.jsonPath + "." + "${key}"
+                        this.fields = arrayOf()
+                    }
 
                     // 1. Dữ liệu thấm vào Reference của node cha
                     returnToChild(newField)
@@ -47,7 +52,14 @@ class OverlayConfigOutputJson(
 
     private val dialogAddAndEditJsonField by lazy {
         DialogAddAndEditJsonField(context) { key, type ->
-            fieldList.add(TFJsonField(label = key, type = type, jsonPath = "${key}" + "."))
+            fieldList.add(
+                FJsonField().apply {
+                    this.label = key
+                    this.type = type
+                    this.jsonPath = "." + "${key}"
+                    this.fields = arrayOf()
+                }
+            )
             adapterJsonField.submitList(fieldList.toList())
             adapterJsonField.notifyDataSetChanged()
         }
@@ -74,12 +86,18 @@ class OverlayConfigOutputJson(
         super.initAction()
         binding.apply {
             btnSave.setOnClickListener {
-                onOutputConfigured.invoke(fieldList)
+                onOutputConfigured.invoke(fieldList.toTypedArray())
             }
 
             btnMenu.setOnClickListener {
                 dialogAddAndEditJsonField.setCallback { key, type ->
-                    fieldList.add(TFJsonField(label = key, type = type, jsonPath = key))
+                    fieldList.add(
+                        FJsonField().apply {
+                            this.label = key
+                            this.type = type
+                            this.jsonPath = key
+                            this.fields = arrayOf()
+                        })
                     adapterJsonField.submitList(fieldList.toList())
                     adapterJsonField.notifyDataSetChanged()
                     dialogAddAndEditJsonField.dismiss()
@@ -87,6 +105,12 @@ class OverlayConfigOutputJson(
                 dialogAddAndEditJsonField.show()
             }
         }
+    }
+
+    override fun show() {
+        super.show()
+        fieldList = arrayListOf()
+        adapterJsonField.submitList(fieldList)
     }
 
 }

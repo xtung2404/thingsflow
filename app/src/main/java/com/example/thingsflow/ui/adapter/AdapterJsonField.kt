@@ -11,15 +11,17 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutItemJsonFieldBinding
-import com.example.thingsflow.module.define.TFPrimitiveType
-import com.example.thingsflow.module.define.TFJsonField
+import com.example.thingsflow.utils.getFieldTypeColor
+import com.example.thingsflow.utils.getFieldTypeLabel
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
+import rogo.iot.module.flowcommon.define.FJsonField
+import rogo.iot.module.flowcommon.type.FInputValueType
 
 class AdapterJsonField(
-    private val onMenuClick: (parentField: TFJsonField, returnToChild: (TFJsonField) -> Unit) -> Unit,
+    private val onMenuClick: (parentField: FJsonField, returnToChild: (FJsonField) -> Unit) -> Unit,
     private val onNotifyParent: () -> Unit // Callback báo lên root
-) : ListAdapter<TFJsonField, AdapterJsonField.JsonFieldViewHolder>(DIFF) {
+) : ListAdapter<FJsonField, AdapterJsonField.JsonFieldViewHolder>(DIFF) {
 
     inner class JsonFieldViewHolder(private val binding: LayoutItemJsonFieldBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -41,13 +43,14 @@ class AdapterJsonField(
             }
         }
 
-        fun onBind(field: TFJsonField) {
+        fun onBind(field: FJsonField) {
             binding.apply {
                 setUpView(field)
 
                 btnMenu.setOnClickListener {
                     onMenuClick.invoke(field) { newField ->
-                        field.fields.add(newField)
+                        val newFields = field.fields + newField
+                        field.fields = newFields
 
                         childAdapter.submitList(field.fields.toList())
 
@@ -58,7 +61,7 @@ class AdapterJsonField(
                 }
 
                 root.setOnClickListener {
-                    if (field.type == TFPrimitiveType.OBJECT) {
+                    if (field.type == FInputValueType.OBJECT) {
                         if (rvField.isShown) {
                             rvField.gone()
                             btnExpand.setImageDrawable(root.context.getDrawable(R.drawable.ic_forward_full))
@@ -70,17 +73,17 @@ class AdapterJsonField(
                 }
             }
         }
-        private fun setUpView(field: TFJsonField) {
+        private fun setUpView(field: FJsonField) {
             binding.apply {
                 txtLabel.text = field.label
-                txtType.text = TFPrimitiveType.getFieldTypeLabel(root.context, field.type)
-                txtType.setTextColor(TFPrimitiveType.getFieldTypeColor(root.context, field.type))
+                txtType.text = getFieldTypeLabel(root.context, field.type)
+                txtType.setTextColor(getFieldTypeColor(root.context, field.type))
 
                 var imgDrawable: Drawable?= null
                 var imgTint: Int?= null
 
                 when(field.type) {
-                    TFPrimitiveType.OBJECT -> {
+                    FInputValueType.OBJECT -> {
                         imgDrawable = root.context.getDrawable(R.drawable.ic_up)
                         imgTint = R.color.black
                         rvField.show()
@@ -117,9 +120,9 @@ class AdapterJsonField(
     }
 
     companion object {
-        val DIFF = object : DiffUtil.ItemCallback<TFJsonField>() {
-            override fun areItemsTheSame(old: TFJsonField, new: TFJsonField) = old.id == new.id
-            override fun areContentsTheSame(old: TFJsonField, new: TFJsonField) = old == new
+        val DIFF = object : DiffUtil.ItemCallback<FJsonField>() {
+            override fun areItemsTheSame(old: FJsonField, new: FJsonField) = old.uuid == new.uuid
+            override fun areContentsTheSame(old: FJsonField, new: FJsonField) = false
         }
     }
 }
