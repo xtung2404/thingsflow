@@ -45,6 +45,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/ln_previous_box_device"
                 android:orientation="vertical"
                 android:background="@color/background_color"
                 android:paddingHorizontal="8dp"

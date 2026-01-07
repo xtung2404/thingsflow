@@ -1,18 +1,19 @@
 package com.example.thingflowsdk.core.baseimpl.impl;
 
+import static com.example.thingflowsdk.core.utils.FBoxExecutor.generatedBoxActionData;
+import static com.example.thingflowsdk.core.utils.FBoxExecutor.generatedBoxEventData;
+import static com.example.thingflowsdk.core.utils.FBoxExecutor.getTypeOfBox;
+
 import com.example.thingflowsdk.core.base.handler.FlowBindingHandler;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import rogo.iot.module.base.ILogR;
 import rogo.iot.module.flowcommon.box.FBox;
 import rogo.iot.module.flowcommon.box.action.FBoxAction;
-import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice;
 import rogo.iot.module.flowcommon.box.event.FBoxEvent;
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice;
-import rogo.iot.module.flowcommon.type.FBoxType;
 import rogo.iot.module.platform.feature.IoTFeature;
 import rogo.iot.module.platform.invoking.IoTInvokingProperty;
 import rogo.iot.module.rogocore.sdk.SmartSdk;
@@ -140,7 +141,7 @@ public class FlowBindingHandlerImpl implements FlowBindingHandler {
                 false,
                 devId,
                 IoTFeature.BUILTIN_SERVICE_FLOW,
-                "bindBoxEvent",
+                "createBindingBoxEvent",
                 new IoTFeature.FeatureValue() {
                     @IoTInvokingProperty("flowBindingId")
                     private String flowBindingId = bindingId;
@@ -203,7 +204,7 @@ public class FlowBindingHandlerImpl implements FlowBindingHandler {
                 false,
                 devId,
                 IoTFeature.BUILTIN_SERVICE_FLOW,
-                "bindOtherBoxes",
+                "createBindingOtherBoxes",
                 new IoTFeature.FeatureValue() {
                     @IoTInvokingProperty("flowBindingId")
                     private String flowBindingId = bindingId;
@@ -242,38 +243,5 @@ public class FlowBindingHandlerImpl implements FlowBindingHandler {
                     }
                 }
         );
-    }
-
-    private int getTypeOfBox(FBox fBox) {
-        if (fBox instanceof FBoxEventDevice) return FBoxType.EVT_FROM_DEVICE;
-        if (fBox instanceof FBoxActionControlDevice) return FBoxType.ACT_CONTROL_DEVICE;
-        return 0;
-    }
-
-    private String generatedBoxEventData(FBox fBox) {
-        HashMap<String, Object> data = new HashMap<>();
-        if (fBox instanceof FBoxEventDevice) {
-            FBoxEventDevice eventDevice = (FBoxEventDevice) fBox;
-            data.put("eventTypes", getTypeOfBox(fBox));
-            data.put("devType", eventDevice.getDevType());
-            data.put("devId", eventDevice.getDevId());
-            data.put("elms", eventDevice.getElms());
-            data.put("eid", eventDevice.getEid());
-            data.put("attrTypes", eventDevice.getElms());
-            return gson.toJson(data);
-        }
-        return "{}";
-    }
-
-    private String generatedBoxActionData(FBox fBox) {
-        HashMap<String, Object> data = new HashMap<>();
-        if (fBox instanceof FBoxActionControlDevice) {
-            FBoxActionControlDevice actionControlDevice = (FBoxActionControlDevice) fBox;
-            data.put("devType", actionControlDevice.getDevType());
-            data.put("attrType", actionControlDevice.getAttrType());
-            data.put("targetControls", actionControlDevice.getTargetControls());
-            return gson.toJson(data);
-        }
-        return "{}";
     }
 }

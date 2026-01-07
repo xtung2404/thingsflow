@@ -21,12 +21,17 @@
             android:textSize="@dimen/text_caption"
             android:textColor="@color/text_input"
             android:id="@+id/txt_label"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:background="@color/text_input"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
             android:textSize="@dimen/text_caption"
             android:textColor="@color/text_input"
+            android:paddingStart="12dp"
             android:id="@+id/txt_type"/>
 
     </LinearLayout>

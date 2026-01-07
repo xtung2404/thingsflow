@@ -151,4 +151,24 @@ class VMFlowScenario
     fun generateOutputs(fBox: FBox?): List<TFInputBoxValue> {
         return repo.generateOutputs(fBox)
     }
+
+    fun createFlowScene(
+        flowSceneId: String,
+        devId: String,
+        flowSceneLabel: String
+    ) {
+        repo.createFlowScene(flowSceneId, devId, flowSceneLabel)
+    }
+
+    fun createSceneBoxes(
+        flowSceneId: String,
+        devId: String,
+        boxes: ArrayList<FBox>
+    ) {
+        repo.createSceneBoxes(
+            flowSceneId,
+            devId,
+            boxes
+        )
+    }
 }

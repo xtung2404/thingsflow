@@ -376,8 +376,8 @@ class OverlayConfigBoxActionConditionDeviceState(
             val comparisionType = spinnerComparisionType.selectedItem as Int
             val selectedComparingValue = spinnerComparingValue.selectedItem as Pair<TFInOutType, IntArray>
 
-            fBoxActionConditionDeviceState?.attrType = selectedComparedValue.input.value as Int
-            fBoxActionConditionDeviceState?.condition = comparisionType
+            fBoxActionConditionDeviceState?.attrType = (selectedComparedValue.input.value as Int)?: -1
+            fBoxActionConditionDeviceState?.condition = comparisionType?: -1
             fBoxActionConditionDeviceState?.isInputFromPreviousBox = spinnerInputSource.selectedItem as Int == TFInputSource.INPUT_FROM_PREVIOUS_BOX
             when(selectedComparedValue.inputType) {
                 TFInOutType.PAYLOAD_STATE -> {

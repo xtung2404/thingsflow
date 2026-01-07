@@ -14,7 +14,9 @@ import com.example.thingsflow.module.define.TFViewHolderType.Companion.TYPE_SING
 import com.example.thingsflow.utils.getCmdLabel
 import rogo.iot.module.flowcommon.value.FControlValue
 
-class AdapterConfiguredDeviceAction
+class AdapterConfiguredDeviceAction(
+    private val onItemDelete:(devId: String?) -> Unit
+)
     : ListAdapter<Map.Entry<String?, Array<FControlValue>>, RecyclerView.ViewHolder>(
     object : DiffUtil.ItemCallback<Map.Entry<String?, Array<FControlValue>>>() {
         override fun areItemsTheSame(
@@ -56,6 +58,10 @@ class AdapterConfiguredDeviceAction
                         act?.attrValue?.get(1) // Giá trị của lệnh (nếu có)
                     )
                 }
+
+                btnDelete.setOnClickListener {
+                    onItemDelete.invoke(devId)
+                }
             }
         }
     }
@@ -73,6 +79,10 @@ class AdapterConfiguredDeviceAction
                     val adapterElementCmd = AdapterElementCmd(dev.uuid)
                     rvElms.adapter = adapterElementCmd
                     adapterElementCmd.submitList(item.value.toList())
+                }
+
+                btnDelete.setOnClickListener {
+                    onItemDelete.invoke(device?.uuid)
                 }
             }
         }

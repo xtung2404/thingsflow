@@ -162,11 +162,14 @@ class OverlayConfigBoxActionConditionGeneral(
         binding.apply {
             //get parent box info
             val parentBox = getPreviousBox()
+            inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)
             parentBox?.let {
                 when(parentBox) {
+                    is FBoxEventDevice -> {
+                        lnInput.lnPreviousBoxDevice.show()
+                    }
                     is FBoxActionCallHttp -> {
-                        inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)
-
+                        lnInput.lnPreviousBoxDevice.gone()
                         adapterInputFromPreviousBox.submitList(
                             vmFlowScenario?.groupInputs(FBoxType.ACT_CALL_HTTP, inputFromParentBoxList)
                         )

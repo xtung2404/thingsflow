@@ -42,8 +42,8 @@ class OverlaySelectDevice(
     }
 
     private var selectedDeviceMap: HashMap<String?, IntArray> = hashMapOf()
-
     private var selectedDevType: Int = IoTDeviceType.ALL
+    private var currentBoxType: Int = FBoxType.EVT_FROM_DEVICE
 
     // selectedElms is to store selected attributes
     private var selectedAttrs: IntArray = intArrayOf()
@@ -108,6 +108,9 @@ class OverlaySelectDevice(
         devType: Int?,
         attrs: IntArray?
     ) {
+        currentBoxType?.let {
+            this@OverlaySelectDevice.currentBoxType = currentBoxType
+        }
         selectedDeviceMap = hashMapOf()
         originalDevList.clear()
 
@@ -125,6 +128,9 @@ class OverlaySelectDevice(
         devMap: HashMap<String?, IntArray>?= null
     ) {
         super.show()
+        currentBoxType?.let {
+            this@OverlaySelectDevice.currentBoxType = currentBoxType
+        }
         selectedDeviceMap = devMap?: hashMapOf()
         originalDevList.clear()
         binding.apply {
@@ -159,20 +165,62 @@ class OverlaySelectDevice(
             )
             rvDevice.adapter = adapterDevices
             val filteredDevices = vmDevice?.getUserDevices()
-                ?.asSequence() // Use sequence for better performance on large lists
+                ?.asSequence()
                 ?.filter { dev ->
                     if (selectedDevType != IoTDeviceType.ALL) {
-                        dev.devType == selectedDevType
+                        getSupportedDeviceTypes(currentBoxType).contains(dev.devType) && dev.devType == selectedDevType
                     } else {
-                        true
+                        getSupportedDeviceTypes(currentBoxType).contains(dev.devType)
                     }
                 }
-                ?.distinct() // Ensure unique devices if they match multiple attributes
+                ?.distinct()
                 ?.toList() ?: emptyList()
 
             originalDevList.addAll(filteredDevices)
             adapterDevices.submitList(originalDevList)
             adapterDevices.setSelectedDeviceMap(selectedDeviceMap)
         }
+    }
+
+    private fun getSupportedDeviceTypes(currentBoxType: Int): IntArray {
+        val devTypes = mutableListOf<Int>()
+        devTypes.addAll(
+            when(currentBoxType) {
+                FBoxType.EVT_FROM_DEVICE,
+                FBoxType.ACT_CONDITION_DEVICE -> {
+                    listOf(
+                        IoTDeviceType.LIGHT,
+                        IoTDeviceType.SWITCH,
+                        IoTDeviceType.PLUG,
+                        IoTDeviceType.CURTAINS,
+                        IoTDeviceType.DOORLOCK,
+                        IoTDeviceType.MOTOR_CONTROLLER,
+                        IoTDeviceType.SENSOR_HEAT,
+                        IoTDeviceType.SENSOR_TEMP,
+                        IoTDeviceType.SENSOR_DOOR,
+                        IoTDeviceType.SENSOR_SMOKE,
+                        IoTDeviceType.SENSOR_PRESENCE,
+                        IoTDeviceType.GATE
+                    )
+                }
+                FBoxType.ACT_CONTROL_DEVICE -> {
+                    listOf(
+                        IoTDeviceType.LIGHT,
+                        IoTDeviceType.SWITCH,
+                        IoTDeviceType.PLUG,
+                        IoTDeviceType.CURTAINS,
+                        IoTDeviceType.DOORLOCK,
+                        IoTDeviceType.MOTOR_CONTROLLER,
+                        IoTDeviceType.GATE
+                    )
+                }
+                else -> {
+                    listOf()
+                }
+            }
+        )
+
+        return devTypes.toIntArray()
+
     }
 }

@@ -12,6 +12,8 @@ import com.example.thingsflow.module.define.TFInOutType
 import com.example.thingsflow.module.define.TFViewHolderType.Companion.TYPE_CONTENT_CALL_HTTP
 import com.example.thingsflow.module.define.TFViewHolderType.Companion.TYPE_CONTENT_STATE
 import com.example.thingsflow.module.define.TFViewHolderType.Companion.TYPE_HEADER
+import com.example.thingsflow.utils.getFieldTypeColor
+import com.example.thingsflow.utils.getFieldTypeLabel
 import com.example.thingsflow.utils.getInputLabel
 
 class AdapterInOutput : ListAdapter<AdapterItem, RecyclerView.ViewHolder>(
@@ -106,6 +108,8 @@ class AdapterInOutput : ListAdapter<AdapterItem, RecyclerView.ViewHolder>(
         fun bindData(inputEntry: AdapterItem.ContentItem) {
             binding.apply {
                 txtLabel.text = inputEntry.data.input.value as String
+                txtType.text = getFieldTypeLabel(root.context, inputEntry.data.input.type)
+                txtType.setTextColor(getFieldTypeColor(root.context, inputEntry.data.input.type))
             }
         }
     }

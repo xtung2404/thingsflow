@@ -10,13 +10,21 @@ import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback;
 
 public interface FlowScenarioHandler {
     void createFlowScenario(
-        String label,
-        RequestResultCallback<TFFlowScenario> callback
+            String flowSceneId,
+            String devId,
+            String label,
+            String desc,
+            RequestResultCallback<TFFlowScenario> callback
     );
 
     void bindBoxesScenario(
-        String sceneId,
-        ArrayList<FBox> boxes,
-        SuccessStatusCallback callback
+            String sceneId,
+            String devId,
+            ArrayList<FBox> boxes,
+            SuccessStatusCallback callback
+    );
+
+    void deleteScene(
+            String flowSceneId
     );
 }

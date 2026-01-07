@@ -342,9 +342,11 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionConditionDeviceStat
             overlayConfigBoxActionConditionDeviceState.hide()
             vmFlowScenario.configBox(it, newSegType)
         },
-        onClose = {
+        onClose = { isBackable ->
             overlayConfigBoxActionConditionDeviceState.hide()
-            overlaySelectBoxConditionType.show()
+            if (isBackable) {
+                overlaySelectBoxConditionType.show()
+            }
         }
     )
 

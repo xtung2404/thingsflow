@@ -7,6 +7,7 @@ import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingflowsdk.core.base.define.TFMethodHttp
+import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionCallHttpBinding
 import com.example.thingsflow.module.define.TFBodyHttpFormat
 import com.example.thingsflow.module.define.TFHttpHeader
@@ -64,10 +65,9 @@ class OverlayConfigBoxActionCallHttp(
     private var inputFromParentBoxList: List<TFInputBoxValue>? = listOf() // list of input from previous box
     // hashmap to store headers that user insert
     private var requiredHeaders: HashMap<String, String> = hashMapOf()
-
     private var jsonFields: MutableList<FJsonField> = mutableListOf()
 
-    val map = hashMapOf<String, Int>()
+    private var map = hashMapOf<String, Int>()
     private val adapterInputFromPreviousBox: AdapterInOutput by lazy {
         AdapterInOutput()
     }
@@ -208,6 +208,11 @@ class OverlayConfigBoxActionCallHttp(
             rvJson.adapter = adapterJsonField
             rvTable.adapter = adapterTableJsonField
 
+            btnTable.setBackgroundDrawable(context.getDrawable(R.drawable.btn_emerald))
+            btnTable.setTextColor(context.getColor(R.color.white))
+            btnJson.setBackgroundDrawable(context.getDrawable(R.drawable.btn_gray))
+            btnJson.setTextColor(context.getColor(R.color.text_input))
+
             btnConfigOutput.setOnClickListener {
                 onConfigJsonOutput.invoke()
             }
@@ -230,11 +235,19 @@ class OverlayConfigBoxActionCallHttp(
             }
 
             btnTable.setOnClickListener {
+                btnTable.setBackgroundDrawable(context.getDrawable(R.drawable.btn_emerald))
+                btnTable.setTextColor(context.getColor(R.color.white))
+                btnJson.setBackgroundDrawable(context.getDrawable(R.drawable.btn_gray))
+                btnJson.setTextColor(context.getColor(R.color.text_input))
                 lnOutputTable.show()
                 lnOutputJson.gone()
             }
 
             btnJson.setOnClickListener {
+                btnTable.setBackgroundDrawable(context.getDrawable(R.drawable.btn_gray))
+                btnTable.setTextColor(context.getColor(R.color.text_input))
+                btnJson.setBackgroundDrawable(context.getDrawable(R.drawable.btn_emerald))
+                btnJson.setTextColor(context.getColor(R.color.white))
                 lnOutputTable.gone()
                 lnOutputJson.show()
             }
@@ -304,8 +317,13 @@ class OverlayConfigBoxActionCallHttp(
         this@OverlayConfigBoxActionCallHttp.jsonFields = fields.toMutableList()
         if (jsonFields.isNotEmpty()) binding.lnShowOutputConfigured.show() else binding.lnShowOutputConfigured.gone()
         adapterJsonField.submitList(jsonFields)
+        map = hashMapOf()
         mapJsonTable(jsonFields)
         adapterTableJsonField.submitList(map.entries.toList())
+        binding.apply {
+            lnOutputTable.gone()
+            lnOutputJson.show()
+        }
     }
 
     private fun mapJsonTable(fields: List<FJsonField>) {
@@ -325,9 +343,12 @@ class OverlayConfigBoxActionCallHttp(
         binding.apply {
             //get parent box info
             val parentBox = getPreviousBox()
+            inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)
+            var previousBoxType: Int = FBoxType.EVT_FROM_DEVICE
             parentBox?.let {
                 when(parentBox) {
                     is FBoxEventDevice -> {
+                        previousBoxType = FBoxType.EVT_FROM_DEVICE
                         // get list of input from previous box
                         val device = FlowSdk.deviceHandler().get(parentBox.devId)
                         device?.let {
@@ -335,19 +356,21 @@ class OverlayConfigBoxActionCallHttp(
                             lnInput.txtPinputLabel.text = device.label
                             lnInput.txtPinputLocation.text = location.label
                         }
-                        inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)
 
-                        adapterInputFromPreviousBox.submitList(
-                            vmFlowScenario?.groupInputs(FBoxType.EVT_FROM_DEVICE, inputFromParentBoxList)
-                        )
-
-                        lnInput.lnInputFromPreviousBox.show()
+                    }
+                    is FBoxActionCallHttp -> {
+                        previousBoxType = FBoxType.ACT_CALL_HTTP
                     }
                     else -> {
-                        lnInput.lnInputFromPreviousBox.gone()
+
                     }
                 }
             }
+            adapterInputFromPreviousBox.submitList(
+                vmFlowScenario?.groupInputs(previousBoxType, inputFromParentBoxList)
+            )
+
+            lnInput.lnInputFromPreviousBox.show()
         }
     }
 

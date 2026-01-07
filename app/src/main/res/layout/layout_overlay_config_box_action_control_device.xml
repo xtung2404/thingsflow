@@ -94,33 +94,8 @@
                         android:text="@string/output"/>
                 </com.google.android.material.tabs.TabLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:id="@+id/ln_input"
-                android:paddingHorizontal="16dp"
-                android:visibility="gone"
-                android:layout_marginTop="30dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_screen_super_small"
-                    android:text="@string/input_from_previous_box"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_caption" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/gray"
-                    android:layout_marginTop="@dimen/_space8dp"
-                    android:layout_marginBottom="4dp"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/rv_input_from_previous_box"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-            </LinearLayout>
+            <include layout="@layout/layout_tab_input"
+                android:id="@+id/ln_input"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -128,7 +103,7 @@
                 android:id="@+id/ln_config"
                 android:orientation="vertical"
                 android:paddingHorizontal="@dimen/_space16dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -268,9 +243,8 @@
                                         android:maxLines="1"
                                         android:ellipsize="end"/>
                                     <androidx.appcompat.widget.AppCompatImageView
-                                        android:layout_width="40dp"
-                                        android:layout_height="40dp"
-                                        android:padding="10dp"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
                                         android:id="@+id/btn_select_device"
                                         android:src="@drawable/ic_add_circle"/>
                                 </LinearLayout>

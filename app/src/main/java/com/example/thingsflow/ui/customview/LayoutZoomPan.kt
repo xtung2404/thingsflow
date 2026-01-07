@@ -13,6 +13,7 @@ import android.widget.FrameLayout
 import com.example.thingsflow.R
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxAction
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionDeviceState
 import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
 import rogo.iot.module.flowcommon.box.event.FBoxEvent
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
@@ -370,7 +371,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                 var startYPositive = startBoxRect.centerY()
                 var startYNegative = startBoxRect.centerY()
 
-                if (box is FBoxActionConditionGeneral) {
+                if (box is FBoxActionConditionGeneral || box is FBoxActionConditionDeviceState) {
                     // Điều chỉnh cho Condition Box: xuất phát từ tâm nút "+"
                     startYPositive = startBoxRect.centerY() - spacing // Top/Positive Branch
                     startYNegative = startBoxRect.centerY() + spacing // Bottom/Negative Branch
@@ -536,7 +537,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                 val rightCx = rect.right
 
                 // ✅ Xử lý FBoxActionConditionGeneral (có 2 nút +)
-                if (box is FBoxActionConditionGeneral) {
+                if (box is FBoxActionConditionGeneral || box is FBoxActionConditionGeneral) {
                     if (box.positiveSegId.isNullOrEmpty() && box.negativeSegId.isNullOrEmpty()) {
 
                         // --- Nút "-" (Remove) ---

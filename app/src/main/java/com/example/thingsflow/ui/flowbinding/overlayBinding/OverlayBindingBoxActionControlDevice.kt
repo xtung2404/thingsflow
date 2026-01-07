@@ -62,7 +62,9 @@ class OverlayBindingBoxActionControlDevice(
 
     private val adapterConfiguredDeviceAction: AdapterConfiguredDeviceAction by lazy {
         AdapterConfiguredDeviceAction(
+            onItemDelete = { devId ->
 
+            }
         )
     }
     override fun onViewCreated(binding: LayoutOverlayBindingBoxActionControlDeviceBinding) {

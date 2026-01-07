@@ -1,9 +1,12 @@
 package com.example.thingsflow.module.repository
 
 import com.example.thingflowsdk.core.FlowSdk
+import com.example.thingflowsdk.core.base.entity.TFFlowScenario
 import com.example.thingsflow.module.define.TFInOutType
 import com.example.thingsflow.module.define.TFInputBoxValue
 import com.example.thingsflow.ui.customview.LayoutZoomPan
+import kotlinx.coroutines.flow.flow
+import rogo.iot.module.base.callback.RequestResultCallback
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxAction
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
@@ -12,6 +15,7 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.define.FJsonField
 import rogo.iot.module.flowcommon.type.FInputValueType
 import rogo.iot.module.flowcommon.value.FInputValue
+import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
 import javax.inject.Inject
 
 class RepoFlowScenario @Inject constructor() {
@@ -103,7 +107,7 @@ class RepoFlowScenario @Inject constructor() {
         when (fBox) {
             is FBoxEventDevice -> {
                 if (!fBox.devId.isNullOrEmpty()) {
-                    availableInputs.addAll(generateInputsFromDevice(fBox.devId))
+                    availableInputs.addAll(generateInputsFromDevice(fBox.devId, fBox.elms))
                 }
             }
 
@@ -129,7 +133,7 @@ class RepoFlowScenario @Inject constructor() {
         devMap?.let {
             if (!devMap.isEmpty()) {
                 devMap.forEach { deviceEntry ->
-                    availableInputs.addAll(generateInputsFromDevice(deviceEntry.key))
+                    availableInputs.addAll(generateInputsFromDevice(deviceEntry.key, deviceEntry.value))
                 }
 
             }
@@ -141,7 +145,7 @@ class RepoFlowScenario @Inject constructor() {
     /**
      * generate state inputs basing on information of a device
      */
-    private fun generateInputsFromDevice(devId: String?): ArrayList<TFInputBoxValue> {
+    private fun generateInputsFromDevice(devId: String?, elms: IntArray?): ArrayList<TFInputBoxValue> {
         val availableInputs = arrayListOf<TFInputBoxValue>()
         val device = FlowSdk.deviceHandler().get(devId)
         device?.let {
@@ -163,31 +167,33 @@ class RepoFlowScenario @Inject constructor() {
 
                 else -> {
                     device.elementInfos.forEach { elmInfo ->
-                        if (elmInfo.value.attrs != null && elmInfo.value.attrs.isNotEmpty()) {
-                            elmInfo.value.attrs.forEach { feature ->
-                                val inputValue = FInputValue()
-                                inputValue.setIntegerValue(feature)
-                                availableInputs.add(
-                                    TFInputBoxValue(
-                                        device.uuid,
-                                        elmInfo.key,
-                                        TFInOutType.PAYLOAD_STATE,
-                                        inputValue
+                        if (elms?.contains(elmInfo.key) == true) {
+                            if (elmInfo.value.attrs != null && elmInfo.value.attrs.isNotEmpty()) {
+                                elmInfo.value.attrs.forEach { feature ->
+                                    val inputValue = FInputValue()
+                                    inputValue.setIntegerValue(feature)
+                                    availableInputs.add(
+                                        TFInputBoxValue(
+                                            device.uuid,
+                                            elmInfo.key,
+                                            TFInOutType.PAYLOAD_STATE,
+                                            inputValue
+                                        )
                                     )
-                                )
-                            }
-                        } else {
-                            device.features.forEach { feature ->
-                                val inputValue = FInputValue()
-                                inputValue.setIntegerValue(feature)
-                                availableInputs.add(
-                                    TFInputBoxValue(
-                                        device.uuid,
-                                        elmInfo.key,
-                                        TFInOutType.PAYLOAD_STATE,
-                                        inputValue
+                                }
+                            } else {
+                                device.features.forEach { feature ->
+                                    val inputValue = FInputValue()
+                                    inputValue.setIntegerValue(feature)
+                                    availableInputs.add(
+                                        TFInputBoxValue(
+                                            device.uuid,
+                                            elmInfo.key,
+                                            TFInOutType.PAYLOAD_STATE,
+                                            inputValue
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }
@@ -244,4 +250,47 @@ class RepoFlowScenario @Inject constructor() {
         return availableOutputs
     }
 
+
+    fun createFlowScene(
+        flowSceneId: String,
+        devId: String,
+        flowSceneLabel: String
+    ) {
+        FlowSdk.flowScenarioHandler().createFlowScenario(
+            flowSceneId,
+                    devId,
+            flowSceneLabel,
+            "",
+            object : RequestResultCallback<TFFlowScenario> {
+                override fun onResult(p0: TFFlowScenario?) {
+
+                }
+
+                override fun onError(p0: Int) {
+
+                }
+            }
+        )
+    }
+
+    fun createSceneBoxes(
+        flowSceneId: String,
+        devId: String,
+        boxes: ArrayList<FBox>
+    ) {
+        FlowSdk.flowScenarioHandler().bindBoxesScenario(
+            flowSceneId,
+            devId,
+            boxes,
+            object : SuccessStatusCallback {
+                override fun onSuccess() {
+
+                }
+
+                override fun onFailure(p0: Int, p1: String?) {
+
+                }
+            }
+        )
+    }
 }

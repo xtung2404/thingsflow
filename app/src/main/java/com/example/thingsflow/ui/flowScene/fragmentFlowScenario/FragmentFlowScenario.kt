@@ -11,6 +11,8 @@ import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.example.thingsflow.ui.customview.ViewBox
 import com.example.thingsflow.ui.dialog.DialogConfigHeaderHttp
+import com.example.thingsflow.ui.dialog.DialogDeviceList
+import com.example.thingsflow.ui.dialog.DialogFlowNodeList
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionCallHttp
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionConditionDeviceState
@@ -58,6 +60,7 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventTouchID
 import rogo.iot.module.flowcommon.box.event.FBoxEventVoiceRecognize
 import rogo.iot.module.flowcommon.box.event.FBoxEventWeather
 import rogo.iot.module.base.ILogR
+import java.util.UUID
 
 /**
  * @file: is to set up a flow scenario
@@ -80,6 +83,24 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
 
     // Determine if the next box belongs to positive segment or negative segment of the current box
     internal var newSegType: LayoutZoomPan.OnBoxActionListener.NewSegType? = null
+
+    private val dialogFlowNodeList: DialogFlowNodeList by lazy {
+        DialogFlowNodeList(
+            requireActivity(),
+            onConnectNewNode = {
+
+            },
+            onDevicesSelected = { selectedDevices->
+                binding.apply {
+                    dialogFlowNodeList.hide()
+                    val sceneLabel = txtSceneLabel.text.toString()
+                    val sceneId = UUID.randomUUID().toString()
+                    vmFlowScenario.createFlowScene(sceneId, selectedDevices.keys.first()!!,sceneLabel)
+                    vmFlowScenario.createSceneBoxes(sceneId, selectedDevices.keys.first()!!, vmFlowScenario.boxes.value!!)
+                }
+            }
+        )
+    }
 
     internal lateinit var overlaySelectBoxEventType: OverlaySelectBoxEventType //use when select type of box event
     internal lateinit var overlayConfigBoxEventFromDevice: OverlayConfigBoxEventFromDevice // use when config box event from device
@@ -182,6 +203,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     btnEditScene.setImageDrawable(context?.getDrawable(R.drawable.ic_edit))
                 }
                 vmFlowBinding.setBoxes(vmFlowScenario.boxes.value)
+                dialogFlowNodeList.show()
             }
         }
     }

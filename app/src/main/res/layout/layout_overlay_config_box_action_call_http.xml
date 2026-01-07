@@ -96,7 +96,8 @@
             </LinearLayout>
 
             <include layout="@layout/layout_tab_input"
-                android:id="@+id/ln_input"/>
+                android:id="@+id/ln_input"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -229,7 +230,7 @@
                 android:id="@+id/ln_output"
                 android:paddingHorizontal="16dp"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -369,26 +370,57 @@
                                 android:text="@string/output_value"
                                 android:textColor="@color/black"
                                 android:textSize="13sp"/>
-                            <androidx.appcompat.widget.AppCompatButton
+                            <androidx.appcompat.widget.AppCompatTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/btn_table"
-                                android:text="@string/table"/>
-                            <androidx.appcompat.widget.AppCompatButton
+                                android:text="@string/table"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="4dp"
+                                android:background="@drawable/btn_emerald"
+                                android:textColor="@color/white"/>
+                            <androidx.appcompat.widget.AppCompatTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/btn_json"
-                                android:text="@string/json"/>
+                                android:text="@string/json"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="4dp"
+                                android:background="@drawable/btn_gray"
+                                android:textColor="@color/text_input"/>
                         </LinearLayout>
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            android:layout_marginTop="4dp">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/ln_output_table"
                                 android:orientation="vertical">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.7"
+                                        android:text="@string/name"
+                                        android:fontFamily="@font/roboto_regular"
+                                        android:textColor="@color/text_input"
+                                        android:textSize="@dimen/text_body2"/>
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.3"
+                                        android:text="@string/type"
+                                        android:fontFamily="@font/roboto_regular"
+                                        android:textColor="@color/text_input"
+                                        android:textSize="@dimen/text_body2"/>
+
+                                </LinearLayout>
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/rv_table"
                                     android:layout_width="match_parent"

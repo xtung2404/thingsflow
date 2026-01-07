@@ -262,6 +262,7 @@
     <string name="float_type">Float</string>
     <string name="string_type">String</string>
     <string name="object_type">Object</string>
+    <string name="name">Tên</string>
     <string-array name="location_type">
         <item>Chưa xác định</item>
         <item>Nhà riêng</item>
