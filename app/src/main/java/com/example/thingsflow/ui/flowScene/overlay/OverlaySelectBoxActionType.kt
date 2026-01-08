@@ -2,7 +2,9 @@ package com.example.thingsflow.ui.flowScene.overlay
 
 import android.content.Context
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.thingsflow.databinding.LayoutOverlaySelectBoxActionTypeBinding
+import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterBoxActionType
 import rogo.iot.module.flowcommon.type.FBoxType
@@ -25,6 +27,11 @@ class OverlaySelectBoxActionType(
     container,
     LayoutOverlaySelectBoxActionTypeBinding::inflate
 ) {
+    private val vmFlowScenario: VMFlowScenario? by lazy {
+        viewModelOwner?.let {
+            ViewModelProvider(it)[VMFlowScenario::class.java]
+        }
+    }
 
     // adapter for select type of box action
     private val adapterBoxActionType: AdapterBoxActionType by lazy {
@@ -51,6 +58,13 @@ class OverlaySelectBoxActionType(
             btnCancel.setOnClickListener {
                 onClose.invoke()
             }
+        }
+    }
+
+    override fun show() {
+        super.show()
+        binding.apply {
+
         }
     }
 }

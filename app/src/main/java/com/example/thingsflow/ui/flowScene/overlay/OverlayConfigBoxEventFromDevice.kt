@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxEventFromDeviceBinding
 import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
@@ -175,9 +176,11 @@ class OverlayConfigBoxEventFromDevice(
                 if (fBoxEventDevice == null) {
                     fBoxEventDevice = FBoxEventDevice()
                 }
+                val device = FlowSdk.deviceHandler().get(devId)
                 fBoxEventDevice?.devId = devId?: ""
                 fBoxEventDevice?.devType = selectedDeviceType
                 fBoxEventDevice?.attrTypes = getSelectedAttrs()
+                fBoxEventDevice?.eid = device?.eid?: -1
                 fBoxEventDevice?.elms = selectedDeviceMap[devId]?: intArrayOf()
 
                 onBoxEventCreated.invoke(fBoxEventDevice!!)
@@ -265,6 +268,7 @@ class OverlayConfigBoxEventFromDevice(
         super.show()
         binding.apply {
             fBoxEventDevice = null
+            selectedDeviceMap = hashMapOf()
             selectedDeviceType = IoTDeviceType.ALL
             showOutput(isBoxCreated = false)
         }
@@ -275,6 +279,7 @@ class OverlayConfigBoxEventFromDevice(
         binding.apply {
             btnBack.gone()
             selectedBox?.let {
+                selectedDeviceMap = hashMapOf()
                 fBoxEventDevice = selectedBox
                 selectedDeviceMap = hashMapOf()
                 if (selectedBox.devId.isNotEmpty()) {

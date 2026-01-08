@@ -478,7 +478,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                 }
             }
 
-                if (box is FBoxActionConditionGeneral) {
+                if (box is FBoxActionConditionGeneral || box is FBoxActionConditionDeviceState) {
                     // Vị trí ngang vẫn là cạnh phải
                     val rightCx = rect.right
 
@@ -537,7 +537,7 @@ class LayoutZoomPan @JvmOverloads constructor(
                 val rightCx = rect.right
 
                 // ✅ Xử lý FBoxActionConditionGeneral (có 2 nút +)
-                if (box is FBoxActionConditionGeneral || box is FBoxActionConditionGeneral) {
+                if (box is FBoxActionConditionGeneral || box is FBoxActionConditionDeviceState) {
                     if (box.positiveSegId.isNullOrEmpty() && box.negativeSegId.isNullOrEmpty()) {
 
                         // --- Nút "-" (Remove) ---

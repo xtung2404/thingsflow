@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.example.thingsflow.R
 import com.example.thingsflow.utils.getDeviceTypeLabel
+import com.google.gson.Gson
 import rogo.iot.module.base.ILogR
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
@@ -130,7 +131,7 @@ class ViewBox @JvmOverloads constructor(
                     lnEvtEmpty = findViewById<LinearLayout>(R.id.ln_evt_empty)
                     when (boxVal) {
                         is FBoxEventDevice -> {
-                            ILogR.D(TAG, "updateBlockContent: BoxEventInfo ", boxVal.devType, Arrays.toString(boxVal.attrTypes), boxVal.devType)
+                            ILogR.D(TAG, "updateBlockContent: BoxEventInfo ", Gson().toJson(boxVal))
                             if (boxVal.devId == null &&
                                 boxVal.attrTypes == null &&
                                 boxVal.devType == 0

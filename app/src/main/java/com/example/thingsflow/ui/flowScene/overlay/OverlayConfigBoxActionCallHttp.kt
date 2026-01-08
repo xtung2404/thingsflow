@@ -62,7 +62,7 @@ class OverlayConfigBoxActionCallHttp(
     }
 
     private var fBoxActionCallHttp: FBoxActionCallHttp?= null
-    private var inputFromParentBoxList: List<TFInputBoxValue>? = listOf() // list of input from previous box
+    private var inputFromParentBoxList: List<TFInputBoxValue?> = listOf() // list of input from previous box
     // hashmap to store headers that user insert
     private var requiredHeaders: HashMap<String, String> = hashMapOf()
     private var jsonFields: MutableList<FJsonField> = mutableListOf()
@@ -343,11 +343,15 @@ class OverlayConfigBoxActionCallHttp(
         binding.apply {
             //get parent box info
             val parentBox = getPreviousBox()
-            inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)
+
             var previousBoxType: Int = FBoxType.EVT_FROM_DEVICE
             parentBox?.let {
+                vmFlowScenario?.getInputsFromParentBox(parentBox)?.let {
+                    inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)!!
+                }
                 when(parentBox) {
                     is FBoxEventDevice -> {
+                        lnInput.lnPreviousBoxDevice.show()
                         previousBoxType = FBoxType.EVT_FROM_DEVICE
                         // get list of input from previous box
                         val device = FlowSdk.deviceHandler().get(parentBox.devId)
@@ -359,6 +363,7 @@ class OverlayConfigBoxActionCallHttp(
 
                     }
                     is FBoxActionCallHttp -> {
+                        lnInput.lnPreviousBoxDevice.gone()
                         previousBoxType = FBoxType.ACT_CALL_HTTP
                     }
                     else -> {

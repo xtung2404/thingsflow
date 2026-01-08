@@ -124,7 +124,7 @@ public class FlowBindingHandlerImpl implements FlowBindingHandler {
         int size = eventBoxes.size();
 
         String[] evtBoxIds = new String[size];
-        Integer[] evtEventTypes = new Integer[size];
+        int[] evtEventTypes = new int[size];
         String[] evtTargetIds = new String[size];
         String[] evtEventDatas = new String[size];
 
@@ -148,7 +148,7 @@ public class FlowBindingHandlerImpl implements FlowBindingHandler {
                     @IoTInvokingProperty("eventBoxIds")
                     private String[] eventBoxIds = evtBoxIds;
                     @IoTInvokingProperty("eventType")
-                    private Integer[] eventType = evtEventTypes;
+                    private int[] eventType = evtEventTypes;
                     @IoTInvokingProperty("targetSegId")
                     private String[] targetSegId = evtTargetIds;
                     @IoTInvokingProperty("eventData")
@@ -185,7 +185,7 @@ public class FlowBindingHandlerImpl implements FlowBindingHandler {
     ) {
         int size = boxes.size();
         String[] actBoxIds = new String[size];
-        Integer[] actTypes = new Integer[size];
+        int[] actTypes = new int[size];
         String[] actSegIds = new String[size];
         String[] actPosSegIds = new String[size];
         String[] actNegSegIds = new String[size];
@@ -212,7 +212,7 @@ public class FlowBindingHandlerImpl implements FlowBindingHandler {
                     private String[] boxIds = actBoxIds;
 
                     @IoTInvokingProperty("actionTypes")
-                    private Integer[] actionTypes = actTypes;
+                    private int[] actionTypes = actTypes;
                     @IoTInvokingProperty("segIds")
                     private String[] segIds = actSegIds;
                     @IoTInvokingProperty("positiveSegId")

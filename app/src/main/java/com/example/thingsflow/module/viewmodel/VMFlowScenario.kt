@@ -5,21 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thingflowsdk.core.FlowSdk
-import com.example.thingsflow.module.define.TFInOutType
 import com.example.thingsflow.module.define.TFInputBoxValue
 import com.example.thingsflow.module.repository.RepoFlowScenario
 import com.example.thingsflow.ui.adapter.AdapterItem
 import com.example.thingsflow.ui.customview.LayoutZoomPan
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import rogo.iot.module.base.ILogR
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.type.FBoxType
 import javax.inject.Inject
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 @HiltViewModel
 class VMFlowScenario
@@ -72,9 +67,6 @@ class VMFlowScenario
                     newSegType = newSegType,
                     rootBoxes = currentBoxes
             ))
-            _boxes.value?.forEach {
-                ILogR.D(TAG, "configBox:boxInfo", Gson().toJson(it))
-            }
         }
     }
 
@@ -94,7 +86,7 @@ class VMFlowScenario
         _boxes.value = ArrayList(newBoxes)
     }
 
-    fun getInputsFromParentBox(box: FBox?): ArrayList<TFInputBoxValue> {
+    fun getInputsFromParentBox(box: FBox?): List<TFInputBoxValue?> {
         return repo.generateInputsFromPreviousBox(box)
     }
 
@@ -102,7 +94,7 @@ class VMFlowScenario
         devType: Int?,
         attrs: IntArray?,
         devMap: HashMap<String?, IntArray>?
-    ): ArrayList<TFInputBoxValue> {
+    ): List<TFInputBoxValue?> {
         return repo.generateInputsFromSpecificDevices(
             devType,
             attrs,
@@ -110,7 +102,7 @@ class VMFlowScenario
         )
     }
 
-    fun groupInputs(boxType: Int, inputs: List<TFInputBoxValue>?): MutableList<AdapterItem> {
+    fun groupInputs(boxType: Int, inputs: List<TFInputBoxValue?>): MutableList<AdapterItem> {
         val displayList = mutableListOf<AdapterItem>()
         when(boxType) {
             FBoxType.ACT_CALL_HTTP -> {
@@ -120,11 +112,11 @@ class VMFlowScenario
             }
 
             FBoxType.EVT_FROM_DEVICE -> {
-                val groupedInputsByDevice = inputs?.groupBy { it.devId }
-                groupedInputsByDevice?.forEach { (devId, values) ->
+                val groupedInputsByDevice = inputs.groupBy { it?.devId }
+                groupedInputsByDevice.forEach { (devId, values) ->
                     val device = FlowSdk.deviceHandler().get(devId)
                     device?.let {
-                        val groupedInputsByElm = values.groupBy { it.elm }
+                        val groupedInputsByElm = values.groupBy { it?.elm }
                         groupedInputsByElm.forEach { (elm, values) ->
                             val elmInfo = device.elementInfos[elm]
                             elmInfo?.let {

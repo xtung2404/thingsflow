@@ -2,9 +2,15 @@ package com.example.thingsflow.ui.flowScene.overlay
 
 import android.content.Context
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.thingsflow.databinding.LayoutOverlaySelectBoxConditionTypeBinding
+import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterBoxActionType
+import rogo.iot.module.flowcommon.box.FBox
+import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
+import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
+import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.type.FBoxType
 
 /**
@@ -25,6 +31,11 @@ class OverlaySelectBoxConditionType(
     container,
     LayoutOverlaySelectBoxConditionTypeBinding::inflate
 ) {
+    private val vmFlowScenario: VMFlowScenario? by lazy {
+        viewModelOwner?.let {
+            ViewModelProvider(it)[VMFlowScenario::class.java]
+        }
+    }
     // adapter for select type of box condition
     private val adapterBoxActionType: AdapterBoxActionType by lazy {
         AdapterBoxActionType(
@@ -36,12 +47,6 @@ class OverlaySelectBoxConditionType(
     override fun onViewCreated(binding: LayoutOverlaySelectBoxConditionTypeBinding) {
         binding.apply {
             rvBoxType.adapter = adapterBoxActionType
-            adapterBoxActionType.submitList(
-                listOf<Int>(
-                    FBoxType.ACT_CONDITION_GENERAL,
-                    FBoxType.ACT_CONDITION_DEVICE
-                )
-            )
 
             btnBack.setOnClickListener { onClose.invoke() }
 
@@ -49,5 +54,26 @@ class OverlaySelectBoxConditionType(
                 onClose.invoke()
             }
         }
+    }
+
+    override fun show() {
+        super.show()
+        binding.apply {
+            val list = mutableListOf<Int>()
+            when(getPreviousBox()) {
+                is FBoxActionCallHttp -> {
+                    list.add(FBoxType.ACT_CONDITION_GENERAL)
+                }
+                else -> {
+                    list.add(FBoxType.ACT_CONDITION_DEVICE)
+                }
+            }
+            adapterBoxActionType.submitList(list)
+        }
+    }
+
+    private fun getPreviousBox(): FBox? {
+        val previousBoxId = vmFlowScenario?.getRootBoxId()
+        return vmFlowScenario?.boxes?.value?.find { it.id == previousBoxId }
     }
 }

@@ -19,7 +19,7 @@ import com.example.thingsflow.utils.show
 
 class AdapterSpinnerInput(
     context: Context,
-    private val items: List<TFInputBoxValue>
+    private val items: List<TFInputBoxValue?>
 ): ArrayAdapter<TFInputBoxValue>(context, R.layout.layout_spinner_item_compared_value, items) {
     init {
         setDropDownViewResource(R.layout.layout_spinner_item_compared_value)
@@ -31,28 +31,37 @@ class AdapterSpinnerInput(
         val inputValue = items[position]
         val lnDevElm = view.findViewById<LinearLayout>(R.id.ln_dev_elm)
         val lnJsonField = view.findViewById<LinearLayout>(R.id.ln_json_field)
-        when(inputValue.inputType) {
-            TFInOutType.JSON_FIELD -> {
-                lnJsonField.show()
-                lnDevElm.gone()
-                val txtFieldLabel = view.findViewById<TextView>(R.id.txt_field_label)
-                val txtFieldType = view.findViewById<TextView>(R.id.txt_field_type)
-                txtFieldLabel.text = inputValue.input.value as String
-                txtFieldType.setTextColor(getFieldTypeColor(context, inputValue.input.type))
-                txtFieldType.text = getFieldTypeLabel(context, inputValue.input.type)
-            }
-            else -> {
-                lnJsonField.gone()
-                lnDevElm.show()
-                val txtElm = view.findViewById<TextView>(R.id.txt_elm)
-                val txtState = view.findViewById<TextView>(R.id.txt_label)
-                val device = FlowSdk.deviceHandler().get(inputValue.devId)
-                device?.let {
-                    txtElm.text = device.elementInfos[inputValue.elm]?.label?: "Nút ${inputValue.elm}"
-                    txtState.text =  getInputLabel(context, inputValue)
+        val txtFieldLabel = view.findViewById<TextView>(R.id.txt_field_label)
+        val txtFieldType = view.findViewById<TextView>(R.id.txt_field_type)
+        if (inputValue == null) {
+            lnJsonField.show()
+            lnDevElm.gone()
+            txtFieldLabel.text = "Không khả dụng"
+            txtFieldType.text = ""
+        }
+        inputValue?.let {
+            when(inputValue.inputType) {
+                TFInOutType.JSON_FIELD -> {
+                    lnJsonField.show()
+                    lnDevElm.gone()
+                    txtFieldLabel.text = inputValue.input.value as String
+                    txtFieldType.setTextColor(getFieldTypeColor(context, inputValue.input.type))
+                    txtFieldType.text = getFieldTypeLabel(context, inputValue.input.type)
+                }
+                else -> {
+                    lnJsonField.gone()
+                    lnDevElm.show()
+                    val txtElm = view.findViewById<TextView>(R.id.txt_elm)
+                    val txtState = view.findViewById<TextView>(R.id.txt_label)
+                    val device = FlowSdk.deviceHandler().get(inputValue.devId)
+                    device?.let {
+                        txtElm.text = device.elementInfos[inputValue.elm]?.label?: "Nút ${inputValue.elm}"
+                        txtState.text =  getInputLabel(context, inputValue)
+                    }
                 }
             }
         }
+
 
 
         return view
@@ -65,28 +74,37 @@ class AdapterSpinnerInput(
         val inputValue = items[position]
         val lnDevElm = view.findViewById<LinearLayout>(R.id.ln_dev_elm)
         val lnJsonField = view.findViewById<LinearLayout>(R.id.ln_json_field)
-        when(inputValue.inputType) {
-            TFInOutType.JSON_FIELD -> {
-                lnJsonField.show()
-                lnDevElm.gone()
-                val txtFieldLabel = view.findViewById<TextView>(R.id.txt_field_label)
-                val txtFieldType = view.findViewById<TextView>(R.id.txt_field_type)
-                txtFieldLabel.text = inputValue.input.value as String
-                txtFieldType.setTextColor(getFieldTypeColor(context, inputValue.input.type))
-                txtFieldType.text = getFieldTypeLabel(context, inputValue.input.type)
-            }
-            else -> {
-                lnJsonField.gone()
-                lnDevElm.show()
-                val txtElm = view.findViewById<TextView>(R.id.txt_elm)
-                val txtState = view.findViewById<TextView>(R.id.txt_label)
-                val device = FlowSdk.deviceHandler().get(inputValue.devId)
-                device?.let {
-                    txtElm.text = device.elementInfos[inputValue.elm]?.label?: "Nút ${inputValue.elm}"
-                    txtState.text =  getInputLabel(context, inputValue)
+        val txtFieldLabel = view.findViewById<TextView>(R.id.txt_field_label)
+        val txtFieldType = view.findViewById<TextView>(R.id.txt_field_type)
+        if (inputValue == null) {
+            lnJsonField.show()
+            lnDevElm.gone()
+            txtFieldLabel.text = "Không khả dụng"
+            txtFieldType.text = ""
+        }
+        inputValue?.let {
+            when(inputValue.inputType) {
+                TFInOutType.JSON_FIELD -> {
+                    lnJsonField.show()
+                    lnDevElm.gone()
+                    txtFieldLabel.text = inputValue.input.value as String
+                    txtFieldType.setTextColor(getFieldTypeColor(context, inputValue.input.type))
+                    txtFieldType.text = getFieldTypeLabel(context, inputValue.input.type)
+                }
+                else -> {
+                    lnJsonField.gone()
+                    lnDevElm.show()
+                    val txtElm = view.findViewById<TextView>(R.id.txt_elm)
+                    val txtState = view.findViewById<TextView>(R.id.txt_label)
+                    val device = FlowSdk.deviceHandler().get(inputValue.devId)
+                    device?.let {
+                        txtElm.text = device.elementInfos[inputValue.elm]?.label?: "Nút ${inputValue.elm}"
+                        txtState.text =  getInputLabel(context, inputValue)
+                    }
                 }
             }
         }
+
 
 
         return view

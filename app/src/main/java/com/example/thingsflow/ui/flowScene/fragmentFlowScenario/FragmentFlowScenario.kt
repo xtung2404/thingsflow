@@ -231,6 +231,10 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             is FBoxActionCallHttp -> {
                 overlayConfigBoxActionCallHttp.show(box)
             }
+
+            is FBoxActionConditionGeneral -> {
+                overlayConfigBoxActionConditionGeneral.show(box)
+            }
             is FBoxEventMqtt,
             is FBoxEventWeather,
             is FBoxEventSchedule,
@@ -245,8 +249,6 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
             is FBoxEventStatistic -> {
 
             }
-
-            is FBoxActionConditionGeneral,
             is FBoxActionConditionTime,
 
             is FBoxActionAIGPT,

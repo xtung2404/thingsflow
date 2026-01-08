@@ -235,9 +235,13 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionCallHttp() {
             overlayConfigBoxActionCallHttp.hide()
             overlayConfigOutputJson.show()
         },
-        onBoxActionCallHttpCreated = {
+        onBoxActionCallHttpCreated = { fBoxActionCallHttp->
             overlayConfigBoxActionCallHttp.hide()
-            vmFlowScenario.configBox(it, newSegType)
+            if (fBoxActionCallHttp.id == null) {
+                vmFlowScenario.configBox(fBoxActionCallHttp, newSegType)
+            } else {
+                vmFlowScenario.updateBox(fBoxActionCallHttp)
+            }
         },
         onClose = { isBackable ->
             overlayConfigBoxActionCallHttp.hide()
@@ -312,9 +316,13 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionConditionGeneral() 
     overlayConfigBoxActionConditionGeneral = OverlayConfigBoxActionConditionGeneral(
         requireActivity(),
         binding.overlayContainer,
-        onBoxActionCondtionGeneralCreated = {
+        onBoxActionCondtionGeneralCreated = { fBoxActionConditionGeneral ->
             overlayConfigBoxActionConditionGeneral.hide()
-            vmFlowScenario.configBox(it, newSegType)
+            if (fBoxActionConditionGeneral.id == null) {
+                vmFlowScenario.configBox(fBoxActionConditionGeneral, newSegType)
+            } else {
+                vmFlowScenario.updateBox(fBoxActionConditionGeneral)
+            }
         },
         onClose = { isBackable ->
             overlayConfigBoxActionConditionGeneral.hide()
@@ -338,9 +346,13 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionConditionDeviceStat
             overlayConfigInputBoxActionConditionDeviceState.show()
         },
         // triggered when a new box action condition device state is created
-        onBoxActionCondtionDeviceStateCreated = {
+        onBoxActionCondtionDeviceStateCreated = { fBox ->
             overlayConfigBoxActionConditionDeviceState.hide()
-            vmFlowScenario.configBox(it, newSegType)
+            if (fBox.id == null) {
+                vmFlowScenario.configBox(fBox, newSegType)
+            } else {
+                vmFlowScenario.updateBox(fBox)
+            }
         },
         onClose = { isBackable ->
             overlayConfigBoxActionConditionDeviceState.hide()

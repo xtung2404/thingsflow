@@ -24,9 +24,8 @@ class AdapterInOutput : ListAdapter<AdapterItem, RecyclerView.ViewHolder>(
         ): Boolean {
             return if (oldItem is AdapterItem.HeaderItem && newItem is AdapterItem.HeaderItem) {
                 oldItem.title == newItem.title
-            } else if (oldItem is AdapterItem.ContentItem && newItem is AdapterItem.ContentItem) {
-                oldItem.data.devId == newItem.data.devId && oldItem.data.inputType == newItem.data.inputType
-            } else false
+            } else
+                false
         }
 
         override fun areContentsTheSame(
@@ -35,10 +34,6 @@ class AdapterInOutput : ListAdapter<AdapterItem, RecyclerView.ViewHolder>(
         ): Boolean {
             return if (oldItem is AdapterItem.HeaderItem && newItem is AdapterItem.HeaderItem) {
                 oldItem.title == newItem.title
-            } else if (oldItem is AdapterItem.ContentItem && newItem is AdapterItem.ContentItem) {
-                oldItem.data.devId == newItem.data.devId
-                        && oldItem.data.inputType == newItem.data.inputType
-                        && oldItem.data.elm == newItem.data.elm
             } else false
         }
     }
@@ -62,7 +57,7 @@ class AdapterInOutput : ListAdapter<AdapterItem, RecyclerView.ViewHolder>(
 
     override fun getItemViewType(position: Int): Int {
         return if (getItem(position) is AdapterItem.ContentItem) {
-            if ((getItem(position) as AdapterItem.ContentItem).data.inputType == TFInOutType.PAYLOAD_STATE) {
+            if ((getItem(position) as AdapterItem.ContentItem).data?.inputType == TFInOutType.PAYLOAD_STATE) {
                 TYPE_CONTENT_STATE
             } else {
                 TYPE_CONTENT_CALL_HTTP
@@ -98,7 +93,9 @@ class AdapterInOutput : ListAdapter<AdapterItem, RecyclerView.ViewHolder>(
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(inputEntry: AdapterItem.ContentItem) {
             binding.apply {
-                txtInput.text = getInputLabel(root.context, inputEntry.data)
+                inputEntry.data?.let {
+                    txtInput.text = getInputLabel(root.context, inputEntry.data)
+                }
             }
         }
     }
@@ -107,9 +104,11 @@ class AdapterInOutput : ListAdapter<AdapterItem, RecyclerView.ViewHolder>(
         RecyclerView.ViewHolder(binding.root) {
         fun bindData(inputEntry: AdapterItem.ContentItem) {
             binding.apply {
-                txtLabel.text = inputEntry.data.input.value as String
-                txtType.text = getFieldTypeLabel(root.context, inputEntry.data.input.type)
-                txtType.setTextColor(getFieldTypeColor(root.context, inputEntry.data.input.type))
+                inputEntry.data?.let {
+                    txtLabel.text = inputEntry.data.input.value as String
+                    txtType.text = getFieldTypeLabel(root.context, inputEntry.data.input.type)
+                    txtType.setTextColor(getFieldTypeColor(root.context, inputEntry.data.input.type))
+                }
             }
         }
     }

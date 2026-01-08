@@ -20,11 +20,12 @@ class AdapterSpinnerInputSource(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: LayoutInflater.from(context)
             .inflate(R.layout.layout_spinner_item_location, parent, false)
-
         val textView = view.findViewById<TextView>(R.id.txt_label)
-        textView.text = getInputSourceLabel(items[position])
-
-
+        if (items.isEmpty()) {
+            textView.text = "Không khả dụng"
+        } else {
+            textView.text = getInputSourceLabel(items[position])
+        }
         return view
     }
 
@@ -43,7 +44,7 @@ class AdapterSpinnerInputSource(
             TFInputSource.INPUT_FROM_PREVIOUS_BOX -> context.getString(R.string.input_from_previous_box)
             TFInputSource.INPUT_FROM_OTHER_DEVICES -> context.getString(R.string.input_from_new_device)
 
-            else -> ""
+            else -> "Không khả dụng"
         }
     }
 }

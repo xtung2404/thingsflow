@@ -69,7 +69,7 @@
     <dimen name="_space512dp">512dp</dimen>
     <dimen name="_space320dp">320dp</dimen>
 
-    <dimen name="box_width">120dp</dimen>
+    <dimen name="box_width">135dp</dimen>
     <dimen name="box_height">80dp</dimen>
     <dimen name="padding_box_horizontal">12dp</dimen>
     <dimen name="padding_box_vertical">10dp</dimen>

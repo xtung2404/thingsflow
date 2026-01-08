@@ -2,10 +2,13 @@ package com.example.thingsflow.ui.flowScene.overlay
 
 import android.content.Context
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.thingsflow.databinding.LayoutOverlaySelectBoxTypeBinding
+import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterBoxType
 import com.example.thingsflow.utils.getSupportedBoxType
+import rogo.iot.module.flowcommon.box.FBox
 
 /**
  * @file: This overlay is used to select type of box(action or condition)
@@ -25,7 +28,11 @@ class OverlaySelectBoxType(
     container,
     LayoutOverlaySelectBoxTypeBinding::inflate
 ) {
-
+    private val vmFlowScenario: VMFlowScenario? by lazy {
+        viewModelOwner?.let {
+            ViewModelProvider(it)[VMFlowScenario::class.java]
+        }
+    }
     // adapter for select type of box
     private val adapterBoxType: AdapterBoxType by lazy {
         AdapterBoxType(
@@ -44,4 +51,5 @@ class OverlaySelectBoxType(
             }
         }
     }
+
 }

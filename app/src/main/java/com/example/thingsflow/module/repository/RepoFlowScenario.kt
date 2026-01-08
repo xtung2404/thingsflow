@@ -102,8 +102,8 @@ class RepoFlowScenario @Inject constructor() {
      * generate inputs from previous box
      * @param fBox: the previous box
      */
-    fun generateInputsFromPreviousBox(fBox: FBox?): ArrayList<TFInputBoxValue> {
-        val availableInputs: ArrayList<TFInputBoxValue> = arrayListOf()
+    fun generateInputsFromPreviousBox(fBox: FBox?): ArrayList<TFInputBoxValue?> {
+        val availableInputs: ArrayList<TFInputBoxValue?> = arrayListOf()
         when (fBox) {
             is FBoxEventDevice -> {
                 if (!fBox.devId.isNullOrEmpty()) {

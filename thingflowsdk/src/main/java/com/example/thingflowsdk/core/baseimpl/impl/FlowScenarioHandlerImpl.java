@@ -1,25 +1,18 @@
 package com.example.thingflowsdk.core.baseimpl.impl;
 
-import static com.example.thingflowsdk.core.utils.FBoxExecutor.generatedBoxActionData;
-import static com.example.thingflowsdk.core.utils.FBoxExecutor.generatedBoxEventData;
-import static com.example.thingflowsdk.core.utils.FBoxExecutor.getTypeOfBox;
-
 import com.example.thingflowsdk.core.base.entity.TFFlowScenario;
 import com.example.thingflowsdk.core.base.handler.FlowScenarioHandler;
+import com.example.thingflowsdk.core.utils.FBoxExecutor;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 import rogo.iot.module.base.ILogR;
 import rogo.iot.module.base.callback.RequestResultCallback;
 import rogo.iot.module.flowcommon.box.FBox;
 import rogo.iot.module.flowcommon.box.action.FBoxAction;
-import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice;
 import rogo.iot.module.flowcommon.box.event.FBoxEvent;
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice;
-import rogo.iot.module.flowcommon.type.FBoxType;
 import rogo.iot.module.platform.feature.IoTFeature;
 import rogo.iot.module.platform.invoking.IoTInvokingProperty;
 import rogo.iot.module.rogocore.sdk.SmartSdk;
@@ -122,16 +115,16 @@ public class FlowScenarioHandlerImpl implements FlowScenarioHandler {
         int size = eventBoxes.size();
 
         String[] evtBoxIds = new String[size];
-        Integer[] evtEventTypes = new Integer[size];
+        int[] evtEventTypes = new int[size];
         String[] evtTargetIds = new String[size];
         String[] evtEventDatas = new String[size];
 
         for (int i = 0; i < size; i++) {
             FBox eventBox = eventBoxes.get(i);
             evtBoxIds[i] = eventBox.getId();
-            evtEventTypes[i] = getTypeOfBox(eventBox);
+            evtEventTypes[i] = FBoxExecutor.getTypeOfBox(eventBox);
             evtTargetIds[i] = (eventBox instanceof FBoxEvent) ? ((FBoxEventDevice) eventBox).getTargetSegId() : null;
-            evtEventDatas[i] = generatedBoxEventData(eventBox);
+            evtEventDatas[i] = FBoxExecutor.generatedBoxEventData(eventBox);
         }
 
         ILogR.D(TAG, "onCreateSceneBoxEvent", new Gson().toJson(evtEventDatas));
@@ -146,7 +139,7 @@ public class FlowScenarioHandlerImpl implements FlowScenarioHandler {
                     @IoTInvokingProperty("eventBoxIds")
                     private String[] eventBoxIds = evtBoxIds;
                     @IoTInvokingProperty("eventType")
-                    private Integer[] eventType = evtEventTypes;
+                    private int[] eventType = evtEventTypes;
                     @IoTInvokingProperty("targetSegId")
                     private String[] targetSegId = evtTargetIds;
                     @IoTInvokingProperty("eventData")
@@ -183,7 +176,7 @@ public class FlowScenarioHandlerImpl implements FlowScenarioHandler {
     ) {
         int size = boxes.size();
         String[] actBoxIds = new String[size];
-        Integer[] actTypes = new Integer[size];
+        int[] actTypes = new int[size];
         String[] actSegIds = new String[size];
         String[] actPosSegIds = new String[size];
         String[] actNegSegIds = new String[size];
@@ -192,11 +185,11 @@ public class FlowScenarioHandlerImpl implements FlowScenarioHandler {
         for (int i = 0; i < size; i++) {
             FBoxAction actionBox = (FBoxAction) boxes.get(i);
             actBoxIds[i] = actionBox.getId();
-            actTypes[i] = getTypeOfBox(actionBox);
+            actTypes[i] = FBoxExecutor.getTypeOfBox(actionBox);
             actSegIds[i] = actionBox.getSegId();
             actPosSegIds[i] = actionBox.getPositiveSegId();
             actNegSegIds[i] = actionBox.getNegativeSegId();
-            actDatas[i] = generatedBoxActionData(actionBox);
+            actDatas[i] = FBoxExecutor.generatedBoxActionData(actionBox);
         }
         SmartSdk.featureHandler().runFeatureMethod(
                 false,
@@ -210,7 +203,7 @@ public class FlowScenarioHandlerImpl implements FlowScenarioHandler {
                     private String[] boxIds = actBoxIds;
 
                     @IoTInvokingProperty("actionTypes")
-                    private Integer[] actionTypes = actTypes;
+                    private int[] actionTypes = actTypes;
                     @IoTInvokingProperty("segIds")
                     private String[] segIds = actSegIds;
                     @IoTInvokingProperty("positiveSegId")

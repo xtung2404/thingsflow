@@ -110,9 +110,13 @@ class OverlayBindingBoxEventFromDevice(
             btnCreateBox.setOnClickListener {
                 val devId = selectedDevices.keys.firstOrNull()
                 val elms = selectedDevices.values.firstOrNull()
+                val device = FlowSdk.deviceHandler().get(devId)
                 fBoxEventDevice?.devType = devType
                 fBoxEventDevice?.elms = elms
-                fBoxEventDevice?.devId = devId
+                fBoxEventDevice?.devId = devId?: ""
+                fBoxEventDevice?.eid = device?.eid?: -1
+                fBoxEventDevice?.attrTypes = intArrayOf()
+
                 onSave.invoke(fBoxEventDevice!!)
             }
         }

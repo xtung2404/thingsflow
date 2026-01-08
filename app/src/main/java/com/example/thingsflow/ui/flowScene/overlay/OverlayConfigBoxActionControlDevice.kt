@@ -61,7 +61,7 @@ class OverlayConfigBoxActionControlDevice(
 
     private var fBoxActionControlDevice: FBoxActionControlDevice?= null
     private var deviceActionMap: HashMap<String?, Array<FControlValue>> = hashMapOf()
-    private var inputFromParentBoxList: List<TFInputBoxValue>? = listOf() // list of input from previous box
+    private var inputFromParentBoxList: List<TFInputBoxValue?> = listOf() // list of input from previous box
 
 
     //adapter for select type of device
@@ -318,9 +318,11 @@ class OverlayConfigBoxActionControlDevice(
         binding.apply {
             //get parent box info
             val parentBox = getPreviousBox()
-            inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)
             var previousBoxType = FBoxType.EVT_FROM_DEVICE
             parentBox?.let {
+                vmFlowScenario?.getInputsFromParentBox(parentBox)?.let {
+                    inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)!!
+                }
                  when(parentBox) {
                      is FBoxEventDevice -> {
                          previousBoxType = FBoxType.EVT_FROM_DEVICE

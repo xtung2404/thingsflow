@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 
+import rogo.iot.module.base.ILogR;
 import rogo.iot.module.flowcommon.box.FBox;
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp;
 import rogo.iot.module.flowcommon.box.action.FBoxActionControlDevice;
@@ -13,7 +14,7 @@ import rogo.iot.module.flowcommon.box.event.FBoxEventDevice;
 import rogo.iot.module.flowcommon.type.FBoxType;
 
 public final class FBoxExecutor {
-    private final String TAG = "FBoxExecutor";
+    private final static String TAG = "FBoxExecutor";
     private static final Gson gson = new Gson();
 
     public static int getTypeOfBox(FBox fBox) {
@@ -32,6 +33,7 @@ public final class FBoxExecutor {
             data.put("elms", eventDevice.getElms());
             data.put("eid", eventDevice.getEid());
             data.put("attrTypes", eventDevice.getElms());
+            ILogR.D(TAG, "generatedBoxEventData:data", gson.toJson(data));
             return gson.toJson(data);
         }
         return "{}";
