@@ -13,6 +13,8 @@
     <string name="information_will_be_saved_until_signing_out">Thông tin đăng nhập sẽ đươck lưu cho đến khi bạn đăng xuất</string>
     <string name="confirm_your_password">Xác nhận mật khẩu của bạn</string>
     <string name="at_least_6_characters">Tối thiểu 6 ký tự (Yêu cầu có chữ, số, kí tự đặc biệt)</string>
+    <string name="email_is_not_valid">Email không hợp lệ</string>
+    <string name="password_is_not_valid">Mật khẩu không hợp lệ</string>
     <string name="sending_otp">Đang gửi OTP</string>
     <string name="password">Mật khẩu (*)</string>
     <string name="forgot_password">Quên mật khẩu?</string>
@@ -47,6 +49,7 @@
     <string name="list_of_available_locations">Danh sách địa điểm đã có</string>
     <string name="cancel">Hủy</string>
     <string name="save">Lưu</string>
+    <string name="save_config">Lưu thiết lập</string>
     <string name="output">Đầu ra</string>
     <string name="output_value">Giá trị đầu ra</string>
     <string name="table_type">Bảng</string>
@@ -233,6 +236,7 @@
     <string name="device_label">Tên thiết bị</string>
     <string name="group_of_device">Nhóm thiết bị</string>
     <string name="device">Thiết bị</string>
+    <string name="please_choose_device">Hãy chọn thiết bị</string>
     <string name="group">Nhóm</string>
     <string name="all">Tất cả</string>
     <string name="group_dot">Nhóm:</string>

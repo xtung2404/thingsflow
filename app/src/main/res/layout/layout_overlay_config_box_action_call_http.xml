@@ -104,7 +104,7 @@
                 android:id="@+id/ln_config"
                 android:orientation="vertical"
                 android:paddingHorizontal="@dimen/_space16dp"
-                android:visibility="gone">
+                android:visibility="visible">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -124,7 +124,7 @@
                             android:paddingHorizontal="13dp"
                             android:paddingVertical="14dp"
                             android:layout_marginEnd="8dp"/>
-                        <androidx.appcompat.widget.AppCompatEditText
+                        <EditText
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:id="@+id/edt_url"
@@ -132,7 +132,7 @@
                             android:textSize="@dimen/text_caption"
                             android:paddingStart="8dp"
                             android:textColor="@color/black"
-                            android:background="@drawable/bg_white_stroke_gray"
+                            android:background="@drawable/bg_edit_text"
                             android:paddingVertical="16dp"/>
                     </LinearLayout>
                     <androidx.appcompat.widget.AppCompatButton
@@ -171,7 +171,7 @@
                         <androidx.appcompat.widget.AppCompatEditText
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
-                            android:background="@drawable/bg_white_stroke_gray"
+                            android:background="@drawable/bg_edit_text"
                             android:paddingVertical="16dp"
                             android:paddingHorizontal="8dp"
                             android:layout_marginTop="14dp"
@@ -193,7 +193,7 @@
                         android:textSize="@dimen/text_caption"
                         android:inputType="number"
                         android:textColor="@color/black"
-                        android:background="@drawable/bg_white_stroke_gray"
+                        android:background="@drawable/bg_edit_text"
                         android:paddingVertical="8dp"
                         android:paddingHorizontal="8dp"
                         android:layout_marginTop="4dp"/>
@@ -230,7 +230,7 @@
                 android:id="@+id/ln_output"
                 android:paddingHorizontal="16dp"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

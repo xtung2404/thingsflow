@@ -4,15 +4,25 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowBindingBinding
+import com.example.thingsflow.module.define.TFHttpHeader
 import com.example.thingsflow.module.viewmodel.VMFlowBinding
+import com.example.thingsflow.module.viewmodel.VMFlowScene
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.adapter.AdapterSpinnerGatewayBinding
 import com.example.thingsflow.ui.customview.ViewBox
+import com.example.thingsflow.ui.dialog.DialogConfigHeaderHttp
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
+import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigInputBoxActionConditionDeviceState
+import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigOutputJson
 import com.example.thingsflow.ui.flowScene.overlay.OverlaySelectDevice
+import com.example.thingsflow.ui.flowScene.overlay.OverlaySetControlDevice
+import com.example.thingsflow.ui.flowbinding.overlayBinding.OverlayBindingBoxActionCallHttp
+import com.example.thingsflow.ui.flowbinding.overlayBinding.OverlayBindingBoxActionConditionDeviceState
+import com.example.thingsflow.ui.flowbinding.overlayBinding.OverlayBindingBoxActionConditionGeneral
 import com.example.thingsflow.ui.flowbinding.overlayBinding.OverlayBindingBoxActionControlDevice
 import com.example.thingsflow.ui.flowbinding.overlayBinding.OverlayBindingBoxEventFromDevice
 import dagger.hilt.android.AndroidEntryPoint
+import rgsm.cu
 import rogo.iot.module.base.ILogR
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionAIGPT
@@ -56,6 +66,19 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
 
     internal var currentBoxType: Int = -1
 
+    internal val dialogConfigHeaderHttp: DialogConfigHeaderHttp by lazy {
+        DialogConfigHeaderHttp(
+            requireActivity(),
+            onHeadersConfiged = { headers ->
+                dialogConfigHeaderHttp.dismiss()
+                overlayBindingBoxActionCallHttp.show(headers)
+            },
+            onClose = {
+                dialogConfigHeaderHttp.dismiss()
+                overlayBindingBoxActionCallHttp.show(arrayListOf<TFHttpHeader>())
+            }
+        )
+    }
     private val dialogLabelFlowScenario: DialogLabelFlowScenario by lazy {
         DialogLabelFlowScenario(
             requireContext(),
@@ -68,8 +91,14 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
     private lateinit var adapterSpinnerGatewayBinding: AdapterSpinnerGatewayBinding
     internal lateinit var overlayBindingBoxEventFromDevice: OverlayBindingBoxEventFromDevice
     internal lateinit var overlayBindingBoxActionControlDevice: OverlayBindingBoxActionControlDevice
-    internal lateinit var overlaySelectDevice: OverlaySelectDevice
+    internal lateinit var overlaySetControlDevice: OverlaySetControlDevice
+    internal lateinit var overlayBindingBoxActionCallHttp: OverlayBindingBoxActionCallHttp
+    internal lateinit var overlayBindingBoxActionConditionDeviceState: OverlayBindingBoxActionConditionDeviceState
+    internal lateinit var overlayConfigInputBoxActionConditionDeviceState: OverlayConfigInputBoxActionConditionDeviceState //use when create an input from a device for box action condition device state
 
+    internal lateinit var overlayBindingBoxActionConditionGeneral: OverlayBindingBoxActionConditionGeneral
+    internal lateinit var overlaySelectDevice: OverlaySelectDevice
+    internal lateinit var overlayConfigOutputJson: OverlayConfigOutputJson
 
 
 
@@ -85,7 +114,8 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
         super.initView()
         binding.apply {
             handleBindingBoxes()
-            handlerOverlaySelectDevice()
+            handleOverlaySelectDevice()
+            handleOverlaySetControlDevice()
             toolbar.txtTitle.text = "Danh sách các thiết bị đang triển khai"
             adapterSpinnerGatewayBinding = AdapterSpinnerGatewayBinding(requireContext(), vmFlowBinding.getSelectedGateways().entries.toList())
             spinnerGateway.adapter = adapterSpinnerGatewayBinding
@@ -159,6 +189,11 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
                 overlayBindingBoxActionControlDevice.show()
             }
 
+            is FBoxActionCallHttp -> {
+                currentBoxType = FBoxType.ACT_CALL_HTTP
+                overlayBindingBoxActionCallHttp.show()
+            }
+
             is FBoxEventMqtt,
             is FBoxEventWeather,
             is FBoxEventSchedule,
@@ -175,16 +210,21 @@ class FragmentFlowBinding : FragmentBase<FragmentFlowBindingBinding>(),
 
             }
 
-            is FBoxActionConditionGeneral,
-            is FBoxActionConditionTime,
-            is FBoxActionConditionDeviceState
-                -> {
+            is FBoxActionConditionGeneral -> {
+                currentBoxType = FBoxType.ACT_CONDITION_GENERAL
+                overlayBindingBoxActionConditionGeneral.show()
+            }
 
+            is FBoxActionConditionTime -> {
+
+            }
+            is FBoxActionConditionDeviceState -> {
+                currentBoxType = FBoxType.ACT_CONDITION_DEVICE
+                overlayBindingBoxActionConditionDeviceState.show()
             }
 
             is FBoxActionAIGPT,
             is FBoxActionAIGemini,
-            is FBoxActionCallHttp,
             is FBoxActionCodeFunction,
             is FBoxActionFaceIDLearn,
             is FBoxActionFaceIDRecognize,

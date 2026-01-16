@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxEventFromDeviceBinding
-import com.example.thingsflow.module.viewmodel.VMFlowScenario
+import com.example.thingsflow.module.viewmodel.VMFlowScene
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterAttributes
 import com.example.thingsflow.ui.adapter.AdapterInOutput
@@ -43,9 +43,9 @@ class OverlayConfigBoxEventFromDevice(
     LayoutOverlayConfigBoxEventFromDeviceBinding::inflate
 ) {
     private val TAG = "OverlayConfigBoxEventFromDevice"
-    private val vmFlowScenario: VMFlowScenario? by lazy {
+    private val vmFlowScene: VMFlowScene? by lazy {
         viewModelOwner?.let {
-            ViewModelProvider(it)[VMFlowScenario::class.java]
+            ViewModelProvider(it)[VMFlowScene::class.java]
         }
     }
 

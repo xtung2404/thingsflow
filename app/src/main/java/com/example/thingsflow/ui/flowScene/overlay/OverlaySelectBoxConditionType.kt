@@ -4,13 +4,11 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingsflow.databinding.LayoutOverlaySelectBoxConditionTypeBinding
-import com.example.thingsflow.module.viewmodel.VMFlowScenario
+import com.example.thingsflow.module.viewmodel.VMFlowScene
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterBoxActionType
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
-import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
-import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.type.FBoxType
 
 /**
@@ -31,9 +29,9 @@ class OverlaySelectBoxConditionType(
     container,
     LayoutOverlaySelectBoxConditionTypeBinding::inflate
 ) {
-    private val vmFlowScenario: VMFlowScenario? by lazy {
+    private val vmFlowScene: VMFlowScene? by lazy {
         viewModelOwner?.let {
-            ViewModelProvider(it)[VMFlowScenario::class.java]
+            ViewModelProvider(it)[VMFlowScene::class.java]
         }
     }
     // adapter for select type of box condition
@@ -73,7 +71,7 @@ class OverlaySelectBoxConditionType(
     }
 
     private fun getPreviousBox(): FBox? {
-        val previousBoxId = vmFlowScenario?.getRootBoxId()
-        return vmFlowScenario?.boxes?.value?.find { it.id == previousBoxId }
+        val previousBoxId = vmFlowScene?.getRootBoxId()
+        return vmFlowScene?.boxes?.value?.find { it.id == previousBoxId }
     }
 }

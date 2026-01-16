@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.example.thingsflow.R
+import com.example.thingsflow.utils.getAttrLabel
 import com.example.thingsflow.utils.getDeviceTypeLabel
 import com.google.gson.Gson
 import rogo.iot.module.base.ILogR
@@ -186,6 +187,9 @@ class ViewBox @JvmOverloads constructor(
                     when(boxVal) {
                         is FBoxActionControlDevice -> {
                             txtBoxActType.text = context.getString(R.string.control_device)
+                            if (boxVal.attrType != -1) {
+                                txtBoxActAction.text = getAttrLabel(context, boxVal.attrType)
+                            }
                         }
                         is FBoxActionCallHttp -> {
                             txtBoxActType.text = context.getString(R.string.call_http)

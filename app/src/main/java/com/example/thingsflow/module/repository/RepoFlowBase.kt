@@ -18,8 +18,8 @@ import rogo.iot.module.flowcommon.value.FInputValue
 import rogo.iot.module.rogocore.sdk.callback.SuccessStatusCallback
 import javax.inject.Inject
 
-class RepoFlowScenario @Inject constructor() {
-    private val TAG = "RepoFlowScenario"
+class RepoFlowBase @Inject constructor() {
+    private val TAG = "RepoFlowBase"
 
     val handler = FlowSdk.flowScenarioHandler()
 
@@ -291,6 +291,35 @@ class RepoFlowScenario @Inject constructor() {
 
                 }
             }
+        )
+    }
+
+    fun createFlowBinding(
+        devId: String,
+        sceneId: String,
+        label: String,
+        callback: SuccessStatusCallback
+    ) {
+        FlowSdk.flowBindingHandler().createFlowBinding(
+            devId,
+            "sceneId",
+            "bindingId",
+            label,
+            callback
+        )
+    }
+
+    fun bindBoxes(
+        devId: String,
+        bindingId: String,
+        boxes: ArrayList<FBox?>,
+        callback: SuccessStatusCallback
+    ) {
+        FlowSdk.flowBindingHandler().bindBoxesBinding(
+            devId,
+            bindingId,
+            boxes,
+            callback
         )
     }
 }

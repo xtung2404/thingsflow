@@ -13,7 +13,9 @@
         android:orientation="vertical"
         android:gravity="center_vertical"
         android:paddingVertical="@dimen/_space10dp"
-        android:paddingHorizontal="@dimen/space_screen_super_small">
+        android:paddingHorizontal="@dimen/space_screen_super_small"
+        android:clipToPadding="false"
+        android:clipChildren="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,9 +23,11 @@
             android:orientation="horizontal"
             android:layout_marginBottom="4dp">
             <com.example.thingsflow.ui.customview.CheckBoxCustom
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:padding="4dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:clickable="false"
+                android:enabled="false"
                 android:id="@+id/cb_configed"/>
             <LinearLayout
                 android:layout_width="0dp"
@@ -55,13 +59,20 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
+                android:id="@+id/btn_expand"
                 android:padding="10dp"
                 android:src="@drawable/ic_up" />
         </LinearLayout>
-        <com.example.thingsflow.ui.customview.ViewControlOnOff
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ln_control_on_off"/>
+            android:id="@+id/fl_control">
+            <com.example.thingsflow.ui.customview.ViewControlOnOff
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ln_control_on_off"/>
+        </FrameLayout>
+
 
     </LinearLayout>
 </layout>

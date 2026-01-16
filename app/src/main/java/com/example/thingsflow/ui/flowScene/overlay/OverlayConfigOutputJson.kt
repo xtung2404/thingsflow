@@ -113,4 +113,10 @@ class OverlayConfigOutputJson(
         adapterJsonField.submitList(fieldList)
     }
 
+    fun show(fields: ArrayList<FJsonField>) {
+        super.show()
+        fieldList = fields
+        adapterJsonField.submitList(fieldList)
+    }
+
 }

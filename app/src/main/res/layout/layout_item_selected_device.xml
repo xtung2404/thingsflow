@@ -13,9 +13,9 @@
         android:background="@color/gray"
         android:orientation="vertical"
         android:gravity="center_vertical"
+        android:layout_marginTop="4dp"
         android:paddingVertical="@dimen/_space10dp"
-        android:paddingHorizontal="@dimen/space_screen_super_small"
-        android:layout_marginBottom="@dimen/_space12dp">
+        android:paddingHorizontal="@dimen/space_screen_super_small">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

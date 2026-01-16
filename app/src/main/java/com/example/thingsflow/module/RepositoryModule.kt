@@ -3,7 +3,7 @@ package com.example.thingsflow.module
 import com.example.thingsflow.module.repository.RepoAuthentication
 import com.example.thingsflow.module.repository.RepoConfigWileDirect
 import com.example.thingsflow.module.repository.RepoDevice
-import com.example.thingsflow.module.repository.RepoFlowBinding
+import com.example.thingsflow.module.repository.RepoFlowBase
 import com.example.thingsflow.module.repository.RepoGroup
 import com.example.thingsflow.module.repository.RepoLocation
 import dagger.Module
@@ -35,5 +35,5 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideRepoFlowBinding() = RepoFlowBinding()
+    fun provideRepoFlowBase() = RepoFlowBase()
 }

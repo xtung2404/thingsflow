@@ -8,19 +8,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionControlDeviceBinding
 import com.example.thingsflow.module.define.TFInputBoxValue
-import com.example.thingsflow.module.viewmodel.VMFlowScenario
+import com.example.thingsflow.module.viewmodel.VMFlowScene
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterConfiguredDeviceAction
 import com.example.thingsflow.ui.adapter.AdapterInOutput
 import com.example.thingsflow.ui.adapter.AdapterSpinnerControlAction
 import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
-import com.example.thingsflow.ui.adapter.AdapterSpinnerInput
 import com.example.thingsflow.utils.getControlableDeviceType
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
 import com.example.thingsflow.utils.toElmIntArrayMap
 import com.google.android.material.tabs.TabLayout
-import rogo.iot.module.base.ILogR
 import rogo.iot.module.base.define.IoTAttribute
 import rogo.iot.module.flowcommon.box.FBox
 import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
@@ -53,9 +51,9 @@ class OverlayConfigBoxActionControlDevice(
     private val TAG = "OverlayConfigBoxActionControlDevice"
     //selectedDeviceMap is to store selected devices
 
-    private val vmFlowScenario: VMFlowScenario? by lazy {
+    private val vmFlowScene: VMFlowScene? by lazy {
         viewModelOwner?.let {
-            ViewModelProvider(it)[VMFlowScenario::class.java]
+            ViewModelProvider(it)[VMFlowScene::class.java]
         }
     }
 
@@ -261,7 +259,6 @@ class OverlayConfigBoxActionControlDevice(
     fun show(devType: Int?, attrs: IntArray?, cmdMap: HashMap<String?, Array<FControlValue>>) {
         super.show()
         binding.apply {
-            deviceActionMap = cmdMap
             tabLayout.getTabAt(1)?.select()
             this@OverlayConfigBoxActionControlDevice.deviceActionMap = cmdMap
             initialize(devType, attrs)
@@ -320,14 +317,16 @@ class OverlayConfigBoxActionControlDevice(
             val parentBox = getPreviousBox()
             var previousBoxType = FBoxType.EVT_FROM_DEVICE
             parentBox?.let {
-                vmFlowScenario?.getInputsFromParentBox(parentBox)?.let {
-                    inputFromParentBoxList = vmFlowScenario?.getInputsFromParentBox(parentBox)!!
+                vmFlowScene?.getInputsFromParentBox(parentBox)?.let {
+                    inputFromParentBoxList = vmFlowScene?.getInputsFromParentBox(parentBox)!!
                 }
                  when(parentBox) {
                      is FBoxEventDevice -> {
                          previousBoxType = FBoxType.EVT_FROM_DEVICE
                          val device = FlowSdk.deviceHandler().get(parentBox.devId)
-                         device?.let {
+                         if (device == null) {
+                             lnInput.lnPreviousBoxDevice.gone()
+                         } else {
                              val location = FlowSdk.locationHandler().get(device.locationId)
                              lnInput.txtPinputLabel.text = device.label
                              lnInput.txtPinputLocation.text = location.label
@@ -354,14 +353,14 @@ class OverlayConfigBoxActionControlDevice(
                 }
             }
             adapterInputFromPreviousBox.submitList(
-                vmFlowScenario?.groupInputs(previousBoxType, inputFromParentBoxList)
+                vmFlowScene?.groupInputs(previousBoxType, inputFromParentBoxList)
             )
             lnInput.lnInputFromPreviousBox.show()
         }
     }
 
     private fun getPreviousBox(): FBox? {
-        val previousBoxId = if (fBoxActionControlDevice == null) vmFlowScenario?.getRootBoxId() else fBoxActionControlDevice?.rootId
-        return vmFlowScenario?.boxes?.value?.find { it.id == previousBoxId }
+        val previousBoxId = if (fBoxActionControlDevice == null) vmFlowScene?.getRootBoxId() else fBoxActionControlDevice?.rootId
+        return vmFlowScene?.boxes?.value?.find { it.id == previousBoxId }
     }
 }

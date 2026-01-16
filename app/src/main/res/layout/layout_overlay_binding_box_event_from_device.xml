@@ -93,17 +93,16 @@
                 android:visibility="visible">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:background="@color/background_color"
+                    android:orientation="vertical"
+                    android:layout_marginVertical="15dp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="15dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:background="@color/background_color"
-                        android:layout_marginVertical="15dp"
-                        android:paddingVertical="15dp"
-                        android:paddingHorizontal="10dp">
+                        android:orientation="horizontal">
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -153,33 +152,55 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:id="@+id/btn_edit_attr"
-                            android:src="@drawable/ic_edit"
-                            android:layout_gravity="bottom"/>
+                            android:src="@drawable/ic_edit" />
+
                     </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/list_of_device"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_caption" />
-                    <View
+                        android:text="@string/device"
+                        android:textSize="@dimen/text_caption"
+                        android:fontFamily="@font/roboto_regular"
+                        android:layout_marginTop="15dp"/>
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="8dp"
-                        android:background="@color/gray" />
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_device"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@color/gray">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txt_choose_device"
+                            android:text="@string/select_device_from_list"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/roboto_bold"
+                            android:textSize="@dimen/text_body2"
+                            android:layout_marginTop="10dp"
+                            android:paddingHorizontal="4dp"/>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/rv_device"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:id="@+id/btn_select_device"
+                            android:src="@drawable/ic_note"
+                            android:padding="8dp"
+                            android:layout_gravity="end"/>
+                    </FrameLayout>
                 </LinearLayout>
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btn_create_box"
-                    android:text="@string/create_box_and_config"
+                    android:id="@+id/btn_save"
+                    android:text="@string/save_config"
                     android:textAllCaps="false"
                     android:textSize="@dimen/text_button"
                     android:textColor="@color/white"

@@ -196,17 +196,16 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxEventFromDevice() {
         requireActivity(),
         binding.overlayContainer,
         onSelectDevice = { devType, attrs, devMap ->
-            ILogR.D(TAG, "onSelectDevice:size", devMap?.size)
             currentBoxType = FBoxType.EVT_FROM_DEVICE
             overlaySelectDevice.show(currentBoxType, devType, attrs, devMap)
         },
         onBoxEventCreated = { fBoxEventDevice ->
             overlayConfigBoxEventFromDevice.hide()
             if (fBoxEventDevice.id.isNullOrEmpty()) {
-                vmFlowScenario.boxes.value?.clear()
-                vmFlowScenario.configBox(fBoxEventDevice, null)
+                vmFlowScene.boxes.value?.clear()
+                vmFlowScene.configureNewBox(fBoxEventDevice, null)
             } else {
-                vmFlowScenario.updateBox(fBoxEventDevice)
+                vmFlowScene.updateBoxInfo(fBoxEventDevice)
             }
         },
         onClose = { isBackable ->
@@ -238,9 +237,9 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionCallHttp() {
         onBoxActionCallHttpCreated = { fBoxActionCallHttp->
             overlayConfigBoxActionCallHttp.hide()
             if (fBoxActionCallHttp.id == null) {
-                vmFlowScenario.configBox(fBoxActionCallHttp, newSegType)
+                vmFlowScene.configureNewBox(fBoxActionCallHttp, newSegType)
             } else {
-                vmFlowScenario.updateBox(fBoxActionCallHttp)
+                vmFlowScene.updateBoxInfo(fBoxActionCallHttp)
             }
         },
         onClose = { isBackable ->
@@ -280,9 +279,9 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionControlDevice() {
         onBoxActionControlDeviceCreated = { fBoxActionControlDevice ->
             if (fBoxActionControlDevice.id.isNullOrEmpty()) {
                 overlayConfigBoxActionControlDevice.hide()
-                vmFlowScenario.configBox(fBoxActionControlDevice, newSegType)
+                vmFlowScene.configureNewBox(fBoxActionControlDevice, newSegType)
             } else {
-                vmFlowScenario.updateBox(fBoxActionControlDevice)
+                vmFlowScene.updateBoxInfo(fBoxActionControlDevice)
             }
         },
         onClose = { isBackable ->
@@ -319,9 +318,9 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionConditionGeneral() 
         onBoxActionCondtionGeneralCreated = { fBoxActionConditionGeneral ->
             overlayConfigBoxActionConditionGeneral.hide()
             if (fBoxActionConditionGeneral.id == null) {
-                vmFlowScenario.configBox(fBoxActionConditionGeneral, newSegType)
+                vmFlowScene.configureNewBox(fBoxActionConditionGeneral, newSegType)
             } else {
-                vmFlowScenario.updateBox(fBoxActionConditionGeneral)
+                vmFlowScene.updateBoxInfo(fBoxActionConditionGeneral)
             }
         },
         onClose = { isBackable ->
@@ -349,9 +348,9 @@ private fun FragmentFlowScenario.handleOverlayConfigBoxActionConditionDeviceStat
         onBoxActionCondtionDeviceStateCreated = { fBox ->
             overlayConfigBoxActionConditionDeviceState.hide()
             if (fBox.id == null) {
-                vmFlowScenario.configBox(fBox, newSegType)
+                vmFlowScene.configureNewBox(fBox, newSegType)
             } else {
-                vmFlowScenario.updateBox(fBox)
+                vmFlowScene.updateBoxInfo(fBox)
             }
         },
         onClose = { isBackable ->

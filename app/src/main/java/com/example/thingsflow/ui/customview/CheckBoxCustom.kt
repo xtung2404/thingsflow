@@ -38,6 +38,7 @@ class CheckBoxCustom  @JvmOverloads constructor(
 
     override fun onCreateDrawableState(extraSpace: Int): IntArray {
         val state = super.onCreateDrawableState(extraSpace + 1)
+
         if (isChecked) {
             View.mergeDrawableStates(state, CHECKED_STATE)
         }

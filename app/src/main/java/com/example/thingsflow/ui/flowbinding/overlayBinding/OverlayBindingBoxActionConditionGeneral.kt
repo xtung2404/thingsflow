@@ -1,4 +1,4 @@
-package com.example.thingsflow.ui.flowScene.overlay
+package com.example.thingsflow.ui.flowbinding.overlayBinding
 
 import android.content.Context
 import android.view.View
@@ -7,9 +7,8 @@ import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.base.define.TFComparision
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionGeneralBinding
-import com.example.thingsflow.module.define.TFInOutType
 import com.example.thingsflow.module.define.TFInputBoxValue
-import com.example.thingsflow.module.viewmodel.VMFlowScene
+import com.example.thingsflow.module.viewmodel.VMFlowBinding
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterInOutput
 import com.example.thingsflow.ui.adapter.AdapterSpinnerComparision
@@ -32,22 +31,22 @@ import rogo.iot.module.flowcommon.value.FInputValue
  *
  * @param context The application/Activity context.
  * @param container The ViewGroup that hosts this overlay (usually the Root View).
- * @param OverlayConfigBoxActionConditionGeneral: triggered when a box is setted up successfully
+ * @param OverlayBindingBoxActionConditionGeneral: triggered when a box is setted up successfully
  * @param onClose: triggered when hide the overlay
  */
-class OverlayConfigBoxActionConditionGeneral(
+class OverlayBindingBoxActionConditionGeneral(
     context: Context,
     container: ViewGroup,
-    private val onBoxActionCondtionGeneralCreated: (FBoxActionConditionGeneral) -> Unit,
+    private val onBoxActionCondtionGeneralUpdated: (FBoxActionConditionGeneral) -> Unit,
     private val onClose: (Boolean) -> Unit
 ) : OverlayBase<LayoutOverlayConfigBoxActionConditionGeneralBinding>(
     context,
     container,
     LayoutOverlayConfigBoxActionConditionGeneralBinding::inflate
 ) {
-    private val vmFlowScene: VMFlowScene? by lazy {
+    private val vmFlowBinding: VMFlowBinding? by lazy {
         viewModelOwner?.let {
-            ViewModelProvider(it)[VMFlowScene::class.java]
+            ViewModelProvider(it)[VMFlowBinding::class.java]
         }
     }
     private var fBoxActionConditionGeneral: FBoxActionConditionGeneral? = null
@@ -95,9 +94,6 @@ class OverlayConfigBoxActionConditionGeneral(
     private fun setUpConfigLayout() {
         binding.apply {
             btnCreateBox.setOnClickListener {
-                if (fBoxActionConditionGeneral == null) {
-                    fBoxActionConditionGeneral = FBoxActionConditionGeneral()
-                }
                 val rawValue = binding.edtComparingValue.text.toString()
                 val convertedValue: Any = try {
                     when (selectedComparedValue!!.input.type) {
@@ -127,7 +123,7 @@ class OverlayConfigBoxActionConditionGeneral(
                         )
                     }
                 }
-                onBoxActionCondtionGeneralCreated.invoke(fBoxActionConditionGeneral!!)
+                onBoxActionCondtionGeneralUpdated.invoke(fBoxActionConditionGeneral!!)
             }
 
             spinnerComparedValue.onItemSelectedListener =
@@ -198,36 +194,38 @@ class OverlayConfigBoxActionConditionGeneral(
     override fun show() {
         super.show()
         binding.apply {
-            fBoxActionConditionGeneral = null
+            if (vmFlowBinding?.getSelectedBox() != null && vmFlowBinding?.getSelectedBox() is FBoxActionConditionGeneral) {
+                fBoxActionConditionGeneral = vmFlowBinding!!.getSelectedBox() as FBoxActionConditionGeneral
+            }
             tabLayoutEvtDevice.getTabAt(0)?.select()
             showInputFromPreviousBox()
         }
     }
 
-    fun show(fBox: FBoxActionConditionGeneral?) {
-        super.show()
-        fBoxActionConditionGeneral = fBox
-        fBoxActionConditionGeneral?.let {
-            showInputFromPreviousBox()
-            if (fBoxActionConditionGeneral!!.comparedValue != null) {
-                val comparedValuePos = adapterComparedValue.getPosition(
-                    TFInputBoxValue(
-                        null,
-                        null,
-                        TFInOutType.JSON_FIELD,
-                        FInputValue(
-                            fBoxActionConditionGeneral!!.comparedValue!![0].type,
-                            fBoxActionConditionGeneral!!.comparedValue!![0].value
-                        )
-                    )
-                )
-                if (comparedValuePos != -1) {
-                    binding.spinnerComparedValue.setSelection(comparedValuePos)
-                    binding.lnConfigComparedValue.show()
-                }
-            }
-        }
-    }
+//    fun show(fBox: FBoxActionConditionGeneral?) {
+//        super.show()
+//        fBoxActionConditionGeneral = fBox
+//        fBoxActionConditionGeneral?.let {
+//            showInputFromPreviousBox()
+//            if (fBoxActionConditionGeneral!!.comparedValue != null) {
+//                val comparedValuePos = adapterComparedValue.getPosition(
+//                    TFInputBoxValue(
+//                        null,
+//                        null,
+//                        TFInOutType.JSON_FIELD,
+//                        FInputValue(
+//                            fBoxActionConditionGeneral!!.comparedValue!![0].type,
+//                            fBoxActionConditionGeneral!!.comparedValue!![0].value
+//                        )
+//                    )
+//                )
+//                if (comparedValuePos != -1) {
+//                    binding.spinnerComparedValue.setSelection(comparedValuePos)
+//                    binding.lnConfigComparedValue.show()
+//                }
+//            }
+//        }
+//    }
 
     /**
      * show list of input from previous box
@@ -240,8 +238,8 @@ class OverlayConfigBoxActionConditionGeneral(
             //get parent box info
             val parentBox = getPreviousBox()
             parentBox?.let {
-                vmFlowScene?.getInputsFromParentBox(parentBox)?.let {
-                    inputFromParentBoxList = vmFlowScene?.getInputsFromParentBox(parentBox)!!
+                vmFlowBinding?.getInputsFromParentBox(parentBox)?.let {
+                    inputFromParentBoxList = vmFlowBinding?.getInputsFromParentBox(parentBox)!!
                 }
                 when (parentBox) {
                     is FBoxEventDevice -> {
@@ -251,7 +249,7 @@ class OverlayConfigBoxActionConditionGeneral(
                     is FBoxActionCallHttp -> {
                         lnInput.lnPreviousBoxDevice.gone()
                         adapterInputFromPreviousBox.submitList(
-                            vmFlowScene?.groupInputs(
+                            vmFlowBinding?.groupInputs(
                                 FBoxType.ACT_CALL_HTTP,
                                 inputFromParentBoxList
                             )
@@ -275,11 +273,7 @@ class OverlayConfigBoxActionConditionGeneral(
         }
     }
 
-    private fun getPreviousBox(): FBox? {
-        val previousBoxId =
-            if (fBoxActionConditionGeneral == null) vmFlowScene?.getRootBoxId() else fBoxActionConditionGeneral?.rootId
-        return vmFlowScene?.boxes?.value?.find { it.id == previousBoxId }
-    }
+    private fun getPreviousBox(): FBox? = vmFlowBinding?.boxes?.value?.find { it.id == fBoxActionConditionGeneral?.rootId }
 
     private fun setUpTabs() {
         binding.apply {

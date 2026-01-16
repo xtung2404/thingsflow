@@ -6,12 +6,11 @@ import com.example.thingsflow.R
 import com.example.thingsflow.databinding.FragmentFlowScenarioBinding
 import com.example.thingsflow.module.define.TFHttpHeader
 import com.example.thingsflow.module.viewmodel.VMFlowBinding
-import com.example.thingsflow.module.viewmodel.VMFlowScenario
+import com.example.thingsflow.module.viewmodel.VMFlowScene
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.customview.LayoutZoomPan
 import com.example.thingsflow.ui.customview.ViewBox
 import com.example.thingsflow.ui.dialog.DialogConfigHeaderHttp
-import com.example.thingsflow.ui.dialog.DialogDeviceList
 import com.example.thingsflow.ui.dialog.DialogFlowNodeList
 import com.example.thingsflow.ui.dialog.DialogLabelFlowScenario
 import com.example.thingsflow.ui.flowScene.overlay.OverlayConfigBoxActionCallHttp
@@ -76,9 +75,8 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
 
     internal val TAG = "FragmentFlowScenario"
 
-    internal val vmFlowScenario: VMFlowScenario by activityViewModels<VMFlowScenario>()
-
-    private val vmFlowBinding: VMFlowBinding by activityViewModels<VMFlowBinding>()
+    internal val vmFlowScene: VMFlowScene by activityViewModels<VMFlowScene>()
+    internal val vmFlowBinding: VMFlowBinding by activityViewModels<VMFlowBinding>()
     internal var currentBoxType: Int = -1
 
     // Determine if the next box belongs to positive segment or negative segment of the current box
@@ -95,8 +93,8 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     dialogFlowNodeList.hide()
                     val sceneLabel = txtSceneLabel.text.toString()
                     val sceneId = UUID.randomUUID().toString()
-                    vmFlowScenario.createFlowScene(sceneId, selectedDevices.keys.first()!!,sceneLabel)
-                    vmFlowScenario.createSceneBoxes(sceneId, selectedDevices.keys.first()!!, vmFlowScenario.boxes.value!!)
+                      vmFlowScene.createFlowScene(sceneId, selectedDevices.keys.first()!!,sceneLabel)
+                    vmFlowScene.createSceneBoxes(sceneId, selectedDevices.keys.first()!!, vmFlowScene.boxes.value!!)
                 }
             }
         )
@@ -147,17 +145,19 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
     override fun initView() {
         super.initView()
         binding.apply {
+            vmFlowScene.initScenario()
+
             toolbar.txtTitle.text = context?.getString(R.string.list_of_flow_scenario)
 
             binding.boxLayout.onBoxClickListener = this@FragmentFlowScenario
 
-            vmFlowScenario.boxes.observe(this@FragmentFlowScenario) {
+            vmFlowScene.boxes.observe(this@FragmentFlowScenario) {
                 boxLayout.boxList = ArrayList(it)
             }
 
             // Khởi tạo một danh sách FBox mới
-            if (vmFlowScenario.boxes.value?.size == 1) {
-                val fBox = vmFlowScenario.boxes.value?.get(0)
+            if (vmFlowScene.boxes.value?.size == 1) {
+                val fBox = vmFlowScene.boxes.value?.get(0)
                 if (fBox is FBoxEvent) {
                     if (fBox.targetSegId.isNullOrEmpty() && fBox.id.isNullOrEmpty()) {
                         btnEditScene.gone()
@@ -201,9 +201,10 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     btnEditScene.setImageDrawable(context?.getDrawable(R.drawable.ic_check))
                 } else {
                     btnEditScene.setImageDrawable(context?.getDrawable(R.drawable.ic_edit))
+                    dialogFlowNodeList.show()
+                    vmFlowBinding.setBoxes(vmFlowScene.boxes.value)
                 }
-                vmFlowBinding.setBoxes(vmFlowScenario.boxes.value)
-                dialogFlowNodeList.show()
+
             }
         }
     }
@@ -280,7 +281,7 @@ class FragmentFlowScenario : FragmentBase<FragmentFlowScenarioBinding>(),
                     ILogR.D(TAG, "onAddBoxClicked:fBoxId ", box.id)
                     this@FragmentFlowScenario.newSegType = newSegType
                     overlaySelectBoxType.show()
-                    vmFlowScenario.setRootBoxId(box.id)
+                    vmFlowScene.setRootBoxId(box.id)
                 }
 
                 override fun onRemoveBoxClicked(box: FBox) {

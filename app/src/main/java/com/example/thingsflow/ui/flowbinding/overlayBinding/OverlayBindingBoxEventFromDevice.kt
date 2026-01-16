@@ -1,41 +1,24 @@
 package com.example.thingsflow.ui.flowbinding.overlayBinding
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.FlowSdk
 import com.example.thingsflow.databinding.LayoutOverlayBindingBoxEventFromDeviceBinding
-import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionGeneralBinding
-import com.example.thingsflow.databinding.LayoutOverlayConfigBoxEventFromDeviceBinding
 import com.example.thingsflow.module.viewmodel.VMFlowBinding
-import com.example.thingsflow.module.viewmodel.VMFlowScenario
 import com.example.thingsflow.ui.OverlayBase
-import com.example.thingsflow.ui.adapter.AdapterAttributes
-import com.example.thingsflow.ui.adapter.AdapterDevices
-import com.example.thingsflow.ui.adapter.AdapterSpinnerDeviceType
-import com.example.thingsflow.ui.dialog.DialogDeviceList
-import com.example.thingsflow.utils.getAttrLabel
+import com.example.thingsflow.ui.adapter.AdapterSelectedDevice
 import com.example.thingsflow.utils.getDeviceTypeLabel
-import com.example.thingsflow.utils.getSupportedAttribue
-import com.example.thingsflow.utils.getSupportedDeviceType
 import com.example.thingsflow.utils.gone
 import com.example.thingsflow.utils.show
 import com.google.android.material.tabs.TabLayout
 import rogo.iot.module.base.define.IoTDeviceType
-import rogo.iot.module.flowcommon.box.FBox
-import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
-import rogo.iot.module.flowcommon.box.action.condition.FBoxActionConditionGeneral
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
-import rogo.iot.module.rogocore.sdk.SmartSdk
-import kotlin.collections.get
-import kotlin.text.set
 
 class OverlayBindingBoxEventFromDevice(
     context: Context,
     container: ViewGroup,
+    private val onSelectDevice: (devType: Int?, attrs: IntArray?, selectedDevices: HashMap<String?, IntArray>) -> Unit,
     private val onSave: (FBoxEventDevice) -> Unit,
     private val onClose: () -> Unit
 ): OverlayBase<LayoutOverlayBindingBoxEventFromDeviceBinding>(
@@ -52,13 +35,8 @@ class OverlayBindingBoxEventFromDevice(
     private var selectedDevices: HashMap<String?, IntArray> = hashMapOf()
     private var fBoxEventDevice: FBoxEventDevice?= null
     private var devType: Int = IoTDeviceType.ALL
-    private val adapterDevices: AdapterDevices by lazy {
-        AdapterDevices(
-            onDevicesSelected = {devices->
-                selectedDevices.clear()
-                selectedDevices.putAll(devices)
-            }
-        )
+    private val adapterSelectedDevices: AdapterSelectedDevice by lazy {
+        AdapterSelectedDevice()
     }
     override fun onViewCreated(binding: LayoutOverlayBindingBoxEventFromDeviceBinding) {
         binding.apply {
@@ -105,9 +83,17 @@ class OverlayBindingBoxEventFromDevice(
 
     private fun setUpConfigLayout() {
         binding.apply {
-            rvDevice.adapter = adapterDevices
+            rvDevice.adapter = adapterSelectedDevices
 
-            btnCreateBox.setOnClickListener {
+            btnSelectDevice.setOnClickListener {
+                onSelectDevice.invoke(
+                    devType,
+                    intArrayOf(),
+                    selectedDevices
+                )
+            }
+
+            btnSave.setOnClickListener {
                 val devId = selectedDevices.keys.firstOrNull()
                 val elms = selectedDevices.values.firstOrNull()
                 val device = FlowSdk.deviceHandler().get(devId)
@@ -136,36 +122,39 @@ class OverlayBindingBoxEventFromDevice(
         if (vmFlowBinding?.getSelectedBox() != null && vmFlowBinding?.getSelectedBox() is FBoxEventDevice) {
             fBoxEventDevice = vmFlowBinding!!.getSelectedBox() as FBoxEventDevice
         }
-
         binding.apply {
             fBoxEventDevice.let {
-                devType = fBoxEventDevice!!.devType
-                selectedDevices = hashMapOf()
-                selectedDevices[fBoxEventDevice!!.devId] = fBoxEventDevice!!.elms
-                initialize()
+                if (fBoxEventDevice!!.devId.isNotEmpty()) {
+                    selectedDevices[fBoxEventDevice!!.devId] = fBoxEventDevice!!.elms
+                } else {
+                    selectedDevices = hashMapOf()
+                }
+                initialize(fBoxEventDevice!!.devType, fBoxEventDevice!!.attrTypes, selectedDevices)
             }
         }
     }
 
     fun show(devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>?) {
+        super.show()
         if (vmFlowBinding?.getSelectedBox() != null && vmFlowBinding?.getSelectedBox() is FBoxEventDevice) {
             fBoxEventDevice = vmFlowBinding!!.getSelectedBox() as FBoxEventDevice
         }
-
-        this.devType = (devType ?: IoTDeviceType.ALL)
-        this.selectedDevices = (devMap?: hashMapOf())
-        initialize()
+        initialize(devType, attrs, devMap)
     }
 
-    fun initialize() {
+    fun initialize(devType: Int?, attrs: IntArray?, devMap: HashMap<String?, IntArray>?) {
         binding.apply {
-            txtDeviceType.text = getDeviceTypeLabel(context, devType)
-            adapterDevices.setSelectedDeviceMap(selectedDevices)
-            adapterDevices.submitList(
-                FlowSdk.deviceHandler().userDevices.filter {
-                    if (devType == IoTDeviceType.ALL) true else it.devType == devType
-                }
-            )
+            this@OverlayBindingBoxEventFromDevice.devType = (devType ?: IoTDeviceType.ALL)
+            this@OverlayBindingBoxEventFromDevice.selectedDevices = devMap?: hashMapOf()
+            txtDeviceType.text = getDeviceTypeLabel(context, devType!!)
+            if (selectedDevices.isEmpty()) {
+                txtChooseDevice.show()
+                rvDevice.gone()
+            } else {
+                txtChooseDevice.gone()
+                rvDevice.show()
+                adapterSelectedDevices.submitList(selectedDevices.entries.toList())
+            }
         }
     }
 }

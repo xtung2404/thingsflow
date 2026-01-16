@@ -1,4 +1,4 @@
-package com.example.thingsflow.ui.flowScene.overlay
+package com.example.thingsflow.ui.flowbinding.overlayBinding
 
 import android.content.Context
 import android.view.View
@@ -12,7 +12,7 @@ import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionCallHttpBi
 import com.example.thingsflow.module.define.TFBodyHttpFormat
 import com.example.thingsflow.module.define.TFHttpHeader
 import com.example.thingsflow.module.define.TFInputBoxValue
-import com.example.thingsflow.module.viewmodel.VMFlowScene
+import com.example.thingsflow.module.viewmodel.VMFlowBinding
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterInOutput
 import com.example.thingsflow.ui.adapter.AdapterJsonField
@@ -42,11 +42,11 @@ import rogo.iot.module.flowcommon.type.FInputValueType
  * @param onBoxActionCallHttpCreated: triggered when a box is setted up successfully
  * @param onClose: triggered when hide the overlay
  */
-class OverlayConfigBoxActionCallHttp(
+class OverlayBindingBoxActionCallHttp(
     context: Context,
     container: ViewGroup,
-    private val onConfigHeader: (headers: HashMap<String, String>) -> Unit,
-    private val onConfigJsonOutput: () -> Unit,
+    private val onConfigHeader: () -> Unit,
+    private val onConfigJsonOutput: (fields: MutableList<FJsonField>) -> Unit,
     private val onBoxActionCallHttpCreated: (FBoxActionCallHttp) -> Unit,
     private val onClose: (isBackable: Boolean) -> Unit
 ): OverlayBase<LayoutOverlayConfigBoxActionCallHttpBinding>(
@@ -54,10 +54,9 @@ class OverlayConfigBoxActionCallHttp(
     container,
     LayoutOverlayConfigBoxActionCallHttpBinding::inflate
 ) {
-
-    private val vmFlowScene: VMFlowScene? by lazy {
+    private val vmFlowBinding: VMFlowBinding? by lazy {
         viewModelOwner?.let {
-            ViewModelProvider(it)[VMFlowScene::class.java]
+            ViewModelProvider(it)[VMFlowBinding::class.java]
         }
     }
 
@@ -145,13 +144,10 @@ class OverlayConfigBoxActionCallHttp(
             }
 
             btnConfigHeader.setOnClickListener {
-                onConfigHeader.invoke(requiredHeaders)
+                onConfigHeader.invoke()
             }
 
             btnCreateBox.setOnClickListener {
-                if (fBoxActionCallHttp == null) {
-                    fBoxActionCallHttp = FBoxActionCallHttp()
-                }
                 fBoxActionCallHttp?.url = edtUrl.text.toString()
                 fBoxActionCallHttp?.headers = requiredHeaders
                 fBoxActionCallHttp?.timeoutMs = edtTimeout.text.toString().toInt()
@@ -214,7 +210,7 @@ class OverlayConfigBoxActionCallHttp(
             btnJson.setTextColor(context.getColor(R.color.text_input))
 
             btnConfigOutput.setOnClickListener {
-                onConfigJsonOutput.invoke()
+                onConfigJsonOutput.invoke(jsonFields)
             }
 
             btnOutputClose.setOnClickListener {
@@ -257,30 +253,18 @@ class OverlayConfigBoxActionCallHttp(
     override fun show() {
         super.show()
         binding.apply {
-            fBoxActionCallHttp = null
-            requiredHeaders = hashMapOf()
-            initialize(
-                null,
-                null,
-                arrayOf()
-            )
-            cbForwardJson.isChecked = false
-            cbExportValue.isChecked = true
-            btnBack.show()
-        }
-    }
-
-    fun show(fBox: FBoxActionCallHttp?) {
-        super.show()
-        binding.apply {
-            btnBack.gone()
-            fBoxActionCallHttp = fBox
+            if (vmFlowBinding?.getSelectedBox() != null && vmFlowBinding?.getSelectedBox() is FBoxActionCallHttp) {
+                fBoxActionCallHttp = vmFlowBinding!!.getSelectedBox() as FBoxActionCallHttp
+            }
             requiredHeaders = fBoxActionCallHttp?.headers?: hashMapOf()
             initialize(
                 fBoxActionCallHttp?.url,
                 fBoxActionCallHttp?.timeoutMs,
                 fBoxActionCallHttp?.jsonFields?: arrayOf()
             )
+            cbForwardJson.isChecked = false
+            cbExportValue.isChecked = true
+            btnBack.show()
         }
     }
 
@@ -314,7 +298,7 @@ class OverlayConfigBoxActionCallHttp(
     private fun submitJsonFields(
         fields: Array<FJsonField>
     ) {
-        this@OverlayConfigBoxActionCallHttp.jsonFields = fields.toMutableList()
+        this@OverlayBindingBoxActionCallHttp.jsonFields = fields.toMutableList()
         if (jsonFields.isNotEmpty()) binding.lnShowOutputConfigured.show() else binding.lnShowOutputConfigured.gone()
         adapterJsonField.submitList(jsonFields)
         map = hashMapOf()
@@ -346,8 +330,8 @@ class OverlayConfigBoxActionCallHttp(
 
             var previousBoxType: Int = FBoxType.EVT_FROM_DEVICE
             parentBox?.let {
-                vmFlowScene?.getInputsFromParentBox(parentBox)?.let {
-                    inputFromParentBoxList = vmFlowScene?.getInputsFromParentBox(parentBox)!!
+                vmFlowBinding?.getInputsFromParentBox(parentBox)?.let {
+                    inputFromParentBoxList = vmFlowBinding?.getInputsFromParentBox(parentBox)!!
                 }
                 when(parentBox) {
                     is FBoxEventDevice -> {
@@ -369,22 +353,22 @@ class OverlayConfigBoxActionCallHttp(
                         previousBoxType = FBoxType.ACT_CALL_HTTP
                     }
                     else -> {
-
+                        lnInput.lnPreviousBoxDevice.gone()
+                        previousBoxType = FBoxType.ACT_CONTROL_DEVICE
                     }
                 }
             }
             adapterInputFromPreviousBox.submitList(
-                vmFlowScene?.groupInputs(previousBoxType, inputFromParentBoxList)
+                vmFlowBinding?.groupInputs(previousBoxType, inputFromParentBoxList)
             )
 
             lnInput.lnInputFromPreviousBox.show()
         }
     }
 
-    private fun getPreviousBox(): FBox? {
-        val previousBoxId = if (fBoxActionCallHttp == null) vmFlowScene?.getRootBoxId() else fBoxActionCallHttp?.rootId
-        return vmFlowScene?.boxes?.value?.find { it.id == previousBoxId }
-    }
+    private fun getPreviousBox(): FBox? =
+        vmFlowBinding?.boxes?.value?.find { it.id == fBoxActionCallHttp?.rootId }
+
 
     private fun setUpTabs() {
         binding.apply {

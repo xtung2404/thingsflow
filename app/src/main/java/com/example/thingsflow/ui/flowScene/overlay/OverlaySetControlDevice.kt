@@ -2,6 +2,7 @@ package com.example.thingsflow.ui.flowScene.overlay
 
 import android.content.Context
 import android.view.ViewGroup
+import com.example.thingflowsdk.R
 import com.example.thingsflow.databinding.LayoutOverlaySetControlDeviceBinding
 import com.example.thingsflow.ui.OverlayBase
 import com.example.thingsflow.ui.adapter.AdapterConfiguredControlCmd
@@ -70,13 +71,29 @@ class OverlaySetControlDevice(
                 this@OverlaySetControlDevice.action = actions.first()
                 adapterConfigControlCommand = AdapterConfiguredControlCmd(
                     context,
-                    action
+                    action,
+                    onCmdsChanged = {
+                        setAllowableToSelect(!adapterConfigControlCommand.getDeviceControlCmdMap().isEmpty())
+                    }
                 )
                 rvAction.adapter = adapterConfigControlCommand
                 adapterConfigControlCommand.submitList(devMap.entries.toList())
             }
+
+            setAllowableToSelect(false)
         }
     }
 
+    private fun setAllowableToSelect(isAllowable: Boolean) {
+        binding.apply {
+            if (!isAllowable) {
+                btnSave.isEnabled = false
+                btnSave.setBackgroundDrawable(context.getDrawable(com.example.thingsflow.R.drawable.btn_gray))
+            } else {
+                btnSave.isEnabled = true
+                btnSave.setBackgroundDrawable(context.getDrawable(com.example.thingsflow.R.drawable.btn_emerald))
+            }
+        }
+    }
 
 }

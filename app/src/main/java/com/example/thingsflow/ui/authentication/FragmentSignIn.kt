@@ -1,5 +1,7 @@
 package com.example.thingsflow.ui.authentication
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -9,6 +11,8 @@ import com.example.thingsflow.databinding.FragmentSignInBinding
 import com.example.thingsflow.module.viewmodel.VMAuthentication
 import com.example.thingsflow.ui.FragmentBase
 import com.example.thingsflow.ui.dialog.showDialogLoadingWithAnimation
+import com.example.thingsflow.utils.gone
+import com.example.thingsflow.utils.show
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +26,15 @@ class FragmentSignIn : FragmentBase<FragmentSignInBinding>() {
         get() = R.layout.fragment_sign_in
 
     private val vmAuthentication by viewModels<VMAuthentication>()
+
+    override fun initView() {
+        super.initView()
+        binding.apply {
+            txtWarningEmail?.gone()
+        }
+    }
+
+
     override fun initAction() {
         super.initAction()
         binding.apply {
@@ -38,6 +51,58 @@ class FragmentSignIn : FragmentBase<FragmentSignInBinding>() {
                 val bdlEmail = bundleOf("email" to email)
                 findNavController().navigate(R.id.resetPasswordFragment, bdlEmail)
             }
+
+            edtEmail.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    p0: CharSequence?,
+                    p1: Int,
+                    p2: Int,
+                    p3: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(
+                    p0: CharSequence?,
+                    p1: Int,
+                    p2: Int,
+                    p3: Int
+                ) {
+                    if (p0?.isEmpty() == true) {
+                        txtWarningEmail?.show()
+                    } else {
+                        txtWarningEmail?.gone()
+                    }
+                }
+
+                override fun afterTextChanged(p0: Editable?) {}
+            })
+
+            edtPwd.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    p0: CharSequence?,
+                    p1: Int,
+                    p2: Int,
+                    p3: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(
+                    p0: CharSequence?,
+                    p1: Int,
+                    p2: Int,
+                    p3: Int
+                ) {
+                    if (p0?.isEmpty() == true) {
+                        txtWarningPwd?.show()
+                    } else {
+                        txtWarningPwd?.gone()
+                    }
+                }
+
+                override fun afterTextChanged(p0: Editable?) {}
+            })
         }
     }
 
@@ -59,15 +124,17 @@ class FragmentSignIn : FragmentBase<FragmentSignInBinding>() {
      */
     private fun signIn() {
         binding.apply {
-            val dialog = context?.showDialogLoadingWithAnimation(
-                R.string.signing_in,
-                messRes = R.string.information_will_be_saved_until_signing_out,
-                lifecycle = lifecycle
-            )
+            txtWarningEmail?.gone()
+            txtWarningPwd?.gone()
             val input = edtEmail.text.toString()
             val pwd = edtPwd.text.toString()
 
             if (isUserInfoValid(input, pwd)) {
+                val dialog = context?.showDialogLoadingWithAnimation(
+                    R.string.signing_in,
+                    messRes = R.string.information_will_be_saved_until_signing_out,
+                    lifecycle = lifecycle
+                )
                 vmAuthentication.signIn(
                     input,
                     pwd,
@@ -86,6 +153,13 @@ class FragmentSignIn : FragmentBase<FragmentSignInBinding>() {
                         }
                     }
                 )
+            } else {
+                if (input.isEmpty()) {
+                    txtWarningEmail?.show()
+                }
+                if (pwd.isEmpty()) {
+                    txtWarningPwd?.show()
+                }
             }
         }
     }
