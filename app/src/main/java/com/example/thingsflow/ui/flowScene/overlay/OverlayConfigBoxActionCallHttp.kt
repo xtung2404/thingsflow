@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.FlowSdk
-import com.example.thingflowsdk.core.base.define.TFMethodHttp
 import com.example.thingsflow.R
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionCallHttpBinding
 import com.example.thingsflow.module.define.TFBodyHttpFormat
@@ -27,6 +26,7 @@ import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.define.FJsonField
 import rogo.iot.module.flowcommon.type.FBoxType
+import rogo.iot.module.flowcommon.type.FHttpType
 import rogo.iot.module.flowcommon.type.FInputValueType
 
 /**
@@ -86,10 +86,10 @@ class OverlayConfigBoxActionCallHttp(
     private val adapterSpinnerMethodCallHttpType: AdapterSpinnerMethodCallHttpType by lazy {
         AdapterSpinnerMethodCallHttpType(
             context,
-            listOf<TFMethodHttp>(
-                TFMethodHttp.GET,
-                TFMethodHttp.POST,
-                TFMethodHttp.DELETE
+            listOf<Int>(
+                FHttpType.GET,
+                FHttpType.POST,
+                FHttpType.DELETE
             )
         )
     }
@@ -166,9 +166,9 @@ class OverlayConfigBoxActionCallHttp(
                     position: Int,
                     id: Long
                 ) {
-                    val method = parent?.getItemAtPosition(position) as TFMethodHttp
+                    val method = parent?.getItemAtPosition(position) as Int
                     when (method) {
-                        TFMethodHttp.POST -> {
+                        FHttpType.POST -> {
                             lnConfigBody.show()
                         }
                         else -> {

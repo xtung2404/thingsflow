@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.example.thingflowsdk.core.base.define.TFMethodHttp
 import com.example.thingsflow.R
+import rogo.iot.module.flowcommon.type.FHttpType
+
 class AdapterSpinnerMethodCallHttpType(
     context: Context,
-    private val items: List<TFMethodHttp>
-): ArrayAdapter<TFMethodHttp>(context, R.layout.layout_spinner_item_location, items) {
+    private val items: List<Int>
+): ArrayAdapter<Int>(context, R.layout.layout_spinner_item_location, items) {
     init {
         setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
     }
@@ -37,11 +38,11 @@ class AdapterSpinnerMethodCallHttpType(
         return view
     }
 
-    fun getMethodHttpLabel(method: TFMethodHttp): String {
+    fun getMethodHttpLabel(method: Int): String {
         return when (method) {
-            TFMethodHttp.GET -> context.getString(R.string.get)
-            TFMethodHttp.POST ->  context.getString(R.string.post)
-            TFMethodHttp.DELETE -> context.getString(R.string.delete)
+            FHttpType.GET -> context.getString(R.string.get)
+            FHttpType.POST ->  context.getString(R.string.post)
+            FHttpType.DELETE -> context.getString(R.string.delete)
             else -> ""
         }
     }

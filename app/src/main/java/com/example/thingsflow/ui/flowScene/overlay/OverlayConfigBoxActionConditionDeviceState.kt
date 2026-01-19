@@ -246,7 +246,6 @@ class OverlayConfigBoxActionConditionDeviceState(
                 }
                 initialize(null, null, selectedDeviceInputs)
                 val inputSourcePos = adapterSpinnerInputSource.getPosition(if (fBoxActionConditionDeviceState!!.isInputFromPreviousBox) TFInputSource.INPUT_FROM_PREVIOUS_BOX else TFInputSource.INPUT_FROM_OTHER_DEVICES)
-                ILogR.D(TAG, "inputSourcePos", inputSourcePos)
                 if (inputSourcePos != -1) {
                     spinnerInputSource.setSelection(inputSourcePos)
                     val comparedValuePos = if (fBoxActionConditionDeviceState!!.isInputFromPreviousBox) {
@@ -258,24 +257,16 @@ class OverlayConfigBoxActionConditionDeviceState(
                             it?.devId == fBoxActionConditionDeviceState?.devId && it?.elm == fBoxActionConditionDeviceState?.elm && it?.input?.value == fBoxActionConditionDeviceState?.attrType
                         }
                     }
-
-                    ILogR.D(TAG, "comparedValuePos", comparedValuePos)
                     if (comparedValuePos != -1) {
                         spinnerComparedValue.setSelection(comparedValuePos)
-                        val comparingValuePos = adapterSpinnerComparingValue.getPosition(Pair(TFInOutType.PAYLOAD_STATE, intArrayOf(fBoxActionConditionDeviceState?.attrType!!, fBoxActionConditionDeviceState?.comparingValue?.get(0)?.value as Int)))
-                        ILogR.D(TAG, "comparingValuePos", comparingValuePos, Gson().toJson(Pair(TFInOutType.PAYLOAD_STATE, intArrayOf(fBoxActionConditionDeviceState?.attrType!!, fBoxActionConditionDeviceState?.comparingValue?.get(0)?.value as Int))))
-                        if (comparingValuePos != -1) {
-                            spinnerComparingValue.setSelection(comparingValuePos)
-                        }
+                        selectedComparingValue = Pair(TFInOutType.PAYLOAD_STATE, intArrayOf(fBoxActionConditionDeviceState?.attrType!!, fBoxActionConditionDeviceState?.comparingValue?.get(0)?.value as Int))
                     }
                     val comparisionTypePos = adapterSpinnerComparision.getPosition(fBoxActionConditionDeviceState?.condition)
-                    ILogR.D(TAG, "comparisionTypePos", comparisionTypePos)
                     if (comparisionTypePos != -1) {
                         spinnerComparisionType.setSelection(comparisionTypePos)
                     }
                 }
             }
-
         }
     }
 
@@ -426,12 +417,21 @@ class OverlayConfigBoxActionConditionDeviceState(
     private fun handleComparedValueChanged(comparedValue: TFInputBoxValue) {
         binding.apply {
             selectedComparedValue = comparedValue
-            ILogR.D(TAG, "handleComparedValueChanged:comparingValues", Gson().toJson(generateComparingValues(comparedValue)))
+            val comparingValues = generateComparingValues(comparedValue)
             adapterSpinnerComparingValue = AdapterSpinnerComparingValue(
                 context,
-                generateComparingValues(comparedValue)
+                comparingValues
             )
             spinnerComparingValue.adapter = adapterSpinnerComparingValue
+            if (fBoxActionConditionDeviceState != null) {
+                val value = comparingValues.find {
+                    it.first == selectedComparingValue?.first && it.second.contentEquals(selectedComparingValue?.second)
+                }
+                val comparingValuePos = adapterSpinnerComparingValue.getPosition(value)
+                if (comparingValuePos != -1) {
+                    spinnerComparingValue.setSelection(comparingValuePos)
+                }
+            }
         }
     }
 
