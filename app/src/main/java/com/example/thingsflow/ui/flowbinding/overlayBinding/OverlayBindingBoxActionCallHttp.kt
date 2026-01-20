@@ -26,6 +26,7 @@ import rogo.iot.module.flowcommon.box.action.FBoxActionCallHttp
 import rogo.iot.module.flowcommon.box.event.FBoxEventDevice
 import rogo.iot.module.flowcommon.define.FJsonField
 import rogo.iot.module.flowcommon.type.FBoxType
+import rogo.iot.module.flowcommon.type.FHttpType
 import rogo.iot.module.flowcommon.type.FInputValueType
 
 /**
@@ -84,10 +85,10 @@ class OverlayBindingBoxActionCallHttp(
     private val adapterSpinnerMethodCallHttpType: AdapterSpinnerMethodCallHttpType by lazy {
         AdapterSpinnerMethodCallHttpType(
             context,
-            listOf<TFMethodHttp>(
-                TFMethodHttp.GET,
-                TFMethodHttp.POST,
-                TFMethodHttp.DELETE
+            listOf<Int>(
+                FHttpType.GET,
+                FHttpType.POST,
+                FHttpType.DELETE
             )
         )
     }
@@ -161,9 +162,9 @@ class OverlayBindingBoxActionCallHttp(
                     position: Int,
                     id: Long
                 ) {
-                    val method = parent?.getItemAtPosition(position) as TFMethodHttp
+                    val method = parent?.getItemAtPosition(position) as Int
                     when (method) {
-                        TFMethodHttp.POST -> {
+                        FHttpType.POST -> {
                             lnConfigBody.show()
                         }
                         else -> {

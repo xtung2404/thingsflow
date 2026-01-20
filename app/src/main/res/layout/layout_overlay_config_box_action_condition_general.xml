@@ -131,7 +131,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/gray"
-                        android:layout_marginTop="24dp"/>
+                        android:layout_marginTop="12dp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -154,34 +154,100 @@
                             android:background="@drawable/bg_text_input_gray"
                             android:paddingHorizontal="13dp"
                             android:paddingVertical="14dp" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/space_screen_small"
-                            android:text="@string/compared_value"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_caption" />
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/space_screen_super_small"
-                            android:background="@drawable/bg_white_stroke_black"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingVertical="@dimen/_space4dp"
-                            android:paddingStart="8dp">
-
-                            <EditText
-                                android:id="@+id/edt_comparing_value"
-                                android:layout_width="0dp"
+                            android:orientation="vertical"
+                            android:id="@+id/ln_comparing_in_range"
+                            android:layout_marginTop="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@null"
+                                android:text="@string/comparing_value_start"
                                 android:textColor="@color/black"
-                                android:textColorHint="@color/black"
+                                android:textSize="@dimen/text_caption" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_screen_super_small"
+                                android:background="@drawable/bg_edit_text"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingVertical="@dimen/_space4dp"
+                                android:paddingStart="8dp">
+                                <EditText
+                                    android:id="@+id/edt_comparing_value_start"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:background="@null"
+                                    android:textColor="@color/black"
+                                    android:textColorHint="@color/black"
+                                    android:textSize="@dimen/text_caption"
+                                    android:layout_weight="1"
+                                    android:paddingVertical="8dp"/>
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/comparing_value_end"
+                                android:textColor="@color/black"
                                 android:textSize="@dimen/text_caption"
-                                android:layout_weight="1"
-                                android:paddingVertical="8dp"/>
+                                android:layout_marginTop="16dp"/>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_screen_super_small"
+                                android:background="@drawable/bg_edit_text"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingVertical="@dimen/_space4dp"
+                                android:paddingStart="8dp">
+                                <EditText
+                                    android:id="@+id/edt_comparing_value_end"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:background="@null"
+                                    android:textColor="@color/black"
+                                    android:textColorHint="@color/black"
+                                    android:textSize="@dimen/text_caption"
+                                    android:layout_weight="1"
+                                    android:paddingVertical="8dp"/>
+                            </LinearLayout>
                         </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:id="@+id/ln_comparing_value"
+                            android:layout_marginTop="@dimen/space_screen_small">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/compared_value"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/text_caption" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_screen_super_small"
+                                android:background="@drawable/bg_edit_text"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingVertical="@dimen/_space4dp"
+                                android:paddingStart="8dp">
+                                <EditText
+                                    android:id="@+id/edt_comparing_value"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:background="@null"
+                                    android:textColor="@color/black"
+                                    android:textColorHint="@color/black"
+                                    android:textSize="@dimen/text_caption"
+                                    android:layout_weight="1"
+                                    android:paddingVertical="8dp"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
 
                     </LinearLayout>
                     </LinearLayout>
