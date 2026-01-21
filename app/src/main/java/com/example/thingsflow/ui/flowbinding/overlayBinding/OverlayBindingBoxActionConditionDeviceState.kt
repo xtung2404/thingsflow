@@ -226,20 +226,6 @@ class OverlayBindingBoxActionConditionDeviceState(
                 fBoxActionConditionDeviceState = vmFlowBinding!!.getSelectedBox() as FBoxActionConditionDeviceState
             }
 
-//            selectedComparedValue = fBoxActionConditionDeviceState.
-//            selectedComparisionType = fBoxActionConditionDeviceState?.condition
-//            selectedComparingValue = fBoxActionConditionDeviceState?.comparingValue
-            initialize(null, null, hashMapOf())
-            tabLayoutEvtDevice.getTabAt(0)?.select()
-        }
-    }
-
-    fun show(fBox: FBoxActionConditionDeviceState?) {
-        super.show()
-        fBoxActionConditionDeviceState = fBox
-        selectedDeviceInputs = hashMapOf()
-        binding.apply {
-            btnBack.gone()
             fBoxActionConditionDeviceState?.let {
                 if (!fBoxActionConditionDeviceState!!.isInputFromPreviousBox) {
                     if (fBoxActionConditionDeviceState!!.devId != null) {
@@ -250,26 +236,28 @@ class OverlayBindingBoxActionConditionDeviceState(
                 val inputSourcePos = adapterSpinnerInputSource.getPosition(if (fBoxActionConditionDeviceState!!.isInputFromPreviousBox) TFInputSource.INPUT_FROM_PREVIOUS_BOX else TFInputSource.INPUT_FROM_OTHER_DEVICES)
                 if (inputSourcePos != -1) {
                     spinnerInputSource.setSelection(inputSourcePos)
-                    val comparedValuePos = adapterSpinnerComparedValue.getPosition(TFInputBoxValue(
-                        fBoxActionConditionDeviceState?.devId,
-                        fBoxActionConditionDeviceState?.elm,
-                        TFInOutType.PAYLOAD_STATE,
-                        FInputValue(FInputValueType.INTEGER, fBoxActionConditionDeviceState?.attrType)
-                    ))
+                    val comparedValuePos = if (fBoxActionConditionDeviceState!!.isInputFromPreviousBox) {
+                        inputFromParentBoxList.indexOfFirst {
+                            it?.devId == fBoxActionConditionDeviceState?.devId && it?.elm == fBoxActionConditionDeviceState?.elm && it?.input?.value == fBoxActionConditionDeviceState?.attrType
+                        }
+                    } else{
+                        inputFromOtherDevicesList.indexOfFirst {
+                            it?.devId == fBoxActionConditionDeviceState?.devId && it?.elm == fBoxActionConditionDeviceState?.elm && it?.input?.value == fBoxActionConditionDeviceState?.attrType
+                        }
+                    }
                     if (comparedValuePos != -1) {
                         spinnerComparedValue.setSelection(comparedValuePos)
-                        val comparisionTypePos = adapterSpinnerComparision.getPosition(fBoxActionConditionDeviceState?.condition)
-                        if (comparisionTypePos != -1) {
-                            spinnerComparisionType.setSelection(comparisionTypePos)
-                            val comparingValuePos = adapterSpinnerComparingValue.getPosition(Pair(TFInOutType.PAYLOAD_STATE, intArrayOf(fBoxActionConditionDeviceState?.comparingValue?.get(0)?.value as Int)))
-                            if (comparingValuePos != -1) {
-                                spinnerComparingValue.setSelection(comparingValuePos)
-                            }
-                        }
+                        selectedComparingValue = Pair(TFInOutType.PAYLOAD_STATE, intArrayOf(fBoxActionConditionDeviceState?.attrType!!, fBoxActionConditionDeviceState?.comparingValue?.get(0)?.value as Int))
+                    }
+                    val comparisionTypePos = adapterSpinnerComparision.getPosition(fBoxActionConditionDeviceState?.condition)
+                    if (comparisionTypePos != -1) {
+                        selectedComparisionType = fBoxActionConditionDeviceState?.condition
+                        spinnerComparisionType.setSelection(comparisionTypePos)
                     }
                 }
             }
-
+            initialize(null, null, hashMapOf())
+            tabLayoutEvtDevice.getTabAt(0)?.select()
         }
     }
 
@@ -419,11 +407,21 @@ class OverlayBindingBoxActionConditionDeviceState(
     private fun handleComparedValueChanged(comparedValue: TFInputBoxValue) {
         binding.apply {
             selectedComparedValue = comparedValue
+            val comparingValues = generateComparingValues(comparedValue)
             adapterSpinnerComparingValue = AdapterSpinnerComparingValue(
                 context,
-                generateComparingValues(comparedValue)
+                comparingValues
             )
             spinnerComparingValue.adapter = adapterSpinnerComparingValue
+            if (fBoxActionConditionDeviceState != null) {
+                val value = comparingValues.find {
+                    it.first == selectedComparingValue?.first && it.second.contentEquals(selectedComparingValue?.second)
+                }
+                val comparingValuePos = adapterSpinnerComparingValue.getPosition(value)
+                if (comparingValuePos != -1) {
+                    spinnerComparingValue.setSelection(comparingValuePos)
+                }
+            }
         }
     }
 

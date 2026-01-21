@@ -109,6 +109,8 @@
     <string name="control_action">Hành động điều khiển</string>
     <string name="attribute_of_device">Thuộc tính thiết bị</string>
     <string name="compared_value">Giá trị cần so sánh</string>
+    <string name="comparing_value_start">Giá trị so sánh đầu</string>
+    <string name="comparing_value_end">Giá trị so sánh cuối</string>
     <string name="compared_input">Đầu vào cần so sánh</string>
     <string name="comparision_type">Loại so sánh</string>
     <string name="config_action_call_api">Thiết lập hành động kết nối với API</string>

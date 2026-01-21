@@ -183,6 +183,7 @@ class OverlayConfigBoxActionConditionGeneral(
         super.show()
         binding.apply {
             btnBack.show()
+            edtComparingValue.setText("")
             fBoxActionConditionGeneral = null
             tabLayoutEvtDevice.getTabAt(0)?.select()
             showInputFromPreviousBox()

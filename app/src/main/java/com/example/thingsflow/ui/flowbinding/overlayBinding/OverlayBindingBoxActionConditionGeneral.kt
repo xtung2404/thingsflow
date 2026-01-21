@@ -7,6 +7,7 @@ import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import com.example.thingflowsdk.core.base.define.TFComparision
 import com.example.thingsflow.databinding.LayoutOverlayConfigBoxActionConditionGeneralBinding
+import com.example.thingsflow.module.define.TFInOutType
 import com.example.thingsflow.module.define.TFInputBoxValue
 import com.example.thingsflow.module.viewmodel.VMFlowBinding
 import com.example.thingsflow.ui.OverlayBase
@@ -94,36 +95,7 @@ class OverlayBindingBoxActionConditionGeneral(
     private fun setUpConfigLayout() {
         binding.apply {
             btnCreateBox.setOnClickListener {
-                val rawValue = binding.edtComparingValue.text.toString()
-                val convertedValue: Any = try {
-                    when (selectedComparedValue!!.input.type) {
-                        FInputValueType.INTEGER -> rawValue.toInt()
-                        FInputValueType.FLOAT -> rawValue.toDouble()
-                        FInputValueType.BOOLEAN -> rawValue.toBooleanStrict()
-                        FInputValueType.STRING -> rawValue
-                        else -> rawValue
-                    }
-                } catch (e: Exception) {
-
-                }
-                selectedComparedValue?.let {
-                    fBoxActionConditionGeneral?.comparedValue = arrayOf(
-                        FInputValue(
-                            selectedComparedValue!!.input.type,
-                            selectedComparedValue!!.input.value
-                        )
-                    )
-                    selectedComparisionType?.let { fBoxActionConditionGeneral?.condition = selectedComparisionType!! }
-                    if (!rawValue.isBlank()) {
-                        fBoxActionConditionGeneral?.comparingValue = arrayOf(
-                            FInputValue(
-                                selectedComparedValue!!.input.type,
-                                convertedValue
-                            )
-                        )
-                    }
-                }
-                onBoxActionCondtionGeneralUpdated.invoke(fBoxActionConditionGeneral!!)
+                configureBoxConditionGeneral()
             }
 
             spinnerComparedValue.onItemSelectedListener =
@@ -164,10 +136,19 @@ class OverlayBindingBoxActionConditionGeneral(
                     ) {
                         val comparisionType = parent?.getItemAtPosition(position) as Int
                         selectedComparisionType = comparisionType
+                        if (selectedComparisionType == TFComparision.BETWEEN) {
+                            lnComparingInRange.show()
+                            lnComparingValue.gone()
+                        } else {
+                            lnComparingInRange.gone()
+                            lnComparingValue.show()
+                        }
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                         selectedComparisionType = null
+                        lnComparingInRange.gone()
+                        lnComparingValue.gone()
                     }
                 }
 
@@ -198,34 +179,26 @@ class OverlayBindingBoxActionConditionGeneral(
                 fBoxActionConditionGeneral = vmFlowBinding!!.getSelectedBox() as FBoxActionConditionGeneral
             }
             tabLayoutEvtDevice.getTabAt(0)?.select()
+            fBoxActionConditionGeneral?.let {
+                selectedComparisionType = fBoxActionConditionGeneral!!.condition
+                if (fBoxActionConditionGeneral!!.comparedValue != null) {
+                    val comparedValuePos =
+                        inputFromParentBoxList.indexOfFirst {
+                            it?.inputType == TFInOutType.JSON_FIELD && it.input.type == fBoxActionConditionGeneral!!.comparedValue!![0].type && it.input.value == fBoxActionConditionGeneral!!.comparedValue!![0].value
+
+                        }
+                    if (comparedValuePos != -1) {
+                        spinnerComparedValue.setSelection(comparedValuePos)
+                        val comparingValue = fBoxActionConditionGeneral!!.comparingValue[0]
+                        comparingValue?.let {
+                            edtComparingValue.setText(comparingValue.value.toString())
+                        }
+                    }
+                }
+            }
             showInputFromPreviousBox()
         }
     }
-
-//    fun show(fBox: FBoxActionConditionGeneral?) {
-//        super.show()
-//        fBoxActionConditionGeneral = fBox
-//        fBoxActionConditionGeneral?.let {
-//            showInputFromPreviousBox()
-//            if (fBoxActionConditionGeneral!!.comparedValue != null) {
-//                val comparedValuePos = adapterComparedValue.getPosition(
-//                    TFInputBoxValue(
-//                        null,
-//                        null,
-//                        TFInOutType.JSON_FIELD,
-//                        FInputValue(
-//                            fBoxActionConditionGeneral!!.comparedValue!![0].type,
-//                            fBoxActionConditionGeneral!!.comparedValue!![0].value
-//                        )
-//                    )
-//                )
-//                if (comparedValuePos != -1) {
-//                    binding.spinnerComparedValue.setSelection(comparedValuePos)
-//                    binding.lnConfigComparedValue.show()
-//                }
-//            }
-//        }
-//    }
 
     /**
      * show list of input from previous box
@@ -274,6 +247,39 @@ class OverlayBindingBoxActionConditionGeneral(
     }
 
     private fun getPreviousBox(): FBox? = vmFlowBinding?.boxes?.value?.find { it.id == fBoxActionConditionGeneral?.rootId }
+
+    private fun configureBoxConditionGeneral() {
+        val rawValue = binding.edtComparingValue.text.toString()
+        val convertedValue: Any = try {
+            when (selectedComparedValue!!.input.type) {
+                FInputValueType.INTEGER -> rawValue.toInt()
+                FInputValueType.FLOAT -> rawValue.toDouble()
+                FInputValueType.BOOLEAN -> rawValue.toBooleanStrict()
+                FInputValueType.STRING -> rawValue
+                else -> rawValue
+            }
+        } catch (e: Exception) {
+
+        }
+        selectedComparedValue?.let {
+            fBoxActionConditionGeneral?.comparedValue = arrayOf(
+                FInputValue(
+                    selectedComparedValue!!.input.type,
+                    selectedComparedValue!!.input.value
+                )
+            )
+            selectedComparisionType?.let { fBoxActionConditionGeneral?.condition = selectedComparisionType!! }
+            if (!rawValue.isBlank()) {
+                fBoxActionConditionGeneral?.comparingValue = arrayOf(
+                    FInputValue(
+                        selectedComparedValue!!.input.type,
+                        convertedValue
+                    )
+                )
+            }
+        }
+        onBoxActionCondtionGeneralUpdated.invoke(fBoxActionConditionGeneral!!)
+    }
 
     private fun setUpTabs() {
         binding.apply {

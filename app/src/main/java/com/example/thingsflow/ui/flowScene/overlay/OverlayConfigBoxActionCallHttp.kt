@@ -262,6 +262,7 @@ class OverlayConfigBoxActionCallHttp(
             initialize(
                 null,
                 null,
+                null,
                 arrayOf()
             )
             cbForwardJson.isChecked = false
@@ -277,6 +278,7 @@ class OverlayConfigBoxActionCallHttp(
             fBoxActionCallHttp = fBox
             requiredHeaders = fBoxActionCallHttp?.headers?: hashMapOf()
             initialize(
+                fBoxActionCallHttp?.method,
                 fBoxActionCallHttp?.url,
                 fBoxActionCallHttp?.timeoutMs,
                 fBoxActionCallHttp?.jsonFields?: arrayOf()
@@ -297,12 +299,17 @@ class OverlayConfigBoxActionCallHttp(
         submitJsonFields(fieldList)
     }
 
-    private fun initialize(url: String?, timeout: Int?, jsonFields: Array<FJsonField>) {
+    private fun initialize(methodType: Int?, url: String?, timeout: Int?, jsonFields: Array<FJsonField>) {
         binding.apply {
             tabLayout.getTabAt(1)?.select()
             edtUrl.setText(url?: "")
             edtTimeout.setText(timeout?.toString()?: "30000")
-
+            methodType?.let {
+                val methodTypePos = adapterSpinnerMethodCallHttpType.getPosition(methodType)
+                if (methodTypePos != -1) {
+                    spinnerMethodType.setSelection(methodTypePos)
+                }
+            }
             submitJsonFields(jsonFields)
             showInputFromPreviousBox()
         }
