@@ -15,6 +15,13 @@
         <item name="android:insetBottom">0dp</item>
 <!--        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.BottomNav.Indicator</item>-->
     </style>
+    <style name="BottomNav.TextAppearance.Custom"
+        parent="TextAppearance.MaterialComponents.Caption">
+        <!-- Bạn có thể điều chỉnh textSize ở đây nếu muốn -->
+        <item name="android:textSize">10sp</item>
+        <!-- Thêm các thuộc tính khác như font chữ nếu cần -->
+         <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
 
 <!--    <style name="ShapeAppearanceOverlay.MyApp.BottomNav.Indicator">-->
 <!--        <item name="cornerFamily">rounded</item>-->

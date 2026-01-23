@@ -32,11 +32,17 @@
             android:layout_height="wrap_content"
             app:menu="@menu/bottom_nav_menu"
             app:labelVisibilityMode="labeled"
+            app:itemIconSize="24dp"
+            android:background="@color/bottom_nav_color"
             app:itemHorizontalTranslationEnabled="true"
-            app:itemIconSize="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:itemActiveIndicatorStyle="@null"
+            app:itemBackground="@null"
+            app:itemTextColor="@color/bottom_nav_color_selector"
+            app:itemIconTint="@color/bottom_nav_color_selector"
+            android:textSize="@dimen/text_body2"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

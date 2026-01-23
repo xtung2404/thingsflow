@@ -105,6 +105,7 @@ class FragmentIdentifyDevice : FragmentBase<FragmentIdentifyDeviceBinding>() {
                 DISCOVERY_TIMEOUT_SECONDS,
                 object : ScanningIoTDeviceCallback {
                     override fun onDeviceFound(device: IoTModelSmartConfig) {
+
                         CoroutineScope(Dispatchers.Main).launch {
                             if (discoveredGateways.isEmpty()) {
                                 binding.lnSelectDevice.visibility = View.VISIBLE

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Trạng thái khi item được chọn (state_checked="true") -->
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <!-- Đây là màu nền bạn thấy trong hình, bạn có thể đổi màu tùy ý -->
+            <solid android:color="#E8E0F8" />
+            <!-- Bo tròn các góc để có hiệu ứng đẹp hơn -->
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    <!-- Trạng thái mặc định (không được chọn) -->
+    <item android:state_checked="false">
+        <!-- Nền trong suốt -->
+        <color android:color="@android:color/transparent" />
+    </item>
+</selector>

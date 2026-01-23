@@ -31,6 +31,8 @@ class FragmentSignIn : FragmentBase<FragmentSignInBinding>() {
         super.initView()
         binding.apply {
             txtWarningEmail?.gone()
+            edtEmail.setText("tungrogo24@gmail.com")
+            edtPwd.setText("123456")
         }
     }
 

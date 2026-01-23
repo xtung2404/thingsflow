@@ -208,10 +208,10 @@ class OverlayConfigBoxActionCallHttp(
             rvJson.adapter = adapterJsonField
             rvTable.adapter = adapterTableJsonField
 
-            btnTable.setBackgroundDrawable(context.getDrawable(R.drawable.btn_emerald))
-            btnTable.setTextColor(context.getColor(R.color.white))
-            btnJson.setBackgroundDrawable(context.getDrawable(R.drawable.btn_gray))
-            btnJson.setTextColor(context.getColor(R.color.text_input))
+            btnJson.setBackgroundDrawable(context.getDrawable(R.drawable.btn_emerald))
+            btnJson.setTextColor(context.getColor(R.color.white))
+            btnTable.setBackgroundDrawable(context.getDrawable(R.drawable.btn_gray))
+            btnTable.setTextColor(context.getColor(R.color.text_input))
 
             btnConfigOutput.setOnClickListener {
                 onConfigJsonOutput.invoke()
